@@ -1,12 +1,15 @@
 import streamlit as st
 import pandas as pd
-# from io import BytesIO  # Ya no es necesario si no generamos docx
-# from docx import Document # Ya no es necesario si no generamos docx
+# Las siguientes líneas se comentan/eliminan si ya no se usa docx
+# from io import BytesIO
+# from docx import Document
 
 # Configuración de la página
 st.set_page_config(page_title="Asistente para Matriz de Investigación", layout="wide")
 
 # Inicialización del estado de sesión
+# ESTE BLOQUE DE INICIALIZACIÓN DEBE ESTAR AL PRINCIPIO DEL SCRIPT
+# PARA GARANTIZAR QUE st.session_state.matrix_data EXISTE SIEMPRE.
 if 'step' not in st.session_state:
     st.session_state.step = 0
 if 'matrix_data' not in st.session_state:
@@ -27,10 +30,10 @@ if 'matrix_data' not in st.session_state:
         'hipotesis': {'nula': '', 'alternativa': ''}
     }
 
-# La función generate_word_document se ha eliminado
-# Ya no es necesario importar docx ni BytesIO
+# La función generate_word_document y las importaciones de docx/BytesIO se asumen eliminadas
+# si no quieres la funcionalidad de descarga de Word.
 
-# Chatbot: Lista de pasos y preguntas
+# Chatbot: Lista de pasos y preguntas (ESTAS LISTAS PUEDEN ESTAR FUERA DE MAIN)
 steps = [
     {
         'question': "¡Hola! Vamos a crear tu matriz de investigación. ¿Qué tipo de investigación realizarás?",
@@ -115,90 +118,79 @@ final_steps = [
     },
 ]
 
-# Ajustar pasos según tipo de investigación
-# Esta lógica debe estar DENTRO de main o re-evaluarse después del primer input de tipo_investigacion
-# Para que all_steps se actualice correctamente cuando el usuario elija "Cuantitativa" o "Cualitativa"
-# La forma en que está ahora, solo se evalúa una vez al inicio.
-
-# Solución propuesta para la actualización dinámica de `all_steps`:
-# Mover la determinación de `all_steps` dentro de la función `main`
-# y recalcularla cada vez que 'tipo_investigacion' cambie.
-
 # Función principal
 def main():
     st.title("Asistente Chatbot para Matriz de Investigación")
     st.write("Soy tu asistente para crear una matriz de consistencia. Responde cada pregunta y al final podrás ver tu matriz.")
 
-    # Determinar all_steps dinámicamente dentro de main
+    # Mover la determinación de all_steps AQUÍ, DESPUÉS DE LA INICIALIZACIÓN DE SESSION_STATE
     tipo_investigacion = st.session_state.matrix_data.get('tipo_investigacion', '')
     if tipo_investigacion == 'Cuantitativa':
-        current_all_steps = steps + quantitative_steps + final_steps
+        all_steps = steps + quantitative_steps + final_steps
     else:
-        current_all_steps = steps + final_steps
-
+        all_steps = steps + final_steps
 
     # Mostrar progreso
     st.sidebar.header("Progreso")
-    for i, step in enumerate(current_all_steps): # Usar current_all_steps
+    for i, step in enumerate(all_steps):
         icon = "⬜" if i > st.session_state.step else "✅" if i < st.session_state.step else "🟨"
         st.sidebar.markdown(f"{icon} Paso {i+1}")
 
     # Mostrar paso actual
-    if st.session_state.step < len(current_all_steps): # Usar current_all_steps
-        current_step = current_all_steps[st.session_state.step] # Usar current_all_steps
+    if st.session_state.step < len(all_steps):
+        current_step = all_steps[st.session_state.step]
         st.markdown(f"**Chatbot:** {current_step['question']}")
 
         # Manejar diferentes tipos de entrada
         if current_step['input_type'] == 'radio':
-            response = st.radio("Selecciona una opción:", current_step['options'], key=f"input_{st.session_state.step}")
-            # Solo actualizamos el estado si la respuesta ha cambiado, para evitar re-runs innecesarios
-            if st.session_state.matrix_data[current_step['key']] != response:
-                st.session_state.matrix_data[current_step['key']] = response
-                # Si el tipo de investigación cambia, ajustamos el paso para evitar saltos.
-                # Esto es crucial para la lógica de los pasos dinámicos.
-                if current_step['key'] == 'tipo_investigacion':
-                    # Si el tipo de investigación cambia, podría ser necesario resetear o ajustar el paso
-                    # para que el usuario no se quede en un paso que ya no existe en la nueva secuencia.
-                    # Para simplificar, si cambian de Cualitativa a Cuantitativa o viceversa,
-                    # se les pedirá que avancen o retrocedan para ver los nuevos pasos.
-                    st.warning("Tipo de investigación cambiado. Por favor, revisa tus pasos.")
-                    # No reseteamos st.session_state.step a 0 automáticamente,
-                    # para que el usuario pueda navegar desde donde estaba.
-                    # El `st.rerun()` manejará la re-renderización con los nuevos pasos.
+            # Obtener el valor actual de session_state para el radio
+            current_radio_value = st.session_state.matrix_data.get(current_step['key'], current_step['options'][0] if current_step['options'] else '')
+            response = st.radio("Selecciona una opción:", current_step['options'], index=current_step['options'].index(current_radio_value) if current_radio_value in current_step['options'] else 0, key=f"input_{st.session_state.step}")
+            st.session_state.matrix_data[current_step['key']] = response
+            # Si el tipo de investigación cambia, puede que quieras hacer algo especial,
+            # pero el st.rerun() ya manejará que la lista de pasos se recalcule correctamente.
 
         elif current_step['input_type'] == 'text_input':
-            response = st.text_input("Tu respuesta:", value=st.session_state.matrix_data.get(current_step['key'], '') if '.' not in current_step['key'] else st.session_state.matrix_data.get(current_step['key'].split('.')[0], {}).get(current_step['key'].split('.')[1], ''), key=f"input_{st.session_state.step}")
+            # Recuperar el valor existente para precargar el input
+            current_value_input = ''
             keys = current_step['key'].split('.')
+            if len(keys) == 2:
+                current_value_input = st.session_state.matrix_data[keys[0]].get(keys[1], '')
+            else:
+                current_value_input = st.session_state.matrix_data.get(current_step['key'], '')
+
+            response = st.text_input("Tu respuesta:", value=current_value_input, key=f"input_{st.session_state.step}")
+            
             if len(keys) == 2:
                 st.session_state.matrix_data[keys[0]][keys[1]] = response
             else:
                 st.session_state.matrix_data[current_step['key']] = response
+
         elif current_step['input_type'] == 'text_area':
-            current_value = ""
+            # Recuperar el valor existente para precargar el text_area
+            current_value_area = ""
             if current_step.get('special') == 'list':
-                current_value = "\n".join(st.session_state.matrix_data[current_step['key']])
+                current_value_area = "\n".join(st.session_state.matrix_data[current_step['key']])
             elif current_step.get('special') == 'marco_teorico':
-                current_value = "\n".join([f"{entry['concepto']} - {entry['autores']}" for entry in st.session_state.matrix_data[current_step['key']]])
+                current_value_area = "\n".join([f"{entry['concepto']} - {entry['autores']}" for entry in st.session_state.matrix_data[current_step['key']]])
             else:
                 keys = current_step['key'].split('.')
                 if len(keys) == 2:
-                    current_value = st.session_state.matrix_data[keys[0]][keys[1]]
+                    current_value_area = st.session_state.matrix_data[keys[0]].get(keys[1], '')
                 else:
-                    current_value = st.session_state.matrix_data[current_step['key']]
+                    current_value_area = st.session_state.matrix_data.get(current_step['key'], '')
 
-            response = st.text_area("Tu respuesta:", value=current_value, key=f"input_{st.session_state.step}", height=100)
+            response = st.text_area("Tu respuesta:", value=current_value_area, key=f"input_{st.session_state.step}", height=100)
 
             if current_step.get('special') == 'list':
-                # Convertir entrada en lista
                 lines = [line.strip() for line in response.split('\n') if line.strip()]
                 st.session_state.matrix_data[current_step['key']] = lines[:3]  # Limitar a 3
             elif current_step.get('special') == 'marco_teorico':
-                # Convertir entrada en lista de diccionarios
                 lines = [line.strip() for line in response.split('\n') if line.strip()]
                 marco_teorico = []
                 for line in lines:
                     parts = line.split(' - ')
-                    if len(parts) >= 2:  # Manejar casos con múltiples guiones
+                    if len(parts) >= 2:
                         marco_teorico.append({'concepto': parts[0], 'autores': ' - '.join(parts[1:])})
                 st.session_state.matrix_data[current_step['key']] = marco_teorico
             else:
@@ -216,32 +208,28 @@ def main():
                     st.session_state.step -= 1
                     st.rerun()
         with col2:
-            # Aquí, la condición para avanzar debería ser si el *valor actual en session_state* no está vacío.
-            # Los componentes de Streamlit actualizan session_state al instante para inputs como radio.
-            # Para text_input y text_area, el valor se actualiza cuando el usuario escribe.
-            # El botón "Avanzar" solo debe forzar el rerun si el campo tiene datos.
-            value_to_check = None
-            if current_step['input_type'] == 'radio':
-                value_to_check = st.session_state.matrix_data[current_step['key']]
-            elif current_step['input_type'] in ['text_input', 'text_area']:
-                keys = current_step['key'].split('.')
-                if len(keys) == 2:
-                    value_to_check = st.session_state.matrix_data[keys[0]][keys[1]]
-                else:
-                    value_to_check = st.session_state.matrix_data[current_step['key']]
+            # Obtener el valor actual del estado de sesión para validar
+            current_data_value = None
+            keys = current_step['key'].split('.')
+            if len(keys) == 2:
+                current_data_value = st.session_state.matrix_data[keys[0]].get(keys[1])
+            else:
+                current_data_value = st.session_state.matrix_data.get(current_step['key'])
+
+            # Para listas o marco teórico, verificar si hay elementos
+            if current_step.get('special') in ['list', 'marco_teorico']:
+                is_completed = bool(current_data_value) and len(current_data_value) > 0
+            else:
+                is_completed = bool(current_data_value and str(current_data_value).strip() != '') # Considerar vacío si solo hay espacios
 
             if st.button("Avanzar ➡️"):
-                # Para campos de texto/área, `response` ya contiene el valor actual del widget.
-                # Para radio, `response` también lo contiene.
-                # Asegúrate de que `response` realmente representa lo que el usuario ha introducido
-                # antes de permitir avanzar.
-                if response or (current_step['input_type'] == 'radio' and value_to_check): # Asegurar que radio siempre permite avanzar si algo está seleccionado
+                if is_completed:
                     st.session_state.step += 1
                     st.rerun()
                 else:
                     st.warning("Por favor, completa el campo antes de avanzar.")
 
-    # Paso final: Revisión (sin descarga de Word)
+    # Paso final: Revisión
     else:
         st.markdown("**Chatbot:** ¡Hemos terminado! Aquí tienes un resumen de tu matriz.")
         data = st.session_state.matrix_data
@@ -270,9 +258,6 @@ def main():
         st.write(f"- Población: {data['metodologia']['poblacion'] or 'No definido'}")
         st.write(f"- Muestra: {data['metodologia']['muestra'] or 'No definido'}")
         st.write(f"- Técnicas: {data['metodologia']['tecnicas'] or 'No definido'}")
-
-        # Se eliminó el botón de descarga del documento Word.
-        # Se eliminó el bloque try-except para generate_word_document.
 
         # Botón para reiniciar
         if st.button("🔄 Empezar de nuevo"):
