@@ -1,15 +1,17 @@
 import streamlit as st
 import pandas as pd
-# Las siguientes líneas se comentan/eliminan si ya no se usa docx
+# Las siguientes líneas se eliminan si ya no se usa docx
 # from io import BytesIO
 # from docx import Document
 
 # Configuración de la página
 st.set_page_config(page_title="Asistente para Matriz de Investigación", layout="wide")
 
-# Inicialización del estado de sesión
-# ESTE BLOQUE DE INICIALIZACIÓN DEBE ESTAR AL PRINCIPIO DEL SCRIPT
-# PARA GARANTIZAR QUE st.session_state.matrix_data EXISTE SIEMPRE.
+# ==============================================================================
+# INICIALIZACIÓN DEL ESTADO DE SESIÓN
+# Este bloque debe estar al principio del script para garantizar
+# que st.session_state.matrix_data exista siempre antes de ser accedido.
+# ==============================================================================
 if 'step' not in st.session_state:
     st.session_state.step = 0
 if 'matrix_data' not in st.session_state:
@@ -30,10 +32,10 @@ if 'matrix_data' not in st.session_state:
         'hipotesis': {'nula': '', 'alternativa': ''}
     }
 
-# La función generate_word_document y las importaciones de docx/BytesIO se asumen eliminadas
-# si no quieres la funcionalidad de descarga de Word.
-
-# Chatbot: Lista de pasos y preguntas (ESTAS LISTAS PUEDEN ESTAR FUERA DE MAIN)
+# ==============================================================================
+# DEFINICIÓN DE PASOS DEL CHATBOT
+# Estas listas pueden estar fuera de main() ya que son datos estáticos.
+# ==============================================================================
 steps = [
     {
         'question': "¡Hola! Vamos a crear tu matriz de investigación. ¿Qué tipo de investigación realizarás?",
@@ -112,43 +114,51 @@ final_steps = [
         'key': 'metodologia.muestra'
     },
     {
-        'question': "¿Qué técnicas usarás para recolectar datos? (Ej. entrevistas, encuestas, observación).",
+        'question': "Describe qué técnicas usarás para recolectar datos (Ej. entrevistas, encuestas, observación).",
         'input_type': 'text_area',
         'key': 'metodologia.tecnicas'
     },
 ]
 
-# Función principal
+# ==============================================================================
+# FUNCIÓN PRINCIPAL DE LA APLICACIÓN STREAMLIT
+# ==============================================================================
 def main():
     st.title("Asistente Chatbot para Matriz de Investigación")
     st.write("Soy tu asistente para crear una matriz de consistencia. Responde cada pregunta y al final podrás ver tu matriz.")
 
-    # Mover la determinación de all_steps AQUÍ, DESPUÉS DE LA INICIALIZACIÓN DE SESSION_STATE
+    # ==========================================================================
+    # DETERMINACIÓN DINÁMICA DE LOS PASOS COMPLETOS
+    # Esta lógica DEBE estar DENTRO de main() para que se recalcule
+    # cada vez que el tipo de investigación cambia.
+    # ==========================================================================
     tipo_investigacion = st.session_state.matrix_data.get('tipo_investigacion', '')
     if tipo_investigacion == 'Cuantitativa':
         all_steps = steps + quantitative_steps + final_steps
     else:
         all_steps = steps + final_steps
 
-    # Mostrar progreso
+    # ==========================================================================
+    # BARRA LATERAL DE PROGRESO
+    # ==========================================================================
     st.sidebar.header("Progreso")
     for i, step in enumerate(all_steps):
         icon = "⬜" if i > st.session_state.step else "✅" if i < st.session_state.step else "🟨"
         st.sidebar.markdown(f"{icon} Paso {i+1}")
 
-    # Mostrar paso actual
+    # ==========================================================================
+    # LÓGICA DE VISUALIZACIÓN DEL PASO ACTUAL
+    # ==========================================================================
     if st.session_state.step < len(all_steps):
         current_step = all_steps[st.session_state.step]
         st.markdown(f"**Chatbot:** {current_step['question']}")
 
         # Manejar diferentes tipos de entrada
         if current_step['input_type'] == 'radio':
-            # Obtener el valor actual de session_state para el radio
+            # Obtener el valor actual del estado de sesión para precargar la opción
             current_radio_value = st.session_state.matrix_data.get(current_step['key'], current_step['options'][0] if current_step['options'] else '')
             response = st.radio("Selecciona una opción:", current_step['options'], index=current_step['options'].index(current_radio_value) if current_radio_value in current_step['options'] else 0, key=f"input_{st.session_state.step}")
             st.session_state.matrix_data[current_step['key']] = response
-            # Si el tipo de investigación cambia, puede que quieras hacer algo especial,
-            # pero el st.rerun() ya manejará que la lista de pasos se recalcule correctamente.
 
         elif current_step['input_type'] == 'text_input':
             # Recuperar el valor existente para precargar el input
@@ -160,7 +170,8 @@ def main():
                 current_value_input = st.session_state.matrix_data.get(current_step['key'], '')
 
             response = st.text_input("Tu respuesta:", value=current_value_input, key=f"input_{st.session_state.step}")
-            
+
+            # Guardar la respuesta en el estado de sesión
             if len(keys) == 2:
                 st.session_state.matrix_data[keys[0]][keys[1]] = response
             else:
@@ -182,9 +193,10 @@ def main():
 
             response = st.text_area("Tu respuesta:", value=current_value_area, key=f"input_{st.session_state.step}", height=100)
 
+            # Procesar y guardar la respuesta en el estado de sesión
             if current_step.get('special') == 'list':
                 lines = [line.strip() for line in response.split('\n') if line.strip()]
-                st.session_state.matrix_data[current_step['key']] = lines[:3]  # Limitar a 3
+                st.session_state.matrix_data[current_step['key']] = lines[:3]  # Limitar a 3 objetivos
             elif current_step.get('special') == 'marco_teorico':
                 lines = [line.strip() for line in response.split('\n') if line.strip()]
                 marco_teorico = []
@@ -200,7 +212,9 @@ def main():
                 else:
                     st.session_state.matrix_data[current_step['key']] = response
 
-        # Botones de navegación
+        # ==========================================================================
+        # BOTONES DE NAVEGACIÓN
+        # ==========================================================================
         col1, col2 = st.columns(2)
         with col1:
             if st.session_state.step > 0:
@@ -208,7 +222,7 @@ def main():
                     st.session_state.step -= 1
                     st.rerun()
         with col2:
-            # Obtener el valor actual del estado de sesión para validar
+            # Validar si el campo actual está completo antes de permitir avanzar
             current_data_value = None
             keys = current_step['key'].split('.')
             if len(keys) == 2:
@@ -216,11 +230,11 @@ def main():
             else:
                 current_data_value = st.session_state.matrix_data.get(current_step['key'])
 
-            # Para listas o marco teórico, verificar si hay elementos
+            is_completed = False
             if current_step.get('special') in ['list', 'marco_teorico']:
                 is_completed = bool(current_data_value) and len(current_data_value) > 0
             else:
-                is_completed = bool(current_data_value and str(current_data_value).strip() != '') # Considerar vacío si solo hay espacios
+                is_completed = bool(current_data_value is not None and str(current_data_value).strip() != '') # Considerar vacío si solo hay espacios
 
             if st.button("Avanzar ➡️"):
                 if is_completed:
@@ -229,7 +243,9 @@ def main():
                 else:
                     st.warning("Por favor, completa el campo antes de avanzar.")
 
-    # Paso final: Revisión
+    # ==========================================================================
+    # PASO FINAL: REVISIÓN DE LA MATRIZ
+    # ==========================================================================
     else:
         st.markdown("**Chatbot:** ¡Hemos terminado! Aquí tienes un resumen de tu matriz.")
         data = st.session_state.matrix_data
@@ -280,5 +296,8 @@ def main():
             }
             st.rerun()
 
+# ==============================================================================
+# PUNTO DE ENTRADA DE LA APLICACIÓN
+# ==============================================================================
 if __name__ == "__main__":
     main()
