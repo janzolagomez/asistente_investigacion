@@ -355,8 +355,9 @@ if 'matrix_data' not in st.session_state:
 # FUNCIÓN PRINCIPAL DE LA APLICACIÓN STREAMLIT
 # ==============================================================================
 def main():
-    st.title("Asistente para Matriz de Investigación")
-    st.write("Completa cada sección para construir tu matriz de consistencia.")
+    # Eliminar el título principal y la descripción de aquí para que no se repitan
+    # st.title("Asistente para Matriz de Investigación")
+    # st.write("Completa cada sección para construir tu matriz de consistencia.")
 
     # ==========================================================================
     # DETERMINACIÓN DINÁMICA DE LOS PASOS COMPLETOS
@@ -367,12 +368,16 @@ def main():
     all_steps = list(base_steps) # Copia los pasos base
     if tipo_investigacion == 'Cuantitativa':
         all_steps.extend(quantitative_specific_steps) # Añade los pasos cuantitativos si aplica
-    # Los pasos finales comunes siempre se añaden al final
+    # Los pasos finales comunes siempre se añaden al final, independientemente del tipo
     all_steps.extend(final_common_steps)
 
     # ==========================================================================
     # BARRA LATERAL DE PROGRESO
     # ==========================================================================
+    st.sidebar.title("Asistente para Matriz de Investigación") # Título principal en la barra lateral
+    st.sidebar.write("Completa cada sección para construir tu matriz de consistencia.") # Descripción en la barra lateral
+    st.sidebar.markdown("---") # Separador visual
+
     st.sidebar.header("Progreso de la Matriz")
     # Mostrar el tipo de investigación seleccionado en la barra lateral
     if tipo_investigacion:
