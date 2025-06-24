@@ -463,9 +463,7 @@ Estructura tu retroalimentación en:
 
 Extensión: 6000 tokens. Mantén el tipo de investigación claro y constante. Usa principios de Hernández Sampieri y pedagogía constructivista.
 """
-} 
-
-
+}
 # ==============================================================================
 # FUNCIÓN PARA LLAMAR A LA API DE GEMINI
 # ==============================================================================
@@ -482,17 +480,17 @@ def get_gemini_feedback(step_key, user_response, research_type, tokens_limit=700
             return "No hay un prompt de validación configurado para esta sección."
 
         if step_key == 'final_coherence_evaluation':
-            current_tokens_limit = 4000 
+            current_tokens_limit = 6000 # Adjusted to 6000 as per prompt, previously 4000
             prompt_text = prompt_template(user_response, research_type) 
         elif isinstance(prompt_template, dict):
             specific_prompt_func = prompt_template.get(research_type)
             if not specific_prompt_func:
                 return "No hay un prompt de validación para este tipo de investigación en esta sección."
             prompt_text = specific_prompt_func(user_response)
-            current_tokens_limit = tokens_limit 
+            current_tokens_limit = 3000 # Adjusted to 3000 as per prompt, previously 700
         else:
             prompt_text = prompt_template(user_response)
-            current_tokens_limit = tokens_limit 
+            current_tokens_limit = 3000 # Adjusted to 3000 as per prompt, previously 700
 
         response = model.generate_content(
             prompt_text,
@@ -1240,8 +1238,8 @@ def main():
             st.rerun() 
 
         if st.session_state.ai_feedback:
-            st.markdown(f"**Retroalimentación de la IA:**")
-            st.markdown(st.session_state.ai_feedback)
+            # Reverted to st.info for blue background
+            st.info(st.session_state.ai_feedback)
 
         col1, col2 = st.columns(2)
         with col1:
@@ -1314,7 +1312,7 @@ def main():
                     'final_coherence_evaluation',
                     formatted_matrix,
                     st.session_state.matrix_data.get('tipo_investigacion', ''),
-                    tokens_limit=4000 
+                    tokens_limit=6000 
                 )
                 st.session_state.ai_feedback_final = final_feedback
             st.session_state.validating_ai = False
@@ -1322,7 +1320,8 @@ def main():
 
         if st.session_state.get('ai_feedback_final'):
             st.markdown(f"**Análisis del Experto:**")
-            st.markdown(st.session_state.ai_feedback_final)
+            # Reverted to st.info for blue background
+            st.info(st.session_state.ai_feedback_final) 
             st.markdown("---")
             
             # Download button for AI feedback
