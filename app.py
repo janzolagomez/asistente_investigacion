@@ -702,7 +702,7 @@ def format_matrix_data_for_ai(data):
     else:
         formatted_str.append("- No definidos")
 
-    if data.get('tipo_investigacion') in ['Cuantitativa', 'Mixta']: # Variables and Hypotheses apply to Mixed too
+    if data.get('tipo_investigacion') in ['Cuantitativa', 'Mixta']: # Variables and Hipotesis apply to Mixed too
         formatted_str.append(f"Variable Independiente: {data['variables'].get('independiente', 'No definido')}")
         formatted_str.append(f"Variable Dependiente: {data['variables'].get('dependiente', 'No definido')}")
         formatted_str.append(f"Hipótesis Nula (H₀): {data['hipotesis'].get('nula', 'No definido')}")
@@ -1247,7 +1247,7 @@ def main():
     tipo_investigacion = st.session_state.matrix_data.get('tipo_investigacion', '')
     
     all_steps = list(base_steps) 
-    # Variables and Hypotheses sections are added for Quantitative and Mixed types
+    # Variables and Hipotesis sections are added for Quantitative and Mixed types
     if tipo_investigacion in ['Cuantitativa', 'Mixta']: 
         all_steps.extend(quantitative_specific_steps) 
     all_steps.extend(final_common_steps)
@@ -1374,47 +1374,73 @@ def main():
         else:
             current_data_value = st.session_state.matrix_data.get(current_step['key'], '')
 
-        if current_step['input_type'] == 'radio':
-            response = st.radio("Selecciona una opción:", current_step['options'], 
-                                index=current_step['options'].index(current_data_value) if current_data_value in current_step['options'] else 0, 
-                                key=f"input_{st.session_state.step}")
-            if len(keys) == 2:
-                st.session_state.matrix_data[keys[0]][keys[1]] = response
+        # Define a function to update matrix_data and clear feedback
+        def update_matrix_data_and_clear_feedback(key_to_update, new_value):
+            keys_to_update_split = key_to_update.split('.')
+            if len(keys_to_update_split) == 2:
+                st.session_state.matrix_data[keys_to_update_split[0]][keys_to_update_split[1]] = new_value
             else:
-                st.session_state.matrix_data[current_step['key']] = response
-            user_input_for_validation = response 
-        elif current_step['input_type'] == 'radio_with_explanation': # Handle radio with explanations
+                st.session_state.matrix_data[key_to_update] = new_value
+            st.session_state.ai_feedback = "" # Clear AI feedback on data change
+
+        if current_step['input_type'] == 'radio':
+            # Generate a unique key for the Streamlit widget itself
+            widget_key = f"radio_input_{current_step['key']}_{st.session_state.step}"
+            
+            # Use on_change callback to update the session state
+            st.radio("Selecciona una opción:", current_step['options'], 
+                     index=current_step['options'].index(current_data_value) if current_data_value in current_step['options'] else 0, 
+                     key=widget_key, # This key is for the Streamlit widget
+                     on_change=update_matrix_data_and_clear_feedback, 
+                     args=(current_step['key'], st.session_state[widget_key])) # Pass the key and the new value
+            
+            # The user_input_for_validation should be read from the matrix_data after the potential on_change
+            if len(keys) == 2:
+                user_input_for_validation = st.session_state.matrix_data[keys[0]][keys[1]]
+            else:
+                user_input_for_validation = st.session_state.matrix_data[current_step['key']]
+
+        elif current_step['input_type'] == 'radio_with_explanation': 
             current_research_type = st.session_state.matrix_data.get('tipo_investigacion')
             options_dict = {}
             if current_research_type and current_research_type in current_step['options_by_type']:
                 options_dict = current_step['options_by_type'][current_research_type]
             
             display_options = []
+            display_to_option_map = {}
             for option_name, explanation in options_dict.items():
-                display_options.append(f"**{option_name}**: {explanation}")
+                display_string = f"**{option_name}**: {explanation}"
+                display_options.append(display_string)
+                display_to_option_map[display_string] = option_name
 
             if display_options:
-                # Find the index of the current_data_value in the display_options
-                try:
-                    selected_index = next(i for i, opt_str in enumerate(display_options) if opt_str.startswith(f"**{current_data_value}**"))
-                except StopIteration:
-                    selected_index = 0 # Default to first option if not found
+                selected_index = 0 
+                if current_data_value in options_dict:
+                    try:
+                        target_display_string = f"**{current_data_value}**: {options_dict[current_data_value]}"
+                        selected_index = display_options.index(target_display_string)
+                    except ValueError:
+                        pass
                 
-                selected_display_option = st.radio("Selecciona una opción:", display_options, 
-                                                index=selected_index, 
-                                                key=f"input_{st.session_state.step}")
-                # Extract only the option name (before the first ':') for storage
-                response = selected_display_option.split(':')[0].strip().replace('**', '')
+                widget_key = f"radio_exp_input_{current_step['key']}_{st.session_state.step}"
+                
+                st.radio("Selecciona una opción:", display_options, 
+                         index=selected_index, 
+                         key=widget_key,
+                         on_change=update_matrix_data_and_clear_feedback, 
+                         args=(current_step['key'], display_to_option_map.get(st.session_state[widget_key], "")))
+                
+                # The user_input_for_validation should be read from the matrix_data after the potential on_change
+                if len(keys) == 2:
+                    user_input_for_validation = st.session_state.matrix_data[keys[0]][keys[1]]
+                else:
+                    user_input_for_validation = st.session_state.matrix_data[current_step['key']]
             else:
-                response = ""
+                user_input_for_validation = "" # Default if no options
                 st.warning("Selecciona primero un tipo de investigación para ver las opciones disponibles.")
                 
-            if len(keys) == 2:
-                st.session_state.matrix_data[keys[0]][keys[1]] = response
-            else:
-                st.session_state.matrix_data[current_step['key']] = response
-            user_input_for_validation = response
         elif current_step['input_type'] == 'text_input':
+            # For text inputs, the update is simpler as on_change is not strictly needed for this type of issue
             response = st.text_input("", value=current_data_value, key=f"input_{st.session_state.step}")
             if len(keys) == 2:
                 st.session_state.matrix_data[keys[0]][keys[1]] = response
@@ -1448,9 +1474,7 @@ def main():
         is_current_step_valid = current_step['validation'](user_input_for_validation)
         
         if not is_current_step_valid:
-            if current_step['input_type'] == 'radio' and user_input_for_validation == '':
-                 st.warning("Por favor, selecciona una opción para continuar.")
-            elif current_step['input_type'] == 'radio_with_explanation' and user_input_for_validation == '':
+            if current_step['input_type'] in ['radio', 'radio_with_explanation'] and user_input_for_validation == '':
                  st.warning("Por favor, selecciona una opción para continuar.")
             elif current_step['key'] == 'tema' and len(user_input_for_validation) <= 20:
                 st.warning("El tema de investigación debe tener al menos 20 caracteres.")
