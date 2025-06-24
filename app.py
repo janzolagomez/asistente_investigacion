@@ -66,7 +66,7 @@ gemini_prompts = {
     },
     'objetivos_especificos': {
         'Cualitativa': lambda objs: f"Eres un experto en investigación cualitativa. Evalúa los siguientes objetivos específicos cualitativos: '{objs}'. ¿Son coherentes con el objetivo general, detallan pasos concretos y son apropiados para un enfoque cualitativo? Proporciona retroalimentación constructiva.",
-        'Cuantitativa': lambda objs: f"Eres un experto en investigación cuantitativa. Evalúa los siguientes objetivos específicos cuantitativos: '{objs}'. ¿Son medibles, se alinean con el objetivo general y las variables, y son claros? Proporciona retroalimentación constructiva."
+        'Cuantitativa': lambda objs: f"Eres un experto en investigación cuantitativa. Evalúa los siguientes objetivos específicos cuantitativos: '{objs}'. ¿Son medibles, se alinean con el objetivo general y las variables, y son claros? Proporciona retroalimentación constructiva.",
     },
     'variables.independiente': lambda var: f"Eres un experto en metodología. Evalúa la siguiente definición de variable independiente: '{var}'. ¿Está bien conceptualizada como causa o factor de influencia? Proporciona retroalimentación constructiva.",
     'variables.dependiente': lambda var: f"Eres un experto en metodología. Evalúa la siguiente definición de variable dependiente: '{var}'. ¿Está bien conceptualizada como efecto o resultado medible? Proporciona retroalimentación constructiva.",
@@ -614,7 +614,7 @@ def main():
                 st.warning("La justificación debe tener al menos 50 caracteres.")
             # Modificación aquí: la validación para marco_teorico solo verifica que no esté vacío y que las líneas no estén vacías.
             elif current_step['key'] == 'marco_teorico' and (len(user_input_for_validation) == 0 or not all(line.strip() != '' for line in user_input_for_validation.split('\n') if line.strip())):
-                st.warning("Debes ingresar al menos una entrada para el marco teórico (solo los temas/conceptos).")
+                st.warning("Debes ingresar al menos una entrada para el marco teórico (solo los temas/conceptos).") # MENSAJE DE ADVERTENCIA CORREGIDO
             elif current_step['key'] in ['metodologia.poblacion', 'metodologia.muestra', 'metodologia.tecnicas'] and len(user_input_for_validation) <= 20:
                 st.warning("La descripción para esta sección de metodología debe tener al menos 20 caracteres.")
             else:
