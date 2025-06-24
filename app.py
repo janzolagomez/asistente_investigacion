@@ -1564,7 +1564,7 @@ def main():
         st.markdown("---")
 
         # Comprehensive AI Evaluation
-        st.subheader("Evaluación Crítica Completa de la Matriz por la IA �")
+        st.subheader("Evaluación Crítica Completa de la Matriz por la IA 🧐")
         st.write("A continuación, se evaluará la coherencia de toda tu matriz.")
 
         if st.button("Obtener Evaluación Crítica de la Matriz ✨"):
@@ -1655,4 +1655,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-�
