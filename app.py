@@ -58,8 +58,8 @@ explanations = {
     },
     'metodologia.horizonte_tiempo': "El horizonte de tiempo se refiere al plazo temporal del estudio en función de su duración y momentos de observación. Puede ser Transversal (los datos se recogen en un único momento) o Longitudinal (los datos se recogen en múltiples momentos a lo largo del tiempo).",
     'metodologia.estrategias': {
-        'Cualitativa': "Las estrategias de investigación cualitativa son los diseños estructurales generales para abordar el estudio. Ejemplos incluyen: Estudios de Caso (análisis profundo de un evento o individuo), Investigación Acción Participativa (colaboración con la comunidad para el cambio), Etnográfico (inmersión en una cultura para comprenderla), y Teoría Fundamentada (construcción de teoría a partir de datos empíricos).",
-        'Cuantitativa': "Las estrategias de investigación cuantitativa son los diseños estructurales generales para abordar el estudio. Un ejemplo común es la Investigación de Encuesta, que recopila datos de una muestra grande para describir tendencias o probar relaciones."
+        'Cualitativa': "Las estrategias de investigación cualitativa son los diseños estructurales generales para abordar el estudio. Ejemplos incluyen: Estudio de caso, Investigación Acción Participativa (IAP), Etnográfico y Teoría Fundamentada. Cada una ofrece una forma particular de acercarse al fenómeno para una comprensión profunda.",
+        'Cuantitativa': "Las estrategias de investigación cuantitativa son los diseños estructurales generales que se emplean para la recolección y análisis de datos numéricos. Ejemplos comunes son el Diseño de Encuesta, Experimental, Cuasi-experimental y No experimental. Cada estrategia define cómo se manipularán o se observarán las variables y cómo se recolectarán los datos."
     }
 }
 
@@ -72,15 +72,13 @@ gemini_prompts = {
     'tipo_investigacion': lambda respuesta: f"""
 Actúa como un experto en metodología de investigación. Evalúa la elección del tipo de investigación '{respuesta}'.
 
-Tu rol es ser un guía pedagógico constructivista, no un juez. Fundamenta tu análisis con base en criterios de Hernández Sampieri (6ª ed.).
-
 Estructura tu respuesta en:
 1. Reconocimiento del aporte del estudiante.
 2. Evaluación crítica fundamentada: ¿el tipo de investigación es coherente con el enfoque general del estudio?
 3. Orientación para la mejora (si aplica).
 4. Ejemplo orientativo (si aplica).
 
-Extensión esperada: 2800 a 3200 tokens. Mantén un tono académico, respetuoso, motivador y crítico.
+Extensión máxima: 300 tokens. Mantén un tono académico, respetuoso y crítico.
 """,
 
     'tema': {
@@ -89,13 +87,13 @@ Actúa como experto en investigación cualitativa. Evalúa el siguiente tema de 
 
 "{tema}"
 
-Usa un enfoque constructivista. Estructura tu respuesta en:
+Estructura tu respuesta en:
 1. Valoración inicial del esfuerzo.
 2. Evaluación crítica: ¿delimita fenómeno y contexto? ¿es apropiado para estudio cualitativo?
 3. Sugerencias claras de mejora.
 4. Ejemplo orientador (no resolver).
 
-Extensión: 300 tokens. Sé claro, empático y fundamenta en Sampieri.
+Extensión máxima: 300 tokens. Sé claro y empático.
 """,
 
         'Cuantitativa': lambda tema: f"""
@@ -109,7 +107,7 @@ Estructura tu evaluación en:
 3. Orientación para mejorar.
 4. Ejemplo ilustrativo (si aplica).
 
-Responde en tono académico y constructivo. Extensión: 3000 tokens.
+Responde en tono académico y constructivo. Extensión máxima: 300 tokens.
 """
     },
 
@@ -125,7 +123,7 @@ Tu retroalimentación debe:
 3. Orientar si requiere mejoras.
 4. Incluir ejemplo similar como guía.
 
-Sigue criterios de Hernández Sampieri. Sé crítico y empático. Extensión: 300 tokens.
+Sé crítico y empático. Extensión máxima: 300 tokens.
 """,
 
         'Cuantitativa': lambda pregunta: f"""
@@ -139,7 +137,7 @@ Tu evaluación debe:
 3. Orientar sin reemplazar.
 4. Dar ejemplo comparativo.
 
-Responde de forma crítica y constructiva, citando criterios de Sampieri. Extensión: 3000 tokens.
+Responde de forma crítica y constructiva. Extensión máxima: 300 tokens.
 """
     },
 
@@ -155,7 +153,7 @@ Organiza tu respuesta en:
 3. Recomendaciones claras.
 4. Ejemplo tipo.
 
-Tono pedagógico, crítica fundamentada. Extensión esperada: 300 tokens.
+Extensión máxima: 300 tokens.
 """,
 
         'Cuantitativa': lambda obj: f"""
@@ -169,7 +167,7 @@ Responde en:
 3. Orientación pedagógica.
 4. Modelo orientador.
 
-Usa marco de Sampieri. Sé detallado y formativo. 3000 tokens.
+Extensión máxima: 300 tokens.
 """
     },
 
@@ -185,7 +183,7 @@ Tu respuesta debe incluir:
 3. Orientación concreta.
 4. Ejemplo orientativo parcial.
 
-Extensión: 3000 tokens. Tono pedagógico, crítico y constructivo.
+Extensión máxima: 300 tokens.
 """,
 
         'Cuantitativa': lambda objs: f"""
@@ -199,7 +197,7 @@ Organiza la retroalimentación en:
 3. Recomendaciones formativas.
 4. Ejemplo ilustrativo.
 
-Sigue un enfoque constructivista. Extensión: 3000 tokens.
+Extensión máxima: 300 tokens.
 """
     },
 
@@ -214,7 +212,7 @@ Estructura tu respuesta en:
 3. Orientación pedagógica.
 4. Ejemplo similar.
 
-Extensión sugerida: 3000 tokens. Usa enfoque pedagógico y criterios de Sampieri.
+Extensión máxima: 300 tokens.
 """,
 
     'variables.dependiente': lambda var: f"""
@@ -228,7 +226,7 @@ Organiza tu retroalimentación en:
 3. Recomendación para refinar.
 4. Ejemplo modelo.
 
-Extensión sugerida: 3000 tokens.
+Extensión máxima: 300 tokens.
 """,
 
     'hipotesis.nula': lambda hip: f"""
@@ -242,7 +240,7 @@ Sigue esta estructura:
 3. Sugerencias.
 4. Ejemplo orientador.
 
-Cita criterios de Sampieri. Extensión: 3000 tokens.
+Extensión máxima: 300 tokens.
 """,
 
     'hipotesis.alternativa': lambda hip: f"""
@@ -256,7 +254,7 @@ Desarrolla tu retroalimentación en:
 3. Sugerencia de mejora.
 4. Ejemplo ilustrativo.
 
-Tono académico y empático. Extensión: 3000 tokens.
+Extensión máxima: 300 tokens.
 """,
 
     'justificacion': lambda just: f"""
@@ -270,7 +268,7 @@ Tu evaluación debe:
 3. Orientación formativa.
 4. Preguntas guía para revisión.
 
-Extensión: 3000 tokens. Sé crítico y alentador.
+Extensión máxima: 300 tokens.
 """,
 
     'marco_teorico': lambda temas: f"""
@@ -282,7 +280,7 @@ Evalúa la lista de conceptos para el marco teórico:
 2. Evaluación de pertinencia.
 3. Genera lista de 5-10 palabras clave en inglés para búsqueda científica (Scopus, WoS).
 
-Tono académico. Extensión: 3000 tokens.
+Extensión máxima: 300 tokens.
 """,
 
     'metodologia.poblacion': lambda pob: f"""
@@ -295,7 +293,7 @@ Evalúa la descripción de población:
 3. Sugerencias.
 4. Ejemplo orientativo.
 
-Extensión: 3000 tokens.
+Extensión máxima: 300 tokens.
 """,
 
     'metodologia.muestra': lambda mue: f"""
@@ -308,7 +306,7 @@ Evalúa la muestra propuesta:
 3. Orientación para ajustes.
 4. Ejemplo similar.
 
-Extensión: 3000 tokens.
+Extensión máxima: 300 tokens.
 """,
 
     'metodologia.tecnicas': lambda tec: f"""
@@ -321,7 +319,7 @@ Evalúa técnicas e instrumentos:
 3. Recomendaciones.
 4. Ejemplo.
 
-Extensión: 3000 tokens.
+Extensión máxima: 300 tokens.
 """,
 
     'metodologia.filosofia': {
@@ -335,7 +333,7 @@ Evalúa la filosofía de investigación cualitativa:
 3. Sugerencias.
 4. Ejemplo orientativo.
 
-Extensión: 3000 tokens.
+Extensión máxima: 300 tokens.
 """,
 
         'Cuantitativa': lambda filo: f"""
@@ -348,7 +346,7 @@ Evalúa la filosofía de investigación cuantitativa:
 3. Orientación.
 4. Ejemplo.
 
-Extensión: 3000 tokens.
+Extensión máxima: 300 tokens.
 """
     },
 
@@ -363,7 +361,7 @@ Evalúa el enfoque cualitativo:
 3. Recomendaciones.
 4. Ejemplo.
 
-Extensión: 3000 tokens.
+Extensión máxima: 300 tokens.
 """,
 
         'Cuantitativa': lambda enfoque: f"""
@@ -376,7 +374,7 @@ Evalúa el enfoque cuantitativo:
 3. Recomendaciones.
 4. Ejemplo.
 
-Extensión: 3000 tokens.
+Extensión máxima: 300 tokens.
 """
     },
 
@@ -391,7 +389,7 @@ Evalúa la tipología del estudio cualitativo:
 3. Recomendación.
 4. Ejemplo.
 
-Extensión: 3000 tokens.
+Extensión máxima: 300 tokens.
 """,
 
         'Cuantitativa': lambda tipologia: f"""
@@ -404,7 +402,7 @@ Evalúa la tipología del estudio cuantitativo:
 3. Sugerencia.
 4. Modelo.
 
-Extensión: 3000 tokens.
+Extensión máxima: 300 tokens.
 """
     },
 
@@ -418,7 +416,7 @@ Evalúa el horizonte temporal:
 3. Sugerencias.
 4. Ejemplo.
 
-Extensión: 3000 tokens.
+Extensión máxima: 300 tokens.
 """,
 
     'metodologia.estrategias': {
@@ -432,7 +430,7 @@ Evalúa la estrategia de investigación cualitativa:
 3. Sugerencias.
 4. Ejemplo.
 
-Extensión: 3000 tokens.
+Extensión máxima: 300 tokens.
 """,
 
         'Cuantitativa': lambda estrategia: f"""
@@ -445,29 +443,29 @@ Evalúa la estrategia cuantitativa:
 3. Recomendaciones.
 4. Modelo.
 
-Extensión: 3000 tokens.
+Extensión máxima: 300 tokens.
 """
     },
 
     'final_coherence_evaluation': lambda matriz, tipo: f"""
-Eres asesor experto en metodología y editor de revista científica. Evalúa esta matriz de consistencia para una investigación de tipo '{tipo}':
+Eres asesor experto en metodología. Evalúa esta matriz de consistencia para una investigación de tipo '{tipo}':
 
 "{matriz}"
 
-Estructura tu retroalimentación en:
+Tu retroalimentación debe incluir:
 1. Apreciación global del trabajo.
 2. Evaluación crítica parte por parte (tema, objetivos, pregunta, marco, método, hipótesis o variables si aplica).
 3. Sugerencias específicas para mejorar.
 4. Ejemplos ilustrativos (si aplica).
 5. Evaluación global de coherencia.
 
-Extensión: 6000 tokens. Mantén el tipo de investigación claro y constante. Usa principios de Hernández Sampieri y pedagogía constructivista.
+Extensión: 3000 tokens. Mantén el tipo de investigación claro y constante. Usa principios de metodología de investigación.
 """
 }
 # ==============================================================================
 # FUNCIÓN PARA LLAMAR A LA API DE GEMINI
 # ==============================================================================
-def get_gemini_feedback(step_key, user_response, research_type, tokens_limit=700): 
+def get_gemini_feedback(step_key, user_response, research_type): 
     """
     Realiza una llamada a la API de Gemini para obtener retroalimentación.
     """
@@ -480,17 +478,17 @@ def get_gemini_feedback(step_key, user_response, research_type, tokens_limit=700
             return "No hay un prompt de validación configurado para esta sección."
 
         if step_key == 'final_coherence_evaluation':
-            current_tokens_limit = 6000 # Adjusted to 6000 as per prompt, previously 4000
+            current_tokens_limit = 3000 
             prompt_text = prompt_template(user_response, research_type) 
-        elif isinstance(prompt_template, dict):
+        elif isinstance(prompt_template, dict) and research_type in prompt_template:
             specific_prompt_func = prompt_template.get(research_type)
-            if not specific_prompt_func:
+            if not specific_prompt_func: 
                 return "No hay un prompt de validación para este tipo de investigación en esta sección."
             prompt_text = specific_prompt_func(user_response)
-            current_tokens_limit = 3000 # Adjusted to 3000 as per prompt, previously 700
-        else:
+            current_tokens_limit = 300 
+        else: 
             prompt_text = prompt_template(user_response)
-            current_tokens_limit = 3000 # Adjusted to 3000 as per prompt, previously 700
+            current_tokens_limit = 300 
 
         response = model.generate_content(
             prompt_text,
@@ -937,61 +935,76 @@ final_common_steps = [
     },
     {
         'name': "Enfoque de la investigación",
-        'question': "Especifica el tipo de razonamiento que guía tu proceso investigativo.",
-        'examples': {
-            'Cualitativa': ["Inductivo: Se parte de observaciones específicas y datos para desarrollar teorías, patrones y generalizaciones."],
-            'Cuantitativa': ["Deductivo: Se parte de una teoría o hipótesis general para probarla a través de observaciones específicas y datos."]
+        'question': "Especifica el tipo de razonamiento que guía tu proceso investigativo. Selecciona la opción que mejor se adapte a tu investigación:",
+        'input_type': 'radio_with_explanation',
+        'options_by_type': {
+            'Cualitativa': {
+                "Inductivo": "Se parte de observaciones específicas y datos para desarrollar teorías, patrones y generalizaciones."
+            },
+            'Cuantitativa': {
+                "Deductivo": "Se parte de una teoría o hipótesis general para probarla a través de observaciones específicas y datos."
+            }
         },
-        'input_type': 'text_area',
         'key': 'metodologia.enfoque',
-        'validation': lambda x: len(x) > 5
+        'validation': lambda x: x != ''
     },
     {
         'name': "Tipología/Alcance de estudio",
-        'question': "Clasifica tu estudio según su propósito o alcance.",
-        'examples': {
-            'Cualitativa': [
-                "Fenomenológico: Busca comprender las esencias de las experiencias vividas por los individuos.",
-                "Hermenéutico: Se centra en la interpretación de textos, discursos o símbolos para comprender significados.",
-                "Crítico: Analiza las estructuras de poder y las injusticias sociales para promover el cambio.",
-                "Narrativo: Examina las historias de vida o narrativas personales para comprender fenómenos."
-            ],
-            'Cuantitativa': [
-                "Descriptivo: Busca describir características de una población o fenómeno.",
-                "Correlacional: Examina la relación entre dos o más variables.",
-                "Explicativo: Busca establecer relaciones de causa y efecto entre variables."
-            ]
+        'question': "Clasifica tu estudio según su propósito o alcance. Selecciona la opción que mejor se adapte a tu investigación:",
+        'input_type': 'radio_with_explanation',
+        'options_by_type': {
+            'Cualitativa': {
+                "Fenomenológico": "Busca comprender las esencias de las experiencias vividas por los individuos.",
+                "Hermenéutico": "Se centra en la interpretación de textos, discursos o símbolos para comprender significados.",
+                "Crítico": "Analiza las estructuras de poder y las injusticias sociales para promover el cambio.",
+                "Narrativo": "Examina las historias de vida o narrativas personales para comprender fenómenos."
+            },
+            'Cuantitativa': {
+                "Descriptivo": "Busca describir características de una población o fenómeno.",
+                "Correlacional": "Examina la relación entre dos o más variables.",
+                "Explicativo": "Busca establecer relaciones de causa y efecto entre variables."
+            }
         },
-        'input_type': 'text_area',
         'key': 'metodologia.tipologia_estudio',
-        'validation': lambda x: len(x) > 10
+        'validation': lambda x: x != ''
     },
     {
         'name': "Horizonte de tiempo",
-        'question': "Define el plazo temporal de tu estudio en función de su duración y momentos de observación.",
-        'examples': {}, 
-        'input_type': 'radio',
-        'options': ['Transversal', 'Longitudinal'],
+        'question': "Define el plazo temporal de tu estudio en función de su duración y momentos de observación. Selecciona la opción que mejor se adapte a tu investigación:",
+        'input_type': 'radio_with_explanation',
+        'options_by_type': {
+            'Cualitativa': {
+                "Transversal": "Los datos se recogen en un único momento, en un punto específico del tiempo.",
+                "Longitudinal": "Los datos se recogen en múltiples momentos, a lo largo del tiempo, para observar cambios o desarrollo."
+            },
+            'Cuantitativa': {
+                "Transversal": "Los datos se recogen en un único momento, en un punto específico del tiempo.",
+                "Longitudinal": "Los datos se recogen en múltiples momentos, a lo largo del tiempo, para observar cambios o desarrollo."
+            }
+        },
         'key': 'metodologia.horizonte_tiempo',
         'validation': lambda x: x != ''
     },
     {
         'name': "Estrategias de investigación",
-        'question': "Describe el diseño estructural general que emplearás para abordar tu estudio.",
-        'examples': {
-            'Cualitativa': [
-                "Estudio de caso: Análisis intensivo y profundo de una unidad o fenómeno específico (persona, grupo, evento).",
-                "Investigación Acción Participativa (IAP): Proceso colaborativo de investigación y acción para resolver problemas en una comunidad.",
-                "Etnográfico: Inmersión prolongada en un entorno cultural para comprender sus prácticas y creencias.",
-                "Teoría Fundamentada: Desarrollo de una teoría a partir de los datos recopilados, sin partir de una teoría preexistente."
-            ],
-            'Cuantitativa': [
-                "Diseño de Encuesta: Recopilación sistemática de datos de una muestra representativa para describir o analizar relaciones."
-            ]
+        'question': "Describe el diseño estructural general que emplearás para abordar tu estudio. Selecciona la opción que mejor se adapte a tu investigación:",
+        'input_type': 'radio_with_explanation',
+        'options_by_type': {
+            'Cualitativa': {
+                "Estudio de caso": "Análisis intensivo y profundo de una unidad o fenómeno específico (persona, grupo, evento).",
+                "Investigación Acción Participativa (IAP)": "Proceso colaborativo de investigación y acción para resolver problemas en una comunidad.",
+                "Etnográfico": "Inmersión prolongada en un entorno cultural para comprender sus prácticas y creencias.",
+                "Teoría Fundamentada": "Desarrollo de una teoría a partir de los datos recopilados, sin partir de una teoría preexistente."
+            },
+            'Cuantitativa': {
+                "Diseño de Encuesta": "Recopilación sistemática de datos de una muestra representativa para describir o analizar relaciones.",
+                "Experimental": "Manipulación de una variable independiente para observar su efecto en una dependiente, con control de otras variables.",
+                "Cuasi-experimental": "Similar al experimental pero sin asignación aleatoria a grupos, utilizando grupos ya existentes.",
+                "No experimental": "Observación de fenómenos tal como ocurren en su contexto natural, sin manipulación de variables."
+            }
         },
-        'input_type': 'text_area',
         'key': 'metodologia.estrategias',
-        'validation': lambda x: len(x) > 10
+        'validation': lambda x: x != '' 
     },
 ]
 
@@ -1115,7 +1128,8 @@ def main():
                 else: 
                     st.markdown(explanation_content)
 
-        if current_step['examples']: 
+        # Removed redundant 'examples' expander for radio_with_explanation, as explanation is integrated
+        if current_step.get('examples') and current_step['input_type'] not in ['radio_with_explanation', 'radio']: 
             with st.expander("Ver ejemplos 💡"): 
                 current_research_type = st.session_state.matrix_data.get('tipo_investigacion')
                 
@@ -1151,6 +1165,37 @@ def main():
             else:
                 st.session_state.matrix_data[current_step['key']] = response
             user_input_for_validation = response 
+        elif current_step['input_type'] == 'radio_with_explanation': # Handle radio with explanations
+            current_research_type = st.session_state.matrix_data.get('tipo_investigacion')
+            options_dict = {}
+            if current_research_type and current_research_type in current_step['options_by_type']:
+                options_dict = current_step['options_by_type'][current_research_type]
+            
+            display_options = []
+            for option_name, explanation in options_dict.items():
+                display_options.append(f"**{option_name}**: {explanation}")
+
+            if display_options:
+                # Find the index of the current_data_value in the display_options
+                try:
+                    selected_index = next(i for i, opt_str in enumerate(display_options) if opt_str.startswith(f"**{current_data_value}**"))
+                except StopIteration:
+                    selected_index = 0 # Default to first option if not found
+                
+                selected_display_option = st.radio("Selecciona una opción:", display_options, 
+                                                index=selected_index, 
+                                                key=f"input_{st.session_state.step}")
+                # Extract only the option name (before the first ':') for storage
+                response = selected_display_option.split(':')[0].strip().replace('**', '')
+            else:
+                response = ""
+                st.warning("Selecciona primero un tipo de investigación para ver las opciones disponibles.")
+                
+            if len(keys) == 2:
+                st.session_state.matrix_data[keys[0]][keys[1]] = response
+            else:
+                st.session_state.matrix_data[current_step['key']] = response
+            user_input_for_validation = response
         elif current_step['input_type'] == 'text_input':
             response = st.text_input("", value=current_data_value, key=f"input_{st.session_state.step}")
             if len(keys) == 2:
@@ -1187,6 +1232,8 @@ def main():
         if not is_current_step_valid:
             if current_step['input_type'] == 'radio' and user_input_for_validation == '':
                  st.warning("Por favor, selecciona una opción para continuar.")
+            elif current_step['input_type'] == 'radio_with_explanation' and user_input_for_validation == '':
+                 st.warning("Por favor, selecciona una opción para continuar.")
             elif current_step['key'] == 'tema' and len(user_input_for_validation) <= 20:
                 st.warning("El tema de investigación debe tener al menos 20 caracteres.")
             elif current_step['key'] == 'pregunta' and (len(user_input_for_validation) <= 20 or '?' not in user_input_for_validation):
@@ -1219,6 +1266,8 @@ def main():
                 st.warning("La descripción de la tipología de estudio debe tener al menos 10 caracteres.")
             elif current_step['key'] == 'metodologia.horizonte_tiempo' and user_input_for_validation == '':
                 st.warning("Por favor, selecciona una opción para el horizonte de tiempo.")
+            elif current_step['key'] == 'metodologia.estrategias' and user_input_for_validation == '':
+                st.warning("Por favor, selecciona una opción para la estrategia de investigación.")
             elif current_step['key'] == 'metodologia.estrategias' and len(user_input_for_validation) <= 10:
                 st.warning("La descripción de las estrategias de investigación debe tener al menos 10 caracteres.")
             else:
@@ -1238,7 +1287,6 @@ def main():
             st.rerun() 
 
         if st.session_state.ai_feedback:
-            # Reverted to st.info for blue background
             st.info(st.session_state.ai_feedback)
 
         col1, col2 = st.columns(2)
@@ -1301,7 +1349,7 @@ def main():
 
         # Comprehensive AI Evaluation
         st.subheader("Evaluación Crítica Completa de la Matriz por la IA 🧐")
-        st.write("A continuación, un asesor experto en investigación y editor de revista Scopus Q1 evaluará la coherencia de toda tu matriz.")
+        st.write("A continuación, se evaluará la coherencia de toda tu matriz.")
 
         if st.button("Obtener Evaluación Crítica de la Matriz ✨"):
             st.session_state.validating_ai = True
@@ -1311,8 +1359,7 @@ def main():
                 final_feedback = get_gemini_feedback(
                     'final_coherence_evaluation',
                     formatted_matrix,
-                    st.session_state.matrix_data.get('tipo_investigacion', ''),
-                    tokens_limit=6000 
+                    st.session_state.matrix_data.get('tipo_investigacion', '')
                 )
                 st.session_state.ai_feedback_final = final_feedback
             st.session_state.validating_ai = False
@@ -1320,7 +1367,6 @@ def main():
 
         if st.session_state.get('ai_feedback_final'):
             st.markdown(f"**Análisis del Experto:**")
-            # Reverted to st.info for blue background
             st.info(st.session_state.ai_feedback_final) 
             st.markdown("---")
             
