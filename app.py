@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import google.generativeai as genai 
 import time 
+from docx import Document # Importar la librería python-docx
+from io import BytesIO # Para manejar archivos en memoria
 
 # Configuración de la página
 st.set_page_config(page_title="Asistente para Matriz de Investigación", layout="wide")
@@ -150,7 +152,10 @@ def get_gemini_feedback(step_key, user_response, research_type):
         if not prompt_template:
             return "No hay un prompt de validación configurado para esta sección."
 
-        if isinstance(prompt_template, dict):
+        # Modificación aquí: pasar ambos argumentos si el prompt lo requiere
+        if step_key == 'final_coherence_evaluation':
+            prompt_text = prompt_template(user_response, research_type) 
+        elif isinstance(prompt_template, dict):
             specific_prompt_func = prompt_template.get(research_type)
             if not specific_prompt_func:
                 return "No hay un prompt de validación para este tipo de investigación en esta sección."
@@ -162,7 +167,7 @@ def get_gemini_feedback(step_key, user_response, research_type):
             prompt_text,
             generation_config=genai.types.GenerationConfig(
                 temperature=0.7, 
-                max_output_tokens=500 # Aumentado para respuestas más completas
+                max_output_tokens=500 
             )
         )
         
@@ -185,16 +190,16 @@ if 'matrix_data' not in st.session_state:
         'objetivo_general': '',
         'objetivos_especificos': ['', '', ''], 
         'justificacion': '',
-        'marco_teorico': [], # Almacenará solo conceptos como strings
+        'marco_teorico': [], 
         'metodologia': {
             'poblacion': '',
             'muestra': '',
             'tecnicas': '',
-            'filosofia': '', # Nuevo campo
-            'enfoque': '',   # Nuevo campo
-            'tipologia_estudio': '', # Nuevo campo
-            'horizonte_tiempo': '', # Nuevo campo
-            'estrategias': '' # Nuevo campo
+            'filosofia': '', 
+            'enfoque': '',   
+            'tipologia_estudio': '', 
+            'horizonte_tiempo': '', 
+            'estrategias': '' 
         },
         'variables': {'independiente': '', 'dependiente': ''},
         'hipotesis': {'nula': '', 'alternativa': ''}
@@ -203,7 +208,7 @@ if 'ai_feedback' not in st.session_state:
     st.session_state.ai_feedback = ""
 if 'validating_ai' not in st.session_state:
     st.session_state.validating_ai = False
-if 'ai_feedback_final' not in st.session_state: # Nuevo estado para la retroalimentación final
+if 'ai_feedback_final' not in st.session_state: 
     st.session_state.ai_feedback_final = ""
 
 # ==============================================================================
@@ -262,6 +267,62 @@ def format_matrix_data_for_ai(data):
     formatted_str.append(f"- Estrategias de investigación: {metodologia.get('estrategias', 'No definido')}")
 
     return "\n".join(formatted_str)
+
+
+# Función para generar el documento DOCX
+def generate_docx_from_matrix(data):
+    document = Document()
+    document.add_heading('Matriz de Consistencia de Investigación', level=1)
+
+    # Información General
+    document.add_heading('Información General', level=2)
+    document.add_paragraph(f"Tipo de Investigación: {data.get('tipo_investigacion', 'No definido')}")
+    document.add_paragraph(f"Tema de Investigación: {data.get('tema', 'No definido')}")
+    document.add_paragraph(f"Pregunta de Investigación: {data.get('pregunta', 'No definido')}")
+    document.add_paragraph(f"Objetivo General: {data.get('objetivo_general', 'No definido')}")
+
+    document.add_heading('Objetivos Específicos', level=2)
+    obj_especificos = data.get('objetivos_especificos', [])
+    if obj_especificos:
+        for oe in obj_especificos:
+            document.add_paragraph(f"- {oe}", style='List Bullet')
+    else:
+        document.add_paragraph("No definidos")
+
+    if data.get('tipo_investigacion') == 'Cuantitativa':
+        document.add_heading('Variables e Hipótesis', level=2)
+        document.add_paragraph(f"Variable Independiente: {data['variables'].get('independiente', 'No definido')}")
+        document.add_paragraph(f"Variable Dependiente: {data['variables'].get('dependiente', 'No definido')}")
+        document.add_paragraph(f"Hipótesis Nula (H₀): {data['hipotesis'].get('nula', 'No definido')}")
+        document.add_paragraph(f"Hipótesis Alternativa (H₁): {data['hipotesis'].get('alternativa', 'No definido')}")
+
+    document.add_heading('Justificación', level=2)
+    document.add_paragraph(data.get('justificacion', 'No definido'))
+
+    document.add_heading('Marco Teórico', level=2)
+    marco_teorico_items = data.get('marco_teorico', [])
+    if marco_teorico_items:
+        for item in marco_teorico_items:
+            document.add_paragraph(f"- {item}", style='List Bullet')
+    else:
+        document.add_paragraph("No definido")
+
+    document.add_heading('Metodología', level=2)
+    metodologia = data.get('metodologia', {})
+    document.add_paragraph(f"Población: {metodologia.get('poblacion', 'No definido')}")
+    document.add_paragraph(f"Muestra: {metodologia.get('muestra', 'No definido')}")
+    document.add_paragraph(f"Técnicas y procedimientos/Instrumento: {metodologia.get('tecnicas', 'No definido')}")
+    document.add_paragraph(f"Filosofía de la investigación: {metodologia.get('filosofia', 'No definido')}")
+    document.add_paragraph(f"Enfoque de la investigación: {metodologia.get('enfoque', 'No definido')}")
+    document.add_paragraph(f"Tipología/Alcance de estudio: {metodologia.get('tipologia_estudio', 'No definido')}")
+    document.add_paragraph(f"Horizonte de tiempo: {metodologia.get('horizonte_tiempo', 'No definido')}")
+    document.add_paragraph(f"Estrategias de investigación: {metodologia.get('estrategias', 'No definido')}")
+
+    # Guardar en un objeto BytesIO
+    buffer = BytesIO()
+    document.save(buffer)
+    buffer.seek(0)
+    return buffer.getvalue()
 
 
 base_steps = [
@@ -498,8 +559,8 @@ final_common_steps = [
         'validation': lambda x: len(x) > 20
     },
     {
-        'name': "Técnicas y procedimientos/Instrumento", # Renombrado
-        'question': "¿Qué técnicas e instrumentos usarás para recolectar y organizar los datos? (Ej. entrevistas, encuestas, observación).", # Pregunta actualizada
+        'name': "Técnicas y procedimientos/Instrumento", 
+        'question': "¿Qué técnicas e instrumentos usarás para recolectar y organizar los datos? (Ej. entrevistas, encuestas, observación).", 
         'examples': {
             'Cuantitativa': [
                 "Técnica: Encuesta / Instrumento: Cuestionario estandarizado (para recabar datos numéricos sobre uso de redes sociales y rendimiento percibido).",
@@ -516,7 +577,7 @@ final_common_steps = [
         'key': 'metodologia.tecnicas',
         'validation': lambda x: len(x) > 20
     },
-    # NUEVAS SECCIONES DE METODOLOGÍA A CONTINUACIÓN
+    # NUEVAS SECCIONES DE METODOLOGÍA
     {
         'name': "Filosofía de la investigación",
         'question': "Describe la postura epistemológica sobre cómo se concibe el conocimiento y la realidad en tu investigación.",
@@ -568,7 +629,7 @@ final_common_steps = [
     {
         'name': "Horizonte de tiempo",
         'question': "Define el plazo temporal de tu estudio en función de su duración y momentos de observación.",
-        'examples': {}, # Radio buttons no necesitan ejemplos textuales aquí
+        'examples': {}, 
         'input_type': 'radio',
         'options': ['Transversal', 'Longitudinal'],
         'key': 'metodologia.horizonte_tiempo',
@@ -661,7 +722,7 @@ def main():
             'marco_teorico': 'Marco Teórico',
             'metodologia.poblacion': 'Población',
             'metodologia.muestra': 'Muestra',
-            'metodologia.tecnicas': 'Técnicas y procedimientos/Instrumento', # Nombre actualizado
+            'metodologia.tecnicas': 'Técnicas y procedimientos/Instrumento', 
             'metodologia.filosofia': 'Filosofía de la investigación',
             'metodologia.enfoque': 'Enfoque de la investigación',
             'metodologia.tipologia_estudio': 'Tipología/Alcance de estudio',
@@ -743,9 +804,8 @@ def main():
 
         if current_step['input_type'] == 'radio':
             response = st.radio("Selecciona una opción:", current_step['options'], 
-                                index=current_step['options'].index(current_data_value) if current_data_value in current_data_value else 0, # Corregido para usar current_data_value
+                                index=current_step['options'].index(current_data_value) if current_data_value in current_step['options'] else 0, 
                                 key=f"input_{st.session_state.step}")
-            # Guardar el valor directamente en matrix_data
             if len(keys) == 2:
                 st.session_state.matrix_data[keys[0]][keys[1]] = response
             else:
@@ -760,11 +820,10 @@ def main():
             user_input_for_validation = response 
         elif current_step['input_type'] == 'text_area':
             if current_step.get('special') == 'list_split':
-                # current_value_area para text_area debe reflejar la lista como string con saltos de línea
                 if isinstance(st.session_state.matrix_data[current_step['key']], list):
                     current_value_area = "\n".join(st.session_state.matrix_data[current_step['key']])
                 else:
-                    current_value_area = st.session_state.matrix_data[current_step['key']] # Fallback si no es lista (ej: cadena vacía inicial)
+                    current_value_area = st.session_state.matrix_data[current_step['key']] 
             else:
                 current_value_area = current_data_value
             
@@ -899,13 +958,13 @@ def main():
         st.markdown(f"- **Estrategias de investigación:** {data['metodologia']['estrategias'] or 'No definido'}")
         st.markdown("---")
 
-        # New: Comprehensive AI Evaluation
+        # Comprehensive AI Evaluation
         st.subheader("Evaluación Crítica Completa de la Matriz por la IA 🧐")
         st.write("A continuación, un asesor experto en investigación y editor de revista Scopus Q1 evaluará la coherencia de toda tu matriz.")
 
         if st.button("Obtener Evaluación Crítica de la Matriz ✨"):
             st.session_state.validating_ai = True
-            st.session_state.ai_feedback_final = "" # New state variable for final feedback
+            st.session_state.ai_feedback_final = "" 
             with st.spinner('Realizando evaluación crítica de toda la matriz...'):
                 formatted_matrix = format_matrix_data_for_ai(st.session_state.matrix_data)
                 final_feedback = get_gemini_feedback(
@@ -937,7 +996,17 @@ def main():
 
         st.markdown("---")
         st.info("¡Recuerda que este es un punto de partida! La investigación es un proceso iterativo. Lee, ajusta y perfecciona tu matriz con la literatura científica.")
-        st.info("La opción de descarga a PDF/Word se implementará en futuras actualizaciones. ¡Gracias por tu paciencia!") # Acknowledge download request
+        
+        # Download button for the DOCX file
+        if st.button("Descargar Matriz como DOCX 📄"):
+            docx_bytes = generate_docx_from_matrix(st.session_state.matrix_data)
+            st.download_button(
+                label="Haz clic aquí para descargar",
+                data=docx_bytes,
+                file_name="Matriz_de_Consistencia.docx",
+                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            )
+
 
         if st.button("🔄 Empezar una nueva matriz"):
             st.session_state.step = 0
@@ -963,7 +1032,7 @@ def main():
                 'hipotesis': {'nula': '', 'alternativa': ''}
             }
             st.session_state.ai_feedback = "" 
-            st.session_state.ai_feedback_final = "" # Clear final feedback on new matrix
+            st.session_state.ai_feedback_final = "" 
             st.rerun()
 
 if __name__ == "__main__":
