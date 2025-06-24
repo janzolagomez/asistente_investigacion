@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
-import google.generativeai as genai # Importar la librería de Gemini
-import time # Para manejar el estado de carga simulada o real
+import google.generativeai as genai 
+import time 
 
 # Configuración de la página
 st.set_page_config(page_title="Asistente para Matriz de Investigación", layout="wide")
@@ -88,14 +88,9 @@ def get_gemini_feedback(step_key, user_response, research_type):
     Realiza una llamada a la API de Gemini para obtener retroalimentación.
     """
     try:
-        # Configura la API de Gemini con la clave de API desde los secretos de Streamlit
-        # Asegúrate de haber configurado st.secrets["GEMINI_API_KEY"] en .streamlit/secrets.toml
         genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
-
-        # Selecciona el modelo
         model = genai.GenerativeModel('gemini-2.0-flash')
 
-        # Obtiene la función de prompt específica para el paso y tipo de investigación
         prompt_template = gemini_prompts.get(step_key)
         if not prompt_template:
             return "No hay un prompt de validación configurado para esta sección."
@@ -108,21 +103,17 @@ def get_gemini_feedback(step_key, user_response, research_type):
         else:
             prompt_text = prompt_template(user_response)
 
-        # Genera contenido con Gemini
-        # Se añaden parámetros para controlar la salida y evitar respuestas excesivamente largas
         response = model.generate_content(
             prompt_text,
             generation_config=genai.types.GenerationConfig(
-                temperature=0.7, # Controla la creatividad (0.0 a 1.0)
-                max_output_tokens=200 # Limita la longitud de la respuesta
+                temperature=0.7, 
+                max_output_tokens=200 
             )
         )
         
-        # Devuelve el texto generado por la IA
         return response.text
 
     except Exception as e:
-        # Manejo de errores en la llamada a la API
         return f"Error al conectar con la IA: {e}. Por favor, verifica tu clave de API y tu conexión."
 
 
@@ -137,19 +128,17 @@ if 'matrix_data' not in st.session_state:
         'tema': '',
         'pregunta': '',
         'objetivo_general': '',
-        'objetivos_especificos': ['', '', ''], # Por defecto 3 objetivos
+        'objetivos_especificos': ['', '', ''], 
         'justificacion': '',
-        'marco_teorico': [], # Almacena diccionarios {'concepto': '', 'autores': ''}
+        'marco_teorico': [], 
         'metodologia': {
             'poblacion': '',
             'muestra': '',
             'tecnicas': ''
         },
-        # Estas claves se rellenarán solo si el tipo de investigación es Cuantitativa
         'variables': {'independiente': '', 'dependiente': ''},
         'hipotesis': {'nula': '', 'alternativa': ''}
     }
-# Estado para la validación de IA
 if 'ai_feedback' not in st.session_state:
     st.session_state.ai_feedback = ""
 if 'validating_ai' not in st.session_state:
@@ -158,12 +147,11 @@ if 'validating_ai' not in st.session_state:
 # ==============================================================================
 # DEFINICIÓN DE PASOS Y SUS PREGUNTAS/EJEMPLOS
 # ==============================================================================
-# Pasos iniciales (comunes a ambos tipos de investigación para comenzar)
 base_steps = [
     {
         'name': "Tipo de Investigación",
         'question': "¡Hola! Vamos a crear tu matriz de investigación. ¿Qué tipo de investigación realizarás?",
-        'examples': {}, # No aplica ejemplo en radio button
+        'examples': {}, 
         'input_type': 'radio',
         'options': ['Cualitativa', 'Cuantitativa'],
         'key': 'tipo_investigacion',
@@ -243,7 +231,7 @@ base_steps = [
         },
         'input_type': 'text_area',
         'key': 'objetivos_especificos',
-        'special': 'list_split', # Indica que el texto se debe dividir en una lista por líneas
+        'special': 'list_split', 
         'validation': lambda x: len(x) > 0 and all(len(line.strip()) > 10 for line in x.split('\n') if line.strip())
     },
 ]
@@ -259,7 +247,7 @@ quantitative_specific_steps = [
                 "Horas de estudio semanales (medidas en autorreporte).",
                 "Participación en programa de tutorías (variable categórica: sí/no)."
             ],
-            'Cualitativa': [] # Vacío, ya que este paso es específico de cuantitativa
+            'Cualitativa': [] 
         },
         'input_type': 'text_input',
         'key': 'variables.independiente',
@@ -274,7 +262,7 @@ quantitative_specific_steps = [
                 "Nivel de ansiedad ante exámenes (medido con escala validada).",
                 "Tasa de abandono universitario (variable dicotómica: abandono/continúa)."
             ],
-            'Cualitativa': [] # Vacío, ya que este paso es específico de cuantitativa
+            'Cualitativa': [] 
         },
         'input_type': 'text_input',
         'key': 'variables.dependiente',
@@ -289,7 +277,7 @@ quantitative_specific_steps = [
                 "No hay diferencias significativas en el nivel de ansiedad ante exámenes entre estudiantes que reciben tutorías y los que no.",
                 "La edad del estudiante no se correlaciona significativamente con su tasa de abandono universitario."
             ],
-            'Cualitativa': [] # Vacío, ya que este paso es específico de cuantitativa
+            'Cualitativa': [] 
         },
         'input_type': 'text_area',
         'key': 'hipotesis.nula',
@@ -304,7 +292,7 @@ quantitative_specific_steps = [
                 "Existen diferencias significativas en el nivel de ansiedad ante exámenes entre estudiantes que reciben tutorías y los que no.",
                 "La edad del estudiante se correlaciona significativamente de forma inversa con su tasa de abandono universitario."
             ],
-            'Cualitativa': [] # Vacío, ya que este paso es específico de cuantitativa
+            'Cualitativa': [] 
         },
         'input_type': 'text_area',
         'key': 'hipotesis.alternativa',
@@ -350,7 +338,7 @@ final_common_steps = [
         },
         'input_type': 'text_area',
         'key': 'marco_teorico',
-        'special': 'marco_teorico_split', # Indica que el texto se debe parsear para concepto/autores
+        'special': 'marco_teorico_split', 
         'validation': lambda x: len(x) > 0 and all(' - ' in line for line in x.split('\n') if line.strip())
     },
     {
@@ -416,39 +404,34 @@ final_common_steps = [
 # FUNCIÓN PRINCIPAL DE LA APLICACIÓN STREAMLIT
 # ==============================================================================
 def main():
-    # Título principal y descripción en el área de contenido principal
     st.title("Asistente para Matriz de Investigación")
     st.write("Completa cada sección para construir tu matriz de consistencia.")
-    st.markdown("---") # Separador visual
+    st.markdown("---") 
 
     # ==========================================================================
     # DETERMINACIÓN DINÁMICA DE LOS PASOS COMPLETOS
     # ==========================================================================
     tipo_investigacion = st.session_state.matrix_data.get('tipo_investigacion', '')
     
-    # Construir la lista de pasos completa de forma dinámica
-    all_steps = list(base_steps) # Copia los pasos base
+    all_steps = list(base_steps) 
     if tipo_investigacion == 'Cuantitativa':
-        all_steps.extend(quantitative_specific_steps) # Añade los pasos cuantitativos si aplica
-    # Los pasos finales comunes siempre se añaden al final, independientemente del tipo
+        all_steps.extend(quantitative_specific_steps) 
     all_steps.extend(final_common_steps)
 
     # ==========================================================================
     # BARRA LATERAL DE PROGRESO
     # ==========================================================================
     st.sidebar.header("Progreso de la Matriz")
-    # Mostrar el tipo de investigación seleccionado en la barra lateral
-    # Si el tipo de investigación ya ha sido seleccionado, se muestra aquí.
     if tipo_investigacion:
-        st.sidebar.markdown(f"**Tipo Seleccionado:** {tipo_investigacion}")
-        st.sidebar.markdown("---") # Separador visual
+        st.sidebar.markdown(f"**Tipo Seleccionado:** {tipo_invest_dict.get(tipo_investigacion, tipo_investigacion)}")
+        st.sidebar.markdown("---") 
 
     for i, step_info in enumerate(all_steps):
-        icon = "⬜" # No iniciado
+        icon = "⬜" 
         if i < st.session_state.step:
-            icon = "✅" # Completado
+            icon = "✅" 
         elif i == st.session_state.step:
-            icon = "🟨" # En proceso
+            icon = "🟨" 
         st.sidebar.markdown(f"{icon} {step_info['name']}")
 
     # ==========================================================================
@@ -457,41 +440,94 @@ def main():
     if st.session_state.step < len(all_steps):
         current_step = all_steps[st.session_state.step]
         
-        # Formato de título 1 para la Sección
         st.header(f"Sección: {current_step['name']}") 
 
-        # Formato de título 2 para la Pregunta/Tarea (indicación)
+        # ======================================================================
+        # NUEVO: RESUMEN DE DEFINICIONES ANTERIORES
+        # ======================================================================
+        # Define un mapeo para nombres más amigables en el resumen
+        friendly_names = {
+            'tipo_investigacion': 'Tipo de Investigación',
+            'tema': 'Tema de Investigación',
+            'pregunta': 'Pregunta de Investigación',
+            'objetivo_general': 'Objetivo General',
+            'objetivos_especificos': 'Objetivos Específicos',
+            'variables.independiente': 'Variable Independiente',
+            'variables.dependiente': 'Variable Dependiente',
+            'hipotesis.nula': 'Hipótesis Nula (H₀)',
+            'hipotesis.alternativa': 'Hipótesis Alternativa (H₁)',
+            'justificacion': 'Justificación',
+            'marco_teorico': 'Marco Teórico',
+            'metodologia.poblacion': 'Población',
+            'metodologia.muestra': 'Muestra',
+            'metodologia.tecnicas': 'Técnicas de Recolección de Datos'
+        }
+        
+        # Filtra los pasos ya completados y con datos relevantes para mostrar
+        completed_steps_for_summary = []
+        for i in range(st.session_state.step):
+            prev_step_info = all_steps[i]
+            key = prev_step_info['key']
+            
+            # Manejo de claves anidadas para recuperar el valor
+            value = None
+            if '.' in key:
+                main_key, sub_key = key.split('.')
+                if main_key in st.session_state.matrix_data and sub_key in st.session_state.matrix_data[main_key]:
+                    value = st.session_state.matrix_data[main_key][sub_key]
+            else:
+                value = st.session_state.matrix_data.get(key)
+            
+            # Añade al resumen solo si hay un valor significativo
+            if value and (isinstance(value, str) and value.strip() != '' or isinstance(value, list) and value):
+                # Formateo especial para listas o diccionarios
+                display_value = value
+                if isinstance(value, list):
+                    if prev_step_info.get('special') == 'marco_teorico_split':
+                        display_value = "\n".join([f"- {entry['concepto']} ({entry['autores']})" for entry in value])
+                    else:
+                        display_value = "\n".join([f"- {item}" for item in value])
+                
+                completed_steps_for_summary.append({
+                    'name': friendly_names.get(key, prev_step_info['name']),
+                    'value': display_value
+                })
+
+        if completed_steps_for_summary:
+            with st.expander("Resumen de tus definiciones anteriores 📋"):
+                for item in completed_steps_for_summary:
+                    st.markdown(f"**{item['name']}:** {item['value']}")
+                st.markdown("---") # Separador dentro del expander
+        # ======================================================================
+        # FIN NUEVO: RESUMEN DE DEFINICIONES ANTERIORES
+        # ======================================================================
+
         st.subheader(current_step['question']) 
 
-        # === Expander de Explicación (ahora segundo en orden) ===
         exp_key = current_step['key']
         explanation_content = explanations.get(exp_key)
 
         if explanation_content:
-            with st.expander("Ver explicación 📖"): # Texto ajustado aquí
-                if isinstance(explanation_content, dict): # Es una explicación que depende del tipo de investigación
+            with st.expander("Ver explicación 📖"): 
+                if isinstance(explanation_content, dict): 
                     current_research_type = st.session_state.matrix_data.get('tipo_investigacion')
                     if current_research_type:
                         st.markdown(explanation_content.get(current_research_type, "Explicación no disponible para este tipo de investigación."))
                     else:
                         st.markdown("Selecciona un tipo de investigación primero para ver la explicación relevante.")
-                else: # Es una explicación general
+                else: 
                     st.markdown(explanation_content)
-        # === Fin Expander Explicación ===
 
-        # === Expander para Ejemplos (tercero en orden, condicional por tipo de investigación) ===
-        if current_step['examples']: # Solo muestra el expander si hay ejemplos definidos para el paso
-            with st.expander("Ver ejemplos 💡"): # Texto ajustado e icono agregado aquí
+        if current_step['examples']: 
+            with st.expander("Ver ejemplos 💡"): 
                 current_research_type = st.session_state.matrix_data.get('tipo_investigacion')
                 
-                # Obtener los ejemplos específicos para el tipo de investigación actual
                 example_list = []
                 if isinstance(current_step['examples'], dict):
                     if current_research_type:
                         example_list = current_step['examples'].get(current_research_type, [])
-                    else: # Si no hay tipo de investigación seleccionado (primer paso)
+                    else: 
                         st.info("Selecciona un tipo de investigación para ver los ejemplos relevantes.")
-                # Si 'examples' no es un diccionario, se asume que es una lista directa de ejemplos (para casos futuros si se añadiera)
                 elif isinstance(current_step['examples'], list):
                     example_list = current_step['examples']
 
@@ -500,31 +536,28 @@ def main():
                         st.markdown(f"- **Ejemplo {i+1}:** {example_text}")
                 elif current_research_type and isinstance(current_step['examples'], dict):
                     st.info("No hay ejemplos específicos para este tipo de investigación en este paso.")
-        # === Fin Expander Ejemplos ===
 
-        st.markdown("Tu respuesta:") # Título del área de respuesta
-        # Obtener el valor actual del estado de sesión para el campo
+        st.markdown("Tu respuesta:") 
         current_data_value = None
         keys = current_step['key'].split('.')
-        if len(keys) == 2: # Para claves anidadas como 'variables.independiente'
+        if len(keys) == 2: 
             current_data_value = st.session_state.matrix_data[keys[0]].get(keys[1], '')
         else:
             current_data_value = st.session_state.matrix_data.get(current_step['key'], '')
 
-        # Manejar la visualización del input y la respuesta
         if current_step['input_type'] == 'radio':
             response = st.radio("Selecciona una opción:", current_step['options'], 
                                 index=current_step['options'].index(current_data_value) if current_data_value in current_step['options'] else 0, 
                                 key=f"input_{st.session_state.step}")
             st.session_state.matrix_data[current_step['key']] = response
-            user_input_for_validation = response # La respuesta para validar es la seleccionada
+            user_input_for_validation = response 
         elif current_step['input_type'] == 'text_input':
             response = st.text_input("", value=current_data_value, key=f"input_{st.session_state.step}")
             if len(keys) == 2:
                 st.session_state.matrix_data[keys[0]][keys[1]] = response
             else:
                 st.session_state.matrix_data[current_step['key']] = response
-            user_input_for_validation = response # La respuesta para validar es el texto ingresado
+            user_input_for_validation = response 
         elif current_step['input_type'] == 'text_area':
             if current_step.get('special') == 'list_split':
                 current_value_area = "\n".join(st.session_state.matrix_data[current_step['key']])
@@ -534,7 +567,7 @@ def main():
                 current_value_area = current_data_value
             
             response = st.text_area("", value=current_value_area, key=f"input_{st.session_state.step}", height=150)
-            user_input_for_validation = response # La respuesta para validar es el texto ingresado
+            user_input_for_validation = response 
 
             if current_step.get('special') == 'list_split':
                 lines = [line.strip() for line in response.split('\n') if line.strip()]
@@ -556,10 +589,8 @@ def main():
                 else:
                     st.session_state.matrix_data[current_step['key']] = response
         
-        # Validación básica para habilitar el botón de IA y el botón de avanzar
         is_current_step_valid = current_step['validation'](user_input_for_validation)
         
-        # Mostrar advertencia si no es válido
         if not is_current_step_valid:
             if current_step['input_type'] == 'radio' and user_input_for_validation == '':
                  st.warning("Por favor, selecciona una opción para continuar.")
@@ -584,45 +615,35 @@ def main():
             else:
                  st.warning("Por favor, completa el campo antes de avanzar.")
 
-        # ==========================================================================
-        # BOTÓN "VALIDAR CON IA" Y VISUALIZACIÓN DE FEEDBACK
-        # ==========================================================================
         if st.button("Validar con IA ✨", disabled=not is_current_step_valid or st.session_state.validating_ai):
             st.session_state.validating_ai = True
-            st.session_state.ai_feedback = "" # Limpiar feedback anterior
+            st.session_state.ai_feedback = "" 
             with st.spinner('Validando con IA...'):
-                feedback = get_gemini_feedback( # Llamada a la función real de Gemini
+                feedback = get_gemini_feedback( 
                     current_step['key'],
                     user_input_for_validation,
                     st.session_state.matrix_data.get('tipo_investigacion', '')
                 )
                 st.session_state.ai_feedback = feedback
             st.session_state.validating_ai = False
-            st.rerun() # Volver a renderizar para mostrar el feedback
+            st.rerun() 
 
         if st.session_state.ai_feedback:
             st.info(f"**Retroalimentación de la IA:** {st.session_state.ai_feedback}")
 
-        # ==========================================================================
-        # BOTONES DE NAVEGACIÓN
-        # ==========================================================================
         col1, col2 = st.columns(2)
         with col1:
             if st.session_state.step > 0:
                 if st.button("⬅️ Regresar"):
                     st.session_state.step -= 1
-                    st.session_state.ai_feedback = "" # Limpiar feedback al regresar
+                    st.session_state.ai_feedback = "" 
                     st.rerun()
         with col2:
-            # El botón "Avanzar" solo estará habilitado si la validación es exitosa
             if st.button("Avanzar ➡️", disabled=not is_current_step_valid):
                 st.session_state.step += 1
-                st.session_state.ai_feedback = "" # Limpiar feedback al avanzar
+                st.session_state.ai_feedback = "" 
                 st.rerun()
 
-    # ==========================================================================
-    # PASO FINAL: REVISIÓN DE LA MATRIZ Y DESCARGA
-    # ==========================================================================
     else:
         st.subheader("🎉 ¡Matriz de Investigación Completa!")
         st.write("Aquí tienes un resumen de tu matriz de consistencia. Puedes revisarla y empezar una nueva si lo deseas.")
@@ -661,7 +682,6 @@ def main():
         st.markdown(f"- **Técnicas de Recolección de Datos:** {data['metodologia']['tecnicas'] or 'No definido'}")
         st.markdown("---")
 
-        # Mini rúbrica de autoevaluación
         st.subheader("Mini Rúbrica de Autoevaluación:")
         st.write("¡Es hora de reflexionar sobre la coherencia de tu diseño!")
         st.checkbox("¿Mi pregunta de investigación está claramente alineada con mis objetivos?")
@@ -678,10 +698,9 @@ def main():
         st.markdown("---")
         st.info("¡Recuerda que este es un punto de partida! La investigación es un proceso iterativo. Lee, ajusta y perfecciona tu matriz con la literatura científica.")
 
-        # Botón para reiniciar
         if st.button("🔄 Empezar una nueva matriz"):
             st.session_state.step = 0
-            st.session_state.matrix_data = { # Reiniciar completamente los datos
+            st.session_state.matrix_data = { 
                 'tipo_investigacion': '',
                 'tema': '',
                 'pregunta': '',
@@ -697,10 +716,8 @@ def main():
                 'variables': {'independiente': '', 'dependiente': ''},
                 'hipotesis': {'nula': '', 'alternativa': ''}
             }
+            st.session_state.ai_feedback = "" # Limpiar feedback al reiniciar
             st.rerun()
 
-# ==============================================================================
-# PUNTO DE ENTRADA DE LA APLICACIÓN
-# ==============================================================================
 if __name__ == "__main__":
     main()
