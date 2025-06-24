@@ -39,8 +39,25 @@ explanations = {
     'metodologia.poblacion': "La población es el *conjunto total* de todas las personas, objetos o elementos que poseen una o más características comunes y que son el universo de tu estudio. Es el grupo al cual deseas generalizar tus hallazgos.",
     'metodologia.muestra': "La muestra es un *subconjunto representativo* de la población, seleccionado para realizar el estudio. Se describe el tipo de muestreo (probabilístico/no probabilístico), el tamaño de la muestra y los criterios de selección utilizados para garantizar que sea adecuada y permita inferencias si es cuantitativa.",
     'metodologia.tecnicas': {
-        'Cualitativa': "Las técnicas de recolección de datos cualitativas son los procedimientos y herramientas que te permiten obtener información detallada y profunda para comprender el fenómeno. Ejemplos incluyen entrevistas a profundidad, grupos focales, observación participante, o análisis documental.",
+        'Cualitativa': "Las técnicas de recolección de datos cualitativas son los procedimientos y herramientas que te permiten obtener información detallada y profunda para comprender el fenómeno. Ejemplos incluyen entrevistas, grupos focales, observación participante, o análisis documental.",
         'Cuantitativa': "Las técnicas de recolección de datos cuantitativas son los procedimientos y herramientas que te permiten obtener datos numéricos y estructurados para medir variables y probar hipótesis. Ejemplos incluyen encuestas con cuestionarios estandarizados, escalas de medición (Likert), o la recopilación de datos de registros existentes."
+    },
+    'metodologia.filosofia': {
+        'Cualitativa': "La filosofía de la investigación es la postura epistemológica sobre cómo se concibe el conocimiento y la realidad. Para la investigación cualitativa, los enfoques comunes son el Interpretativismo (que busca comprender el significado subjetivo de las experiencias) y el Pragmatismo (que se centra en la utilidad práctica del conocimiento).",
+        'Cuantitativa': "La filosofía de la investigación es la postura epistemológica sobre cómo se concibe el conocimiento y la realidad. Para la investigación cuantitativa, los enfoques comunes son el Positivismo (que busca leyes generales y objetivas a través de la observación empírica) y el Pragmatismo (que se centra en la utilidad práctica del conocimiento y la resolución de problemas)."
+    },
+    'metodologia.enfoque': {
+        'Cualitativa': "El enfoque de la investigación es el tipo de razonamiento que guía el proceso investigativo. En la investigación cualitativa, el enfoque es principalmente Inductivo, lo que significa que se parte de la observación de datos específicos para construir teorías o patrones generales.",
+        'Cuantitativa': "El enfoque de la investigación es el tipo de razonamiento que guía el proceso investigativo. En la investigación cuantitativa, el enfoque es principalmente Deductivo, lo que significa que se parte de teorías o hipótesis generales para probarlas a través de la recolección y análisis de datos específicos."
+    },
+    'metodologia.tipologia_estudio': {
+        'Cualitativa': "La tipología o alcance de estudio clasifica la investigación cualitativa según su propósito y profundidad. Algunos tipos comunes incluyen: Fenomenológico (explora experiencias vividas), Hermenéutico (interpreta textos o símbolos), Crítico (analiza el poder y la injusticia), y Narrativo (examina historias de vida).",
+        'Cuantitativa': "La tipología o alcance de estudio clasifica la investigación cuantitativa según su propósito. Los tipos comunes son: Descriptivo (describe características de una población), Correlacional (examina la relación entre variables), y Explicativo (busca causas y efectos de fenómenos)."
+    },
+    'metodologia.horizonte_tiempo': "El horizonte de tiempo se refiere al plazo temporal del estudio en función de su duración y momentos de observación. Puede ser Transversal (los datos se recogen en un único momento) o Longitudinal (los datos se recogen en múltiples momentos a lo largo del tiempo).",
+    'metodologia.estrategias': {
+        'Cualitativa': "Las estrategias de investigación cualitativa son los diseños estructurales generales para abordar el estudio. Ejemplos incluyen: Estudios de Caso (análisis profundo de un evento o individuo), Investigación Acción Participativa (colaboración con la comunidad para el cambio), Etnográfico (inmersión en una cultura para comprenderla), y Teoría Fundamentada (construcción de teoría a partir de datos empíricos).",
+        'Cuantitativa': "Las estrategias de investigación cuantitativa son los diseños estructurales generales para abordar el estudio. Un ejemplo común es la Investigación de Encuesta, que recopila datos de una muestra grande para describir tendencias o probar relaciones."
     }
 }
 
@@ -48,8 +65,6 @@ explanations = {
 # ==============================================================================
 # PROMPTS PARA LA VALIDACIÓN CON GEMINI (REAL)
 # ==============================================================================
-# Estos prompts serán enviados a la API de Gemini para la evaluación.
-# Se ha generalizado para que la IA pueda ofrecer retroalimentación más flexible.
 gemini_prompts = {
     'tipo_investigacion': lambda respuesta: f"Eres un experto en metodología de investigación. Evalúa la elección del tipo de investigación '{respuesta}' con respecto a la coherencia general para un estudio. Ofrece una retroalimentación concisa y constructiva.",
     'tema': {
@@ -62,7 +77,7 @@ gemini_prompts = {
     },
     'objetivo_general': {
         'Cualitativa': lambda obj: f"Eres un experto en investigación cualitativa. Evalúa el siguiente objetivo general cualitativo: '{obj}'. ¿Inicia con un verbo en infinitivo adecuado al enfoque cualitativo, es coherente con el fenómeno y apropiado para un enfoque cualitativo? Proporciona retroalimentación constructiva.",
-        'Cuantitativa': lambda obj: f"Eres un experto en investigación cuantitativa. Evalúa el siguiente objetivo general cuantitativo: '{obj}'. ¿Inicia con un verbo en infinitivo adecuado al enfoque cuantitativo, es claro y relaciona las variables principales? Proporciona retroalimentación constructiva."
+        'Cuantitativa': lambda obj: f"Eres un experto en investigación cuantitativa. Evalúa el siguiente objetivo general cuantitativo: '{obj}'. ¿Inicia con un verbo de acción medible (analizar, determinar, evaluar), es claro y relaciona las variables principales? Proporciona retroalimentación constructiva."
     },
     'objetivos_especificos': {
         'Cualitativa': lambda objs: f"Eres un experto en investigación cualitativa. Evalúa los siguientes objetivos específicos cualitativos: '{objs}'. ¿Son coherentes con el objetivo general, detallan pasos concretos y son apropiados para un enfoque cualitativo? Proporciona retroalimentación constructiva.",
@@ -76,7 +91,24 @@ gemini_prompts = {
     'marco_teorico': lambda temas: f"Actúa como experto en el tema de investigación. Dada la siguiente lista de temas o conceptos clave para un marco teórico: '{temas}'. Por favor, proporciona una breve introducción en español (1-2 oraciones) indicando que la siguiente es una lista de palabras clave relevantes para búsqueda. Luego, genera una lista de 5 a 10 palabras clave en inglés relevantes para hacer una búsqueda temática en bases de datos como Scopus y Web of Science. Las palabras clave deben estar separadas por comas.",
     'metodologia.poblacion': lambda pob: f"Eres un experto en muestreo. Evalúa la siguiente descripción de población: '{pob}'. ¿Es clara, delimitada y especifica las características comunes? Proporciona retroalimentación constructiva.",
     'metodologia.muestra': lambda mue: f"Eres un experto en muestreo. Evalúa la siguiente descripción de muestra: '{mue}'. ¿El método de selección y el tamaño son apropiados para el tipo de investigación y población? Proporciona retroalimentación constructiva.",
-    'metodologia.tecnicas': lambda tec: f"Eres un experto en recolección de datos. Evalúa la siguiente descripción de técnicas e instrumentos: '{tec}'. ¿Son coherentes con el tipo de investigación y permiten recolectar los datos necesarios para responder la pregunta? Proporciona retroalimentación constructiva."
+    'metodologia.tecnicas': lambda tec: f"Eres un experto en recolección de datos. Evalúa la siguiente descripción de técnicas e instrumentos: '{tec}'. ¿Son coherentes con el tipo de investigación y si permiten recolectar los datos necesarios para responder la pregunta? Proporciona retroalimentación constructiva.",
+    'metodologia.filosofia': {
+        'Cualitativa': lambda filosofia: f"Eres un experto en epistemología. Evalúa la descripción de la filosofía de investigación cualitativa '{filosofia}'. ¿Es coherente con los enfoques interpretativistas o pragmáticos y cómo se alinea con la concepción cualitativa del conocimiento? Proporciona retroalimentación concisa.",
+        'Cuantitativa': lambda filosofia: f"Eres un experto en epistemología. Evalúa la descripción de la filosofía de investigación cuantitativa '{filosofia}'. ¿Es coherente con los enfoques positivistas o pragmáticos y cómo se alinea con la concepción cuantitativa del conocimiento? Proporciona retroalimentación concisa."
+    },
+    'metodologia.enfoque': {
+        'Cualitativa': lambda enfoque: f"Eres un experto en metodología. Evalúa el enfoque de investigación '{enfoque}' para un estudio cualitativo. ¿Es coherente con el razonamiento inductivo? Proporciona retroalimentación concisa.",
+        'Cuantitativa': lambda enfoque: f"Eres un experto en metodología. Evalúa el enfoque de investigación '{enfoque}' para un estudio cuantitativo. ¿Es coherente con el razonamiento deductivo? Proporciona retroalimentación concisa."
+    },
+    'metodologia.tipologia_estudio': {
+        'Cualitativa': lambda tipologia: f"Eres un experto en metodología cualitativa. Evalúa la tipología de estudio cualitativo '{tipologia}'. ¿Es una clasificación reconocida y adecuada para los propósitos de un estudio cualitativo? Proporciona retroalimentación concisa.",
+        'Cuantitativa': lambda tipologia: f"Eres un experto en metodología cuantitativa. Evalúa la tipología de estudio cuantitativo '{tipologia}'. ¿Es una clasificación reconocida y adecuada para los propósitos de un estudio cuantitativo? Proporciona retroalimentación concisa."
+    },
+    'metodologia.horizonte_tiempo': lambda tiempo: f"Eres un experto en diseño de investigación. Evalúa el horizonte de tiempo '{tiempo}'. ¿Es una duración y momento de observación clara y pertinente para el estudio? Proporciona retroalimentación concisa.",
+    'metodologia.estrategias': {
+        'Cualitativa': lambda estrategia: f"Eres un experto en diseños de investigación cualitativa. Evalúa la estrategia de investigación '{estrategia}'. ¿Es un diseño estructural reconocido y apropiado para un estudio cualitativo? Proporciona retroalimentación concisa.",
+        'Cuantitativa': lambda estrategia: f"Eres un experto en diseños de investigación cuantitativa. Evalúa la estrategia de investigación '{estrategia}'. ¿Es un diseño estructural reconocido y apropiado para un estudio cuantitativo (ej. encuestas)? Proporciona retroalimentación concisa."
+    }
 }
 
 
@@ -134,7 +166,12 @@ if 'matrix_data' not in st.session_state:
         'metodologia': {
             'poblacion': '',
             'muestra': '',
-            'tecnicas': ''
+            'tecnicas': '',
+            'filosofia': '', # Nuevo campo
+            'enfoque': '',   # Nuevo campo
+            'tipologia_estudio': '', # Nuevo campo
+            'horizonte_tiempo': '', # Nuevo campo
+            'estrategias': '' # Nuevo campo
         },
         'variables': {'independiente': '', 'dependiente': ''},
         'hipotesis': {'nula': '', 'alternativa': ''}
@@ -221,7 +258,6 @@ base_steps = [
         },
         'input_type': 'text_area',
         'key': 'objetivo_general',
-        # Modificación aquí: solo requiere más de 20 caracteres y empezar con infinitivo
         'validation': lambda x: len(x) > 20 and starts_with_infinitive(x)
     },
     {
@@ -348,8 +384,8 @@ final_common_steps = [
         },
         'input_type': 'text_area',
         'key': 'marco_teorico',
-        'special': 'list_split', # Modificado a list_split para almacenar solo conceptos como strings
-        'validation': lambda x: len(x) > 0 and all(line.strip() != '' for line in x.split('\n') if line.strip()) # Modificado para no requerir " - "
+        'special': 'list_split', 
+        'validation': lambda x: len(x) > 0 and all(line.strip() != '' for line in x.split('\n') if line.strip()) 
     },
     {
         'name': "Población",
@@ -390,23 +426,99 @@ final_common_steps = [
         'validation': lambda x: len(x) > 20
     },
     {
-        'name': "Técnicas de Recolección de Datos",
-        'question': "¿Qué técnicas e instrumentos usarás para recolectar datos? (Ej. encuestas con cuestionarios, entrevistas a profundidad, observación, análisis documental).",
+        'name': "Técnicas y procedimientos/Instrumento", # Renombrado
+        'question': "¿Qué técnicas e instrumentos usarás para recolectar y organizar los datos? (Ej. entrevistas, encuestas, observación).", # Pregunta actualizada
         'examples': {
             'Cuantitativa': [
-                "Encuesta mediante cuestionario estandarizado (para recabar datos numéricos sobre uso de redes sociales y rendimiento percibido).",
-                "Análisis documental de expedientes académicos (para obtener promedios de calificaciones objetivas y tasas de abandono)."
-                "Escalas de medición psicométricas (para evaluar niveles de estrés o ansiedad, con validación y confiabilidad, como la Escala de Estrés Percibido)."
+                "Técnica: Encuesta / Instrumento: Cuestionario estandarizado (para recabar datos numéricos sobre uso de redes sociales y rendimiento percibido).",
+                "Técnica: Análisis documental / Instrumento: Ficha de registro de expedientes académicos (para obtener promedios de calificaciones objetivas y tasas de abandono)."
+                "Técnica: Medición psicométrica / Instrumento: Escalas de estrés o ansiedad (Escala de Estrés Percibido)."
             ],
             'Cualitativa': [
-                "Entrevistas semiestructuradas a docentes (para comprender sus percepciones y experiencias a profundidad).",
-                "Observación participante en el aula (para documentar la dinámica de implementación de las inserciones curriculares)."
-                "Análisis de contenido de documentos curriculares y planes de estudio (para identificar el enfoque del desarrollo sostenible)."
+                "Técnica: Entrevistas / Instrumento: Guion de entrevistas semiestructuradas (para comprender percepciones y experiencias a profundidad).",
+                "Técnica: Observación participante / Instrumento: Diario de campo, guía de observación (para documentar la dinámica de implementación de las inserciones curriculares)."
+                "Técnica: Análisis de contenido / Instrumento: Matriz de análisis documental de documentos curriculares y planes de estudio (para identificar el enfoque del desarrollo sostenible)."
             ]
         },
         'input_type': 'text_area',
         'key': 'metodologia.tecnicas',
         'validation': lambda x: len(x) > 20
+    },
+    # NUEVAS SECCIONES DE METODOLOGÍA A CONTINUACIÓN
+    {
+        'name': "Filosofía de la investigación",
+        'question': "Describe la postura epistemológica sobre cómo se concibe el conocimiento y la realidad en tu investigación.",
+        'examples': {
+            'Cualitativa': [
+                "Interpretativismo: La realidad es una construcción social, subjetiva y múltiple, que debe ser comprendida a través de la interpretación de los significados que los individuos le dan.",
+                "Pragmatismo: El conocimiento es provisional y se valida por su utilidad y las consecuencias prácticas de las acciones; se enfoca en resolver problemas."
+            ],
+            'Cuantitativa': [
+                "Positivismo: La realidad es objetiva y externa, y el conocimiento se obtiene a través de la observación empírica y la verificación de hipótesis, buscando leyes generales.",
+                "Pragmatismo: El conocimiento es provisional y se valida por su utilidad y las consecuencias prácticas de las acciones; se enfoca en resolver problemas."
+            ]
+        },
+        'input_type': 'text_area',
+        'key': 'metodologia.filosofia',
+        'validation': lambda x: len(x) > 20
+    },
+    {
+        'name': "Enfoque de la investigación",
+        'question': "Especifica el tipo de razonamiento que guía tu proceso investigativo.",
+        'examples': {
+            'Cualitativa': ["Inductivo: Se parte de observaciones específicas y datos para desarrollar teorías, patrones y generalizaciones."],
+            'Cuantitativa': ["Deductivo: Se parte de una teoría o hipótesis general para probarla a través de observaciones específicas y datos."]
+        },
+        'input_type': 'text_area',
+        'key': 'metodologia.enfoque',
+        'validation': lambda x: len(x) > 5
+    },
+    {
+        'name': "Tipología/Alcance de estudio",
+        'question': "Clasifica tu estudio según su propósito o alcance.",
+        'examples': {
+            'Cualitativa': [
+                "Fenomenológico: Busca comprender las esencias de las experiencias vividas por los individuos.",
+                "Hermenéutico: Se centra en la interpretación de textos, discursos o símbolos para comprender significados.",
+                "Crítico: Analiza las estructuras de poder y las injusticias sociales para promover el cambio.",
+                "Narrativo: Examina las historias de vida o narrativas personales para comprender fenómenos."
+            ],
+            'Cuantitativa': [
+                "Descriptivo: Busca describir características de una población o fenómeno.",
+                "Correlacional: Examina la relación entre dos o más variables.",
+                "Explicativo: Busca establecer relaciones de causa y efecto entre variables."
+            ]
+        },
+        'input_type': 'text_area',
+        'key': 'metodologia.tipologia_estudio',
+        'validation': lambda x: len(x) > 10
+    },
+    {
+        'name': "Horizonte de tiempo",
+        'question': "Define el plazo temporal de tu estudio en función de su duración y momentos de observación.",
+        'examples': {}, # Radio buttons no necesitan ejemplos textuales aquí
+        'input_type': 'radio',
+        'options': ['Transversal', 'Longitudinal'],
+        'key': 'metodologia.horizonte_tiempo',
+        'validation': lambda x: x != ''
+    },
+    {
+        'name': "Estrategias de investigación",
+        'question': "Describe el diseño estructural general que emplearás para abordar tu estudio.",
+        'examples': {
+            'Cualitativa': [
+                "Estudio de caso: Análisis intensivo y profundo de una unidad o fenómeno específico (persona, grupo, evento).",
+                "Investigación Acción Participativa (IAP): Proceso colaborativo de investigación y acción para resolver problemas en una comunidad.",
+                "Etnográfico: Inmersión prolongada en un entorno cultural para comprender sus prácticas y creencias.",
+                "Teoría Fundamentada: Desarrollo de una teoría a partir de los datos recopilados, sin partir de una teoría preexistente."
+            ],
+            'Cuantitativa': [
+                "Diseño de Encuesta: Recopilación sistemática de datos de una muestra representativa para describir o analizar relaciones."
+            ]
+        },
+        'input_type': 'text_area',
+        'key': 'metodologia.estrategias',
+        'validation': lambda x: len(x) > 10
     },
 ]
 
@@ -477,7 +589,12 @@ def main():
             'marco_teorico': 'Marco Teórico',
             'metodologia.poblacion': 'Población',
             'metodologia.muestra': 'Muestra',
-            'metodologia.tecnicas': 'Técnicas de Recolección de Datos'
+            'metodologia.tecnicas': 'Técnicas y procedimientos/Instrumento', # Nombre actualizado
+            'metodologia.filosofia': 'Filosofía de la investigación',
+            'metodologia.enfoque': 'Enfoque de la investigación',
+            'metodologia.tipologia_estudio': 'Tipología/Alcance de estudio',
+            'metodologia.horizonte_tiempo': 'Horizonte de tiempo',
+            'metodologia.estrategias': 'Estrategias de investigación'
         }
         
         completed_steps_for_summary = []
@@ -496,7 +613,6 @@ def main():
             if value and (isinstance(value, str) and value.strip() != '' or isinstance(value, list) and value):
                 display_value = value
                 if isinstance(value, list):
-                    # Simplificado para mostrar solo los temas, sin asumir estructura de diccionario
                     display_value = "\n".join([f"- {item}" for item in value])
                 
                 completed_steps_for_summary.append({
@@ -557,7 +673,11 @@ def main():
             response = st.radio("Selecciona una opción:", current_step['options'], 
                                 index=current_step['options'].index(current_data_value) if current_data_value in current_step['options'] else 0, 
                                 key=f"input_{st.session_state.step}")
-            st.session_state.matrix_data[current_step['key']] = response
+            # Guardar el valor directamente en matrix_data
+            if len(keys) == 2:
+                st.session_state.matrix_data[keys[0]][keys[1]] = response
+            else:
+                st.session_state.matrix_data[current_step['key']] = response
             user_input_for_validation = response 
         elif current_step['input_type'] == 'text_input':
             response = st.text_input("", value=current_data_value, key=f"input_{st.session_state.step}")
@@ -568,23 +688,23 @@ def main():
             user_input_for_validation = response 
         elif current_step['input_type'] == 'text_area':
             if current_step.get('special') == 'list_split':
-                current_value_area = "\n".join(st.session_state.matrix_data[current_step['key']])
-            # Eliminada la lógica de marco_teorico_split ya que ahora usa list_split
+                # current_value_area para text_area debe reflejar la lista como string con saltos de línea
+                if isinstance(st.session_state.matrix_data[current_step['key']], list):
+                    current_value_area = "\n".join(st.session_state.matrix_data[current_step['key']])
+                else:
+                    current_value_area = st.session_state.matrix_data[current_step['key']] # Fallback si no es lista (ej: cadena vacía inicial)
             else:
                 current_value_area = current_data_value
             
             response = st.text_area("", value=current_value_area, key=f"input_{st.session_state.step}", height=150)
             user_input_for_validation = response 
 
-            # Modificado para manejar 'marco_teorico' como una lista simple de strings
-            if current_step.get('special') == 'list_split': # Esto ahora cubre 'objetivos_especificos' y 'marco_teorico'
+            if current_step.get('special') == 'list_split':
                 lines = [line.strip() for line in response.split('\n') if line.strip()]
-                # Asegurar que no se exceda el límite de 3 objetivos si es el caso (solo para objetivos_especificos)
                 if current_step['key'] == 'objetivos_especificos':
                     st.session_state.matrix_data[current_step['key']] = lines[:3] 
-                else: # Esto aplica para marco_teorico ahora
+                else: 
                     st.session_state.matrix_data[current_step['key']] = lines
-            # Eliminada la lógica de parsing de marco_teorico_split aquí
             else:
                 if len(keys) == 2:
                     st.session_state.matrix_data[keys[0]][keys[1]] = response
@@ -612,11 +732,24 @@ def main():
                 st.warning("La hipótesis debe tener al menos 20 caracteres.")
             elif current_step['key'] == 'justificacion' and len(user_input_for_validation) <= 50:
                 st.warning("La justificación debe tener al menos 50 caracteres.")
-            # Modificación aquí: la validación para marco_teorico solo verifica que no esté vacío y que las líneas no estén vacías.
             elif current_step['key'] == 'marco_teorico' and (len(user_input_for_validation) == 0 or not all(line.strip() != '' for line in user_input_for_validation.split('\n') if line.strip())):
-                st.warning("Debes ingresar al menos una entrada para el marco teórico (solo los temas/conceptos).") # MENSAJE DE ADVERTENCIA CORREGIDO
-            elif current_step['key'] in ['metodologia.poblacion', 'metodologia.muestra', 'metodologia.tecnicas'] and len(user_input_for_validation) <= 20:
-                st.warning("La descripción para esta sección de metodología debe tener al menos 20 caracteres.")
+                st.warning("Debes ingresar al menos una entrada para el marco teórico (solo los temas/conceptos).") 
+            elif current_step['key'] == 'metodologia.poblacion' and len(user_input_for_validation) <= 20:
+                st.warning("La descripción de la población debe tener al menos 20 caracteres.")
+            elif current_step['key'] == 'metodologia.muestra' and len(user_input_for_validation) <= 20:
+                st.warning("La descripción de la muestra debe tener al menos 20 caracteres.")
+            elif current_step['key'] == 'metodologia.tecnicas' and len(user_input_for_validation) <= 20:
+                st.warning("La descripción de las técnicas/instrumentos debe tener al menos 20 caracteres.")
+            elif current_step['key'] == 'metodologia.filosofia' and len(user_input_for_validation) <= 20:
+                st.warning("La descripción de la filosofía de investigación debe tener al menos 20 caracteres.")
+            elif current_step['key'] == 'metodologia.enfoque' and len(user_input_for_validation) <= 5:
+                st.warning("La descripción del enfoque de investigación debe tener al menos 5 caracteres.")
+            elif current_step['key'] == 'metodologia.tipologia_estudio' and len(user_input_for_validation) <= 10:
+                st.warning("La descripción de la tipología de estudio debe tener al menos 10 caracteres.")
+            elif current_step['key'] == 'metodologia.horizonte_tiempo' and user_input_for_validation == '':
+                st.warning("Por favor, selecciona una opción para el horizonte de tiempo.")
+            elif current_step['key'] == 'metodologia.estrategias' and len(user_input_for_validation) <= 10:
+                st.warning("La descripción de las estrategias de investigación debe tener al menos 10 caracteres.")
             else:
                  st.warning("Por favor, completa el campo antes de avanzar.")
 
@@ -677,15 +810,20 @@ def main():
         
         st.markdown("**Marco Teórico:**")
         if data['marco_teorico']:
-            # Ajuste para mostrar la lista de temas/conceptos directamente
             for entry in data['marco_teorico']:
-                st.markdown(f"- **{entry}**") # Muestra el string del tema/concepto
+                st.markdown(f"- **{entry}**") 
         else: st.markdown("No definido")
         
         st.markdown("**Metodología:**")
         st.markdown(f"- **Población:** {data['metodologia']['poblacion'] or 'No definido'}")
         st.markdown(f"- **Muestra:** {data['metodologia']['muestra'] or 'No definido'}")
-        st.markdown(f"- **Técnicas de Recolección de Datos:** {data['metodologia']['tecnicas'] or 'No definido'}")
+        st.markdown(f"- **Técnicas y procedimientos/Instrumento:** {data['metodologia']['tecnicas'] or 'No definido'}") # Nombre actualizado
+        st.markdown(f"- **Filosofía de la investigación:** {data['metodologia']['filosofia'] or 'No definido'}")
+        st.markdown(f"- **Enfoque de la investigación:** {data['metodologia']['enfoque'] or 'No definido'}")
+        st.markdown(f"- **Tipología/Alcance de estudio:** {data['metodologia']['tipologia_estudio'] or 'No definido'}")
+        st.markdown(f"- **Horizonte de tiempo:** {data['metodologia']['horizonte_tiempo'] or 'No definido'}")
+        st.markdown(f"- **Estrategias de investigación:** {data['metodologia']['estrategias'] or 'No definido'}")
+
         st.markdown("---")
 
         st.subheader("Mini Rúbrica de Autoevaluación:")
@@ -717,7 +855,12 @@ def main():
                 'metodologia': {
                     'poblacion': '',
                     'muestra': '',
-                    'tecnicas': ''
+                    'tecnicas': '',
+                    'filosofia': '',
+                    'enfoque': '',
+                    'tipologia_estudio': '',
+                    'horizonte_tiempo': '',
+                    'estrategias': ''
                 },
                 'variables': {'independiente': '', 'dependiente': ''},
                 'hipotesis': {'nula': '', 'alternativa': ''}
