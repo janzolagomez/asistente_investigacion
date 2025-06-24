@@ -529,75 +529,951 @@ Evalúa la tipología del estudio mixto:
 Extensión máxima: 300 tokens.
 """
     },
-
-    'metodologia.horizonte_tiempo': lambda tiempo: f"""
-Evalúa el horizonte temporal:
-
-"{tiempo}"
-
-1. Reconocimiento del estudiante.
-2. Evaluación crítica: ¿es pertinente y clara la duración?
-3. Sugerencias.
-4. Ejemplo.
-
-Extensión máxima: 300 tokens.
-""",
-
+    'metodologia.horizonte_tiempo': "El horizonte de tiempo se refiere al plazo temporal del estudio en función de su duración y momentos de observación. Puede ser Transversal (los datos se recogen en un único momento) o Longitudinal (los datos se recogen en múltiples momentos a lo largo del tiempo).",
     'metodologia.estrategias': {
-        'Cualitativa': lambda estrategia: f"""
-Evalúa la estrategia de investigación cualitativa:
+        'Cualitativa': "Las estrategias de investigación cualitativa son los diseños estructurales generales para abordar el estudio. Ejemplos incluyen: Estudio de caso, Investigación Acción Participativa (IAP), Etnográfico y Teoría Fundamentada. Cada una ofrece una forma particular de acercarse al fenómeno para una comprensión profunda.",
+        'Cuantitativa': "Las estrategias de investigación cuantitativa son los diseños estructurales generales que se emplean para la recolección y análisis de datos numéricos. Ejemplos comunes son el Diseño de Encuesta, Experimental, Cuasi-experimental y No experimental. Cada estrategia define cómo se manipularán o se observarán las variables y cómo se recolectarán los datos.",
+        'Mixta': "Las estrategias de investigación mixta son diseños que integran explícitamente los componentes cualitativos y cuantitativos. Incluyen diseños como Convergente Paralelo, Exploratorio Secuencial (QUAL-quan) y Explicatorio Secuencial (QUAN-qual), los cuales definen la secuencia y la forma de integración de los datos."
+    }
+}
 
-"{estrategia}"
 
-1. Aprecio por el esfuerzo.
-2. Evaluación: ¿es una estrategia reconocida? ¿coherente con lo cualitativo?
-3. Sugerencias.
-4. Ejemplo.
+# ==============================================================================
+# PROMPTS PARA LA VALIDACIÓN CON GEMINI (REAL)
+# ==============================================================================
+gemini_prompts = {
+
+    'tipo_investigacion': lambda respuesta: f"""
+Actúa como un experto en metodología de investigación. Evalúa la elección del tipo de investigación '{respuesta}'.
+
+Estructura tu respuesta en:
+1. Reconocimiento del aporte del estudiante.
+2. Evaluación crítica fundamentada: ¿el tipo de investigación es coherente con el enfoque general del estudio?
+3. Orientación para la mejora (si aplica).
+4. Ejemplo orientativo (si aplica).
+
+Extensión máxima: 300 tokens. Mantén un tono académico, respetuoso y crítico.
+""",
+
+    'tema': {
+        'Cualitativa': lambda tema: f"""
+Actúa como experto en investigación cualitativa. Evalúa el siguiente tema de investigación:
+
+"{tema}"
+
+Estructura tu respuesta en:
+1. Valoración inicial del esfuerzo.
+2. Evaluación crítica: ¿delimita fenómeno y contexto? ¿es apropiado para estudio cualitativo?
+3. Sugerencias claras de mejora.
+4. Ejemplo orientador (no resolver).
+
+Extensión máxima: 300 tokens. Sé claro y empático.
+""",
+
+        'Cuantitativa': lambda tema: f"""
+Actúa como experto en investigación cuantitativa. Evalúa el siguiente tema:
+
+"{tema}"
+
+Estructura tu evaluación en:
+1. Reconocimiento del aporte.
+2. Evaluación crítica: ¿incluye variables? ¿es específico? ¿coherente con lo cuantitativo?
+3. Orientación para mejorar.
+4. Ejemplo ilustrativo (si aplica).
+
+Responde en tono académico y constructivo. Extensión máxima: 300 tokens.
+""",
+        'Mixta': lambda tema: f"""
+Actúa como experto en investigación mixta. Evalúa el siguiente tema de investigación:
+
+"{tema}"
+
+Estructura tu respuesta en:
+1. Valoración inicial del esfuerzo.
+2. Evaluación crítica: ¿delimita el fenómeno desde perspectivas cualitativas y cuantitativas? ¿Es lo suficientemente amplio para un diseño mixto?
+3. Sugerencias claras de mejora.
+4. Ejemplo orientador (no resolver).
+
+Extensión máxima: 300 tokens. Sé claro y empático.
+"""
+    },
+
+    'pregunta': {
+        'Cualitativa': lambda pregunta: f"""
+Eres experto en investigación cualitativa. Evalúa la siguiente pregunta:
+
+"{pregunta}"
+
+Tu retroalimentación debe:
+1. Reconocer el esfuerzo.
+2. Evaluar si es abierta, interpretativa y fenomenológica.
+3. Orientar si requiere mejoras.
+4. Incluir ejemplo similar como guía.
+
+Sé crítico y empático. Extensión máxima: 300 tokens.
+""",
+
+        'Cuantitativa': lambda pregunta: f"""
+Actúa como experto en investigación cuantitativa. Evalúa:
+
+"{pregunta}"
+
+Tu evaluación debe:
+1. Valorar el intento del estudiante.
+2. Evaluar claridad, relación de variables, objetividad.
+3. Orientar sin reemplazar.
+4. Dar ejemplo comparativo.
+
+Responde de forma crítica y constructiva. Extensión máxima: 300 tokens.
+""",
+        'Mixta': lambda pregunta: f"""
+Eres experto en investigación mixta. Evalúa la siguiente pregunta:
+
+"{pregunta}"
+
+Tu retroalimentación debe:
+1. Reconocer el esfuerzo.
+2. Evaluar si integra componentes cualitativos y cuantitativos. ¿Es clara, específica y abarcadora para un diseño mixto?
+3. Orientar si requiere mejoras.
+4. Incluir ejemplo similar como guía.
+
+Sé crítico y empático. Extensión máxima: 300 tokens.
+"""
+    },
+
+    'objetivo_general': {
+        'Cualitativa': lambda obj: f"""
+Eres especialista en investigación cualitativa. Evalúa el objetivo general:
+
+"{obj}"
+
+Organiza tu respuesta en:
+1. Reconocimiento.
+2. Evaluación: ¿verbo en infinitivo adecuado? ¿coherente con lo cualitativo?
+3. Recomendaciones claras.
+4. Ejemplo tipo.
 
 Extensión máxima: 300 tokens.
 """,
 
-        'Cuantitativa': lambda estrategia: f"""
-Evalúa la estrategia cuantitativa:
+        'Cuantitativa': lambda obj: f"""
+Actúa como experto en metodología cuantitativa. Evalúa:
 
-"{estrategia}"
+"{obj}"
+
+Responde en:
+1. Valoración inicial.
+2. Evaluación técnica: ¿verbo de acción medible? ¿variables claras?
+3. Orientación pedagógica.
+4. Modelo orientador.
+
+Extensión máxima: 300 tokens.
+""",
+        'Mixta': lambda obj: f"""
+Eres especialista en investigación mixta. Evalúa el objetivo general:
+
+"{obj}"
+
+Organiza tu respuesta en:
+1. Reconocimiento.
+2. Evaluación: ¿El verbo en infinitivo refleja la integración cualitativa y cuantitativa? ¿Es coherente con un diseño mixto?
+3. Recomendaciones claras.
+4. Ejemplo tipo.
+
+Extensión máxima: 300 tokens.
+"""
+    },
+
+    'objetivos_especificos': {
+        'Cualitativa': lambda objs: f"""
+Evalúa los siguientes objetivos específicos cualitativos:
+
+"{objs}"
+
+Tu respuesta debe incluir:
+1. Aprecio por el esfuerzo.
+2. Evaluación crítica: ¿derivan del objetivo general? ¿son coherentes con lo cualitativo?
+3. Orientación concreta.
+4. Ejemplo orientativo parcial.
+
+Extensión máxima: 300 tokens.
+""",
+
+        'Cuantitativa': lambda objs: f"""
+Evalúa los siguientes objetivos específicos cuantitativos:
+
+"{objs}"
+
+Organiza la retroalimentación en:
+1. Reconocimiento inicial.
+2. Evaluación crítica: ¿son medibles? ¿alineados con variables y objetivo general?
+3. Recomendaciones formativas.
+4. Ejemplo ilustrativo.
+
+Extensión máxima: 300 tokens.
+""",
+        'Mixta': lambda objs: f"""
+Evalúa los siguientes objetivos específicos mixtos:
+
+"{objs}"
+
+Tu respuesta debe incluir:
+1. Aprecio por el esfuerzo.
+2. Evaluación crítica: ¿derivan del objetivo general? ¿Integran pasos cualitativos y cuantitativos? ¿Reflejan la secuencialidad/concurrencia del diseño?
+3. Orientación concreta.
+4. Ejemplo orientativo parcial.
+
+Extensión máxima: 300 tokens.
+"""
+    },
+
+    'variables.independiente': lambda var: f"""
+Evalúa la siguiente variable independiente:
+
+"{var}"
+
+Estructura tu respuesta en:
+1. Apreciación inicial.
+2. Evaluación crítica: ¿es la causa? ¿está bien definida y operacionalizada?
+3. Orientación pedagógica.
+4. Ejemplo similar.
+
+Extensión máxima: 300 tokens.
+""",
+
+    'variables.dependiente': lambda var: f"""
+Evalúa la siguiente variable dependiente:
+
+"{var}"
+
+Organiza tu retroalimentación en:
+1. Valoración del aporte.
+2. Evaluación crítica: ¿representa el efecto? ¿es medible y coherente?
+3. Recomendación para refinar.
+4. Ejemplo modelo.
+
+Extensión máxima: 300 tokens.
+""",
+
+    'hipotesis.nula': lambda hip: f"""
+Evalúa la siguiente hipótesis nula:
+
+"{hip}"
+
+Sigue esta estructura:
+1. Reconocimiento del esfuerzo.
+2. Evaluación: ¿representa ausencia de relación/efecto? ¿es verificable?
+3. Sugerencias.
+4. Ejemplo orientador.
+
+Extensión máxima: 300 tokens.
+""",
+
+    'hipotesis.alternativa': lambda hip: f"""
+Evalúa la siguiente hipótesis alternativa:
+
+"{hip}"
+
+Desarrolla tu retroalimentación en:
+1. Apreciación del intento.
+2. Evaluación crítica: ¿contradice a la nula? ¿establece relación o efecto verificable?
+3. Sugerencia de mejora.
+4. Ejemplo ilustrativo.
+
+Extensión máxima: 300 tokens.
+""",
+
+    'justificacion': lambda just: f"""
+Evalúa la siguiente justificación:
+
+"{just}"
+
+Tu evaluación debe:
+1. Reconocer aspectos positivos.
+2. Evaluar: ¿aborda conveniencia, relevancia social, valor teórico, utilidad?
+3. Orientación formativa.
+4. Preguntas guía para revisión.
+
+Extensión máxima: 300 tokens.
+""",
+
+    'marco_teorico': lambda temas: f"""
+Evalúa la lista de conceptos para el marco teórico:
+
+"{temas}"
+
+1. Breve introducción en español.
+2. Evaluación de pertinencia.
+3. Genera lista de 5-10 palabras clave en inglés para búsqueda científica (Scopus, WoS).
+
+Extensión máxima: 300 tokens.
+""",
+
+    'metodologia.poblacion': lambda pob: f"""
+Evalúa la descripción de población:
+
+"{pob}"
+
+1. Valoración del esfuerzo.
+2. Evaluación crítica: ¿está bien delimitada? ¿se identifican características comunes?
+3. Sugerencias.
+4. Ejemplo orientativo.
+
+Extensión máxima: 300 tokens.
+""",
+
+    'metodologia.muestra': lambda mue: f"""
+Evalúa la muestra propuesta:
+
+"{mue}"
 
 1. Reconocimiento.
-2. Evaluación crítica: ¿es adecuada al diseño estructural del estudio?
-3. Recomendaciones.
-4. Modelo.
+2. Evaluación: ¿tipo de muestreo y tamaño adecuados?
+3. Orientación para ajustes.
+4. Ejemplo similar.
 
 Extensión máxima: 300 tokens.
 """,
-        'Mixta': lambda estrategia: f"""
-Evalúa la estrategia de investigación mixta:
 
-"{estrategia}"
+    'metodologia.tecnicas': {
+        'Cualitativa': lambda tec: f"""
+Evalúa técnicas e instrumentos:
 
-1. Aprecio por el esfuerzo.
-2. Evaluación: ¿Es una estrategia reconocida para diseños mixtos? ¿Refleja la integración de los componentes cualitativos y cuantitativos?
-3. Sugerencias.
+"{tec}"
+
+1. Aprecio inicial.
+2. Evaluación crítica: ¿permiten recolectar los datos necesarios según el enfoque?
+3. Recomendaciones.
+4. Ejemplo.
+
+Extensión máxima: 300 tokens.
+""",
+        'Cuantitativa': lambda tec: f"""
+Evalúa técnicas e instrumentos:
+
+"{tec}"
+
+1. Aprecio inicial.
+2. Evaluación crítica: ¿permiten recolectar los datos necesarios según el enfoque?
+3. Recomendaciones.
+4. Ejemplo.
+
+Extensión máxima: 300 tokens.
+""",
+        'Mixta': lambda tec: f"""
+Evalúa las técnicas e instrumentos propuestos para un estudio mixto:
+
+"{tec}"
+
+1. Aprecio inicial.
+2. Evaluación crítica: ¿Las técnicas e instrumentos cualitativos y cuantitativos son apropiados para el diseño mixto? ¿Se complementan para la triangulación de datos?
+3. Recomendaciones.
 4. Ejemplo.
 
 Extensión máxima: 300 tokens.
 """
     },
 
-    'final_coherence_evaluation': lambda matriz, tipo: f"""
-Eres asesor experto en metodología. Evalúa esta matriz de consistencia para una investigación de tipo '{tipo}':
+    'metodologia.filosofia': {
+        'Cualitativa': lambda filo: f"""
+Evalúa la filosofía de investigación cualitativa:
 
-"{matriz}"
+"{filo}"
 
-Tu retroalimentación debe incluir:
-1. Apreciación global del trabajo.
-2. Evaluación crítica parte por parte (tema, objetivos, pregunta, marco, método, hipótesis o variables si aplica).
-3. Sugerencias específicas para mejorar.
-4. Ejemplos ilustrativos (si aplica).
-5. Evaluación global de coherencia.
+1. Reconocimiento del intento.
+2. Evaluación: ¿se alinea con paradigmas interpretativos/pragmáticos?
+3. Sugerencias.
+4. Ejemplo orientativo.
 
-Extensión: 3000 tokens. Mantén el tipo de investigación claro y constante. Usa principios de metodología de investigación.
+Extensión máxima: 300 tokens.
+""",
+
+        'Cuantitativa': lambda filo: f"""
+Evalúa la filosofía de investigación cuantitativa:
+
+"{filo}"
+
+1. Apreciación inicial.
+2. Evaluación: ¿se alinea con paradigma positivista/pragmático?
+3. Orientación.
+4. Ejemplo.
+
+Extensión máxima: 300 tokens.
+""",
+        'Mixta': lambda filo: f"""
+Evalúa la filosofía de investigación para un estudio mixto:
+
+"{filo}"
+
+1. Reconocimiento del intento.
+2. Evaluación: ¿Es la filosofía adecuada para integrar ambos enfoques?
+3. Sugerencias.
+4. Ejemplo orientativo.
+
+Extensión máxima: 300 tokens.
 """
+    },
+
+    'metodologia.enfoque': {
+        'Cualitativa': lambda enfoque: f"""
+Evalúa el enfoque cualitativo:
+
+"{enfoque}"
+
+1. Reconocimiento.
+2. Evaluación crítica: ¿se alinea con razonamiento inductivo?
+3. Recomendaciones.
+4. Ejemplo.
+
+Extensión máxima: 300 tokens.
+""",
+
+        'Cuantitativa': lambda enfoque: f"""
+Evalúa el enfoque cuantitativo:
+
+"{enfoque}"
+
+1. Apreciación.
+2. Evaluación crítica: ¿se alinea con razonamiento deductivo?
+3. Recomendaciones.
+4. Ejemplo.
+
+Extensión máxima: 300 tokens.
+""",
+        'Mixta': lambda enfoque: f"""
+Evalúa el enfoque para un estudio mixto:
+
+"{enfoque}"
+
+1. Reconocimiento.
+2. Evaluación crítica: ¿Refleja la combinación de razonamiento inductivo y deductivo apropiada para un diseño mixto?
+3. Recomendaciones.
+4. Ejemplo.
+
+Extensión máxima: 300 tokens.
+"""
+    },
+
+    'metodologia.tipologia_estudio': {
+        'Cualitativa': lambda tipologia: f"""
+Evalúa la tipología del estudio cualitativo:
+
+"{tipologia}"
+
+1. Aprecio inicial.
+2. Evaluación crítica: ¿es una clasificación reconocida? ¿coherente con el propósito?
+3. Recomendación.
+4. Ejemplo.
+
+Extensión máxima: 300 tokens.
+""",
+
+        'Cuantitativa': lambda tipologia: f"""
+Evalúa la tipología del estudio cuantitativo:
+
+"{tipologia}"
+
+1. Reconocimiento.
+2. Evaluación: ¿es adecuada para lo que se quiere medir o comparar?
+3. Sugerencia.
+4. Modelo.
+
+Extensión máxima: 300 tokens.
+""",
+        'Mixta': lambda tipologia: f"""
+Evalúa la tipología del estudio mixto:
+
+"{tipologia}"
+
+1. Reconocimiento.
+2. Evaluación: ¿Es una clasificación reconocida para diseños mixtos? ¿Es coherente con el propósito de integrar ambos enfoques?
+3. Sugerencia.
+4. Modelo.
+
+Extensión máxima: 300 tokens.
+"""
+    },
+    'metodologia.horizonte_tiempo': {
+        'Cualitativa': "El horizonte de tiempo se refiere al plazo temporal del estudio en función de su duración y momentos de observación. Puede ser Transversal (los datos se recogen en un único momento) o Longitudinal (los datos se recogen en múltiples momentos a lo largo del tiempo).",
+        'Cuantitativa': "El horizonte de tiempo se refiere al plazo temporal del estudio en función de su duración y momentos de observación. Puede ser Transversal (los datos se recogen en un único momento) o Longitudinal (los datos se recogen en múltiples momentos a lo largo del tiempo).",
+        'Mixta': "El horizonte de tiempo se refiere al plazo temporal del estudio en función de su duración y momentos de observación. Puede ser Transversal (los datos cualitativos y cuantitativos se recogen en un único momento, simultáneamente) o Longitudinal (los datos cualitativos y/o cuantitativos se recogen en múltiples momentos, a lo largo del tiempo, permitiendo observar la evolución)."
+    },
+    'metodologia.estrategias': {
+        'Cualitativa': "Las estrategias de investigación cualitativa son los diseños estructurales generales para abordar el estudio. Ejemplos incluyen: Estudio de caso, Investigación Acción Participativa (IAP), Etnográfico y Teoría Fundamentada. Cada una ofrece una forma particular de acercarse al fenómeno para una comprensión profunda.",
+        'Cuantitativa': "Las estrategias de investigación cuantitativa son los diseños estructurales generales que se emplean para la recolección y análisis de datos numéricos. Ejemplos comunes son el Diseño de Encuesta, Experimental, Cuasi-experimental y No experimental. Cada estrategia define cómo se manipularán o se observarán las variables y cómo se recolectarán los datos.",
+        'Mixta': "Las estrategias de investigación mixta son diseños que integran explícitamente los componentes cualitativos y cuantitativos. Incluyen diseños como Convergente Paralelo, Exploratorio Secuencial (QUAL-quan) y Explicatorio Secuencial (QUAN-qual), los cuales definen la secuencia y la forma de integración de los datos."
+    }
 }
+
+
+# ==============================================================================
+# PROMPTS PARA LA VALIDACIÓN CON GEMINI (REAL)
+# ==============================================================================
+gemini_prompts = {
+
+    'tipo_investigacion': lambda respuesta: f"""
+Actúa como un experto en metodología de investigación. Evalúa la elección del tipo de investigación '{respuesta}'.
+
+Estructura tu respuesta en:
+1. Reconocimiento del aporte del estudiante.
+2. Evaluación crítica fundamentada: ¿el tipo de investigación es coherente con el enfoque general del estudio?
+3. Orientación para la mejora (si aplica).
+4. Ejemplo orientativo (si aplica).
+
+Extensión máxima: 300 tokens. Mantén un tono académico, respetuoso y crítico.
+""",
+
+    'tema': {
+        'Cualitativa': lambda tema: f"""
+Actúa como experto en investigación cualitativa. Evalúa el siguiente tema de investigación:
+
+"{tema}"
+
+Estructura tu respuesta en:
+1. Valoración inicial del esfuerzo.
+2. Evaluación crítica: ¿delimita fenómeno y contexto? ¿es apropiado para estudio cualitativo?
+3. Sugerencias claras de mejora.
+4. Ejemplo orientador (no resolver).
+
+Extensión máxima: 300 tokens. Sé claro y empático.
+""",
+
+        'Cuantitativa': lambda tema: f"""
+Actúa como experto en investigación cuantitativa. Evalúa el siguiente tema:
+
+"{tema}"
+
+Estructura tu evaluación en:
+1. Reconocimiento del aporte.
+2. Evaluación crítica: ¿incluye variables? ¿es específico? ¿coherente con lo cuantitativo?
+3. Orientación para mejorar.
+4. Ejemplo ilustrativo (si aplica).
+
+Responde en tono académico y constructivo. Extensión máxima: 300 tokens.
+""",
+        'Mixta': lambda tema: f"""
+Actúa como experto en investigación mixta. Evalúa el siguiente tema de investigación:
+
+"{tema}"
+
+Estructura tu respuesta en:
+1. Valoración inicial del esfuerzo.
+2. Evaluación crítica: ¿delimita el fenómeno desde perspectivas cualitativas y cuantitativas? ¿Es lo suficientemente amplio para un diseño mixto?
+3. Sugerencias claras de mejora.
+4. Ejemplo orientador (no resolver).
+
+Extensión máxima: 300 tokens. Sé claro y empático.
+"""
+    },
+
+    'pregunta': {
+        'Cualitativa': lambda pregunta: f"""
+Eres experto en investigación cualitativa. Evalúa la siguiente pregunta:
+
+"{pregunta}"
+
+Tu retroalimentación debe:
+1. Reconocer el esfuerzo.
+2. Evaluar si es abierta, interpretativa y fenomenológica.
+3. Orientar si requiere mejoras.
+4. Incluir ejemplo similar como guía.
+
+Sé crítico y empático. Extensión máxima: 300 tokens.
+""",
+
+        'Cuantitativa': lambda pregunta: f"""
+Actúa como experto en investigación cuantitativa. Evalúa:
+
+"{pregunta}"
+
+Tu evaluación debe:
+1. Valorar el intento del estudiante.
+2. Evaluar claridad, relación de variables, objetividad.
+3. Orientar sin reemplazar.
+4. Dar ejemplo comparativo.
+
+Responde de forma crítica y constructiva. Extensión máxima: 300 tokens.
+""",
+        'Mixta': lambda pregunta: f"""
+Eres experto en investigación mixta. Evalúa la siguiente pregunta:
+
+"{pregunta}"
+
+Tu retroalimentación debe:
+1. Reconocer el esfuerzo.
+2. Evaluar si integra componentes cualitativos y cuantitativos. ¿Es clara, específica y abarcadora para un diseño mixto?
+3. Orientar si requiere mejoras.
+4. Incluir ejemplo similar como guía.
+
+Sé crítico y empático. Extensión máxima: 300 tokens.
+"""
+    },
+
+    'objetivo_general': {
+        'Cualitativa': lambda obj: f"""
+Eres especialista en investigación cualitativa. Evalúa el objetivo general:
+
+"{obj}"
+
+Organiza tu respuesta en:
+1. Reconocimiento.
+2. Evaluación: ¿verbo en infinitivo adecuado? ¿coherente con lo cualitativo?
+3. Recomendaciones claras.
+4. Ejemplo tipo.
+
+Extensión máxima: 300 tokens.
+""",
+
+        'Cuantitativa': lambda obj: f"""
+Actúa como experto en metodología cuantitativa. Evalúa:
+
+"{obj}"
+
+Responde en:
+1. Valoración inicial.
+2. Evaluación técnica: ¿verbo de acción medible? ¿variables claras?
+3. Orientación pedagógica.
+4. Modelo orientador.
+
+Extensión máxima: 300 tokens.
+""",
+        'Mixta': lambda obj: f"""
+Eres especialista en investigación mixta. Evalúa el objetivo general:
+
+"{obj}"
+
+Organiza tu respuesta en:
+1. Reconocimiento.
+2. Evaluación: ¿El verbo en infinitivo refleja la integración cualitativa y cuantitativa? ¿Es coherente con un diseño mixto?
+3. Recomendaciones claras.
+4. Ejemplo tipo.
+
+Extensión máxima: 300 tokens.
+"""
+    },
+
+    'objetivos_especificos': {
+        'Cualitativa': lambda objs: f"""
+Evalúa los siguientes objetivos específicos cualitativos:
+
+"{objs}"
+
+Tu respuesta debe incluir:
+1. Aprecio por el esfuerzo.
+2. Evaluación crítica: ¿derivan del objetivo general? ¿son coherentes con lo cualitativo?
+3. Orientación concreta.
+4. Ejemplo orientativo parcial.
+
+Extensión máxima: 300 tokens.
+""",
+
+        'Cuantitativa': lambda objs: f"""
+Evalúa los siguientes objetivos específicos cuantitativos:
+
+"{objs}"
+
+Organiza la retroalimentación en:
+1. Reconocimiento inicial.
+2. Evaluación crítica: ¿son medibles? ¿alineados con variables y objetivo general?
+3. Recomendaciones formativas.
+4. Ejemplo ilustrativo.
+
+Extensión máxima: 300 tokens.
+""",
+        'Mixta': lambda objs: f"""
+Evalúa los siguientes objetivos específicos mixtos:
+
+"{objs}"
+
+Tu respuesta debe incluir:
+1. Aprecio por el esfuerzo.
+2. Evaluación crítica: ¿derivan del objetivo general? ¿Integran pasos cualitativos y cuantitativos? ¿Reflejan la secuencialidad/concurrencia del diseño?
+3. Orientación concreta.
+4. Ejemplo orientativo parcial.
+
+Extensión máxima: 300 tokens.
+"""
+    },
+
+    'variables.independiente': lambda var: f"""
+Evalúa la siguiente variable independiente:
+
+"{var}"
+
+Estructura tu respuesta en:
+1. Apreciación inicial.
+2. Evaluación crítica: ¿es la causa? ¿está bien definida y operacionalizada?
+3. Orientación pedagógica.
+4. Ejemplo similar.
+
+Extensión máxima: 300 tokens.
+""",
+
+    'variables.dependiente': lambda var: f"""
+Evalúa la siguiente variable dependiente:
+
+"{var}"
+
+Organiza tu retroalimentación en:
+1. Valoración del aporte.
+2. Evaluación crítica: ¿representa el efecto? ¿es medible y coherente?
+3. Recomendación para refinar.
+4. Ejemplo modelo.
+
+Extensión máxima: 300 tokens.
+""",
+
+    'hipotesis.nula': lambda hip: f"""
+Evalúa la siguiente hipótesis nula:
+
+"{hip}"
+
+Sigue esta estructura:
+1. Reconocimiento del esfuerzo.
+2. Evaluación: ¿representa ausencia de relación/efecto? ¿es verificable?
+3. Sugerencias.
+4. Ejemplo orientador.
+
+Extensión máxima: 300 tokens.
+""",
+
+    'hipotesis.alternativa': lambda hip: f"""
+Evalúa la siguiente hipótesis alternativa:
+
+"{hip}"
+
+Desarrolla tu retroalimentación en:
+1. Apreciación del intento.
+2. Evaluación crítica: ¿contradice a la nula? ¿establece relación o efecto verificable?
+3. Sugerencia de mejora.
+4. Ejemplo ilustrativo.
+
+Extensión máxima: 300 tokens.
+""",
+
+    'justificacion': lambda just: f"""
+Evalúa la siguiente justificación:
+
+"{just}"
+
+Tu evaluación debe:
+1. Reconocer aspectos positivos.
+2. Evaluar: ¿aborda conveniencia, relevancia social, valor teórico, utilidad?
+3. Orientación formativa.
+4. Preguntas guía para revisión.
+
+Extensión máxima: 300 tokens.
+""",
+
+    'marco_teorico': lambda temas: f"""
+Evalúa la lista de conceptos para el marco teórico:
+
+"{temas}"
+
+1. Breve introducción en español.
+2. Evaluación de pertinencia.
+3. Genera lista de 5-10 palabras clave en inglés para búsqueda científica (Scopus, WoS).
+
+Extensión máxima: 300 tokens.
+""",
+
+    'metodologia.poblacion': lambda pob: f"""
+Evalúa la descripción de población:
+
+"{pob}"
+
+1. Valoración del esfuerzo.
+2. Evaluación crítica: ¿está bien delimitada? ¿se identifican características comunes?
+3. Sugerencias.
+4. Ejemplo orientativo.
+
+Extensión máxima: 300 tokens.
+""",
+
+    'metodologia.muestra': lambda mue: f"""
+Evalúa la muestra propuesta:
+
+"{mue}"
+
+1. Reconocimiento.
+2. Evaluación: ¿tipo de muestreo y tamaño adecuados?
+3. Orientación para ajustes.
+4. Ejemplo similar.
+
+Extensión máxima: 300 tokens.
+""",
+
+    'metodologia.tecnicas': {
+        'Cualitativa': lambda tec: f"""
+Evalúa técnicas e instrumentos:
+
+"{tec}"
+
+1. Aprecio inicial.
+2. Evaluación crítica: ¿permiten recolectar los datos necesarios según el enfoque?
+3. Recomendaciones.
+4. Ejemplo.
+
+Extensión máxima: 300 tokens.
+""",
+        'Cuantitativa': lambda tec: f"""
+Evalúa técnicas e instrumentos:
+
+"{tec}"
+
+1. Aprecio inicial.
+2. Evaluación crítica: ¿permiten recolectar los datos necesarios según el enfoque?
+3. Recomendaciones.
+4. Ejemplo.
+
+Extensión máxima: 300 tokens.
+""",
+        'Mixta': lambda tec: f"""
+Evalúa las técnicas e instrumentos propuestos para un estudio mixto:
+
+"{tec}"
+
+1. Aprecio inicial.
+2. Evaluación crítica: ¿Las técnicas e instrumentos cualitativos y cuantitativos son apropiados para el diseño mixto? ¿Se complementan para la triangulación de datos?
+3. Recomendaciones.
+4. Ejemplo.
+
+Extensión máxima: 300 tokens.
+"""
+    },
+
+    'metodologia.filosofia': {
+        'Cualitativa': lambda filo: f"""
+Evalúa la filosofía de investigación cualitativa:
+
+"{filo}"
+
+1. Reconocimiento del intento.
+2. Evaluación: ¿se alinea con paradigmas interpretativos/pragmáticos?
+3. Sugerencias.
+4. Ejemplo orientativo.
+
+Extensión máxima: 300 tokens.
+""",
+
+        'Cuantitativa': lambda filo: f"""
+Evalúa la filosofía de investigación cuantitativa:
+
+"{filo}"
+
+1. Apreciación inicial.
+2. Evaluación: ¿se alinea con paradigma positivista/pragmático?
+3. Orientación.
+4. Ejemplo.
+
+Extensión máxima: 300 tokens.
+""",
+        'Mixta': lambda filo: f"""
+Evalúa la filosofía de investigación para un estudio mixto:
+
+"{filo}"
+
+1. Reconocimiento del intento.
+2. Evaluación: ¿Es la filosofía adecuada para integrar ambos enfoques?
+3. Sugerencias.
+4. Ejemplo orientativo.
+
+Extensión máxima: 300 tokens.
+"""
+    },
+
+    'metodologia.enfoque': {
+        'Cualitativa': lambda enfoque: f"""
+Evalúa el enfoque cualitativo:
+
+"{enfoque}"
+
+1. Reconocimiento.
+2. Evaluación crítica: ¿se alinea con razonamiento inductivo?
+3. Recomendaciones.
+4. Ejemplo.
+
+Extensión máxima: 300 tokens.
+""",
+
+        'Cuantitativa': lambda enfoque: f"""
+Evalúa el enfoque cuantitativo:
+
+"{enfoque}"
+
+1. Apreciación.
+2. Evaluación crítica: ¿se alinea con razonamiento deductivo?
+3. Recomendaciones.
+4. Ejemplo.
+
+Extensión máxima: 300 tokens.
+""",
+        'Mixta': lambda enfoque: f"""
+Evalúa el enfoque para un estudio mixto:
+
+"{enfoque}"
+
+1. Reconocimiento.
+2. Evaluación crítica: ¿Refleja la combinación de razonamiento inductivo y deductivo apropiada para un diseño mixto?
+3. Recomendaciones.
+4. Ejemplo.
+
+Extensión máxima: 300 tokens.
+"""
+    },
+
+    'metodologia.tipologia_estudio': {
+        'Cualitativa': lambda tipologia: f"""
+Evalúa la tipología del estudio cualitativo:
+
+"{tipologia}"
+
+1. Aprecio inicial.
+2. Evaluación crítica: ¿es una clasificación reconocida? ¿coherente con el propósito?
+3. Recomendación.
+4. Ejemplo.
+
+Extensión máxima: 300 tokens.
+""",
+
+        'Cuantitativa': lambda tipologia: f"""
+Evalúa la tipología del estudio cuantitativo:
+
+"{tipologia}"
+
+1. Reconocimiento.
+2. Evaluación: ¿es adecuada para lo que se quiere medir o comparar?
+3. Sugerencia.
+4. Modelo.
+
+Extensión máxima: 300 tokens.
+""",
+        'Mixta': lambda tipologia: f"""
+Evalúa la tipología del estudio mixto:
+
+"{tipologia}"
+
+1. Reconocimiento.
+2. Evaluación: ¿Es una clasificación reconocida para diseños mixtos? ¿Es coherente con el propósito de integrar ambos enfoques?
+3. Sugerencia.
+4. Modelo.
+
+Extensión máxima: 300 tokens.
+"""
+    },
+    'metodologia.horizonte_tiempo': {
+        'Cualitativa': "El horizonte de tiempo se refiere al plazo temporal del estudio en función de su duración y momentos de observación. Puede ser Transversal (los datos se recogen en un único momento) o Longitudinal (los datos se recogen en múltiples momentos a lo largo del tiempo).",
+        'Cuantitativa': "El horizonte de tiempo se refiere al plazo temporal del estudio en función de su duración y momentos de observación. Puede ser Transversal (los datos se recogen en un único momento) o Longitudinal (los datos se recogen en múltiples momentos a lo largo del tiempo).",
+        'Mixta': "El horizonte de tiempo se refiere al plazo temporal del estudio en función de su duración y momentos de observación. Puede ser Transversal (los datos cualitativos y cuantitativos se recogen en un único momento, simultáneamente) o Longitudinal (los datos cualitativos y/o cuantitativos se recogen en múltiples momentos, a lo largo del tiempo, permitiendo observar la evolución)."
+    },
+    'metodologia.estrategias': {
+        'Cualitativa': "Las estrategias de investigación cualitativa son los diseños estructurales generales para abordar el estudio. Ejemplos incluyen: Estudio de caso, Investigación Acción Participativa (IAP), Etnográfico y Teoría Fundamentada. Cada una ofrece una forma particular de acercarse al fenómeno para una comprensión profunda.",
+        'Cuantitativa': "Las estrategias de investigación cuantitativa son los diseños estructurales generales que se emplean para la recolección y análisis de datos numéricos. Ejemplos comunes son el Diseño de Encuesta, Experimental, Cuasi-experimental y No experimental. Cada estrategia define cómo se manipularán o se observarán las variables y cómo se recolectarán los datos.",
+        'Mixta': "Las estrategias de investigación mixta son diseños que integran explícitamente los componentes cualitativos y cuantitativos. Incluyen diseños como Convergente Paralelo, Exploratorio Secuencial (QUAL-quan) y Explicatorio Secuencial (QUAN-qual), los cuales definen la secuencia y la forma de integración de los datos."
+    }
+}
+
+
 # ==============================================================================
 # FUNCIÓN PARA LLAMAR A LA API DE GEMINI
 # ==============================================================================
@@ -1383,11 +2259,9 @@ def main():
                 st.session_state.matrix_data[key_to_update] = new_value
             st.session_state.ai_feedback = "" # Clear AI feedback on data change
 
-        # --- INICIO DEL CAMBIO DE INDENTACIÓN Y LÓGICA DE st.radio ---
         if current_step['input_type'] == 'radio':
             widget_key = f"radio_input_{current_step['key']}_{st.session_state.step}"
             
-            # Obtener el índice de la opción actualmente seleccionada, o 0 si no se ha seleccionado nada
             try:
                 current_index = current_step['options'].index(current_data_value)
             except ValueError:
@@ -1400,16 +2274,13 @@ def main():
                 key=widget_key
             )
             
-            # Solo actualizar si la respuesta ha cambiado para evitar bucles o comportamientos inesperados
-            # y también asegurar que la validación se haga con el valor correcto.
             if response != current_data_value:
                 if len(keys) == 2:
                     st.session_state.matrix_data[keys[0]][keys[1]] = response
                 else:
                     st.session_state.matrix_data[current_step['key']] = response
-                # For radio buttons, a change causes a rerun, so we need to ensure AI feedback is cleared
                 st.session_state.ai_feedback = ""
-                st.experimental_rerun() # Forces a rerun to reflect the selection and clear feedback
+                st.experimental_rerun() 
 
             user_input_for_validation = response 
             
@@ -1442,18 +2313,17 @@ def main():
                                                 key=widget_key)
                 response = display_to_option_map.get(selected_display_option, "")
                 
-                # Update session state with the selected value
                 if response != current_data_value:
                     if len(keys) == 2:
                         st.session_state.matrix_data[keys[0]][keys[1]] = response
                     else:
                         st.session_state.matrix_data[current_step['key']] = response
-                    st.session_state.ai_feedback = "" # Clear AI feedback on data change
-                    st.experimental_rerun() # Forces a rerun
+                    st.session_state.ai_feedback = ""
+                    st.experimental_rerun()
 
                 user_input_for_validation = response
             else:
-                user_input_for_validation = "" # Default if no options
+                user_input_for_validation = ""
                 st.warning("Selecciona primero un tipo de investigación para ver las opciones disponibles.")
                 
         elif current_step['input_type'] == 'text_input':
@@ -1488,8 +2358,7 @@ def main():
                     st.session_state.matrix_data[current_step['key']] = response
         
         is_current_step_valid = current_step['validation'](user_input_for_validation)
-        # --- FIN DEL CAMBIO DE INDENTACIÓN Y LÓGICA DE st.radio ---
-
+        
         if not is_current_step_valid:
             if current_step['input_type'] in ['radio', 'radio_with_explanation'] and user_input_for_validation == '':
                  st.warning("Por favor, selecciona una opción para continuar.")
@@ -1605,7 +2474,7 @@ def main():
         st.markdown("---")
 
         # Comprehensive AI Evaluation
-        st.subheader("Evaluación Crítica Completa de la Matriz por la IA �")
+        st.subheader("Evaluación Crítica Completa de la Matriz por la IA 🧐")
         st.write("A continuación, se evaluará la coherencia de toda tu matriz.")
 
         if st.button("Obtener Evaluación Crítica de la Matriz ✨"):
@@ -1696,4 +2565,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-�
