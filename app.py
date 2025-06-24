@@ -78,7 +78,7 @@ base_steps = [
     {
         'name': "Tipo de Investigación",
         'question': "¡Hola! Vamos a crear tu matriz de investigación. ¿Qué tipo de investigación realizarás?",
-        'examples': "", # No aplica ejemplo en radio button
+        'examples': {}, # No aplica ejemplo en radio button
         'input_type': 'radio',
         'options': ['Cualitativa', 'Cuantitativa'],
         'key': 'tipo_investigacion',
@@ -87,7 +87,18 @@ base_steps = [
     {
         'name': "Tema de Investigación",
         'question': "¿Cuál es el tema de tu investigación? Describe brevemente el fenómeno y el contexto.",
-        'examples': "**Ejemplo (Cuantitativo):** Impacto del uso de redes sociales en el rendimiento académico de estudiantes universitarios de primer año en la Facultad de Comunicación de la Universidad X durante el ciclo 2024-II.\n\n**Ejemplo (Cualitativo):** Percepciones docentes sobre la educación para el desarrollo sostenible en Portovelo, Ecuador.",
+        'examples': {
+            'Cuantitativa': [
+                "Impacto del uso de redes sociales en el rendimiento académico de estudiantes universitarios de primer año en la Facultad de Comunicación de la Universidad X durante el ciclo 2024-II.",
+                "Relación entre el estrés académico y la calidad del sueño en estudiantes de medicina de una universidad española.",
+                "Efecto de un programa de intervención nutricional en los niveles de glucosa en pacientes diabéticos tipo 2 en un centro de salud urbano."
+            ],
+            'Cualitativa': [
+                "Percepciones docentes sobre la educación para el desarrollo sostenible implementadas en el cantón Portovelo, Ecuador.",
+                "Experiencias de resiliencia en mujeres migrantes venezolanas en España durante el proceso de integración laboral.",
+                "Significados atribuidos por jóvenes a la participación ciudadana en contextos urbanos desfavorecidos de Madrid."
+            ]
+        },
         'input_type': 'text_area',
         'key': 'tema',
         'validation': lambda x: len(x) > 20
@@ -95,7 +106,18 @@ base_steps = [
     {
         'name': "Pregunta de Investigación",
         'question': "¿Cuál es tu pregunta de investigación? Asegúrate de que sea clara, específica y esté alineada con tu tema.",
-        'examples': "**Ejemplo (Cuantitativo):** ¿De qué manera el uso de redes sociales influye en el rendimiento académico de los estudiantes universitarios de primer año de la Facultad de Comunicación de la Universidad X durante el ciclo 2024-II?\n\n**Ejemplo (Cualitativo):** ¿Qué percepciones tienen los docentes de educación básica respecto a las inserciones curriculares de la educación para el desarrollo sostenible en el cantón Portovelo?",
+        'examples': {
+            'Cuantitativa': [
+                "¿De qué manera el uso de redes sociales influye en el rendimiento académico de los estudiantes universitarios de primer año de la Facultad de Comunicación de la Universidad X durante el ciclo 2024-II?",
+                "¿Existe una correlación significativa entre el nivel de estrés académico y la calidad del sueño reportada por estudiantes de medicina?",
+                "¿Cuál es el efecto de un programa de dieta baja en carbohidratos en la reducción de los niveles de glucosa en sangre en pacientes diabéticos tipo 2?"
+            ],
+            'Cualitativa': [
+                "¿Qué percepciones tienen los docentes de educación básica respecto a las inserciones curriculares de la educación para el desarrollo sostenible en el cantón Portovelo?",
+                "¿Cómo construyen la resiliencia las mujeres migrantes venezolanas al enfrentar los desafíos de la integración laboral en España?",
+                "¿Cuáles son los significados que los jóvenes de barrios desfavorecidos de Madrid atribuyen a la participación ciudadana?"
+            ]
+        },
         'input_type': 'text_area',
         'key': 'pregunta',
         'validation': lambda x: len(x) > 20 and '?' in x
@@ -103,7 +125,18 @@ base_steps = [
     {
         'name': "Objetivo General",
         'question': "Ahora escribe tu objetivo general. ¿Qué meta principal quieres lograr con tu investigación? Inicia con un verbo en infinitivo (analizar, determinar, describir, etc.).",
-        'examples': "**Ejemplo (Cuantitativo):** Determinar la influencia del uso de redes sociales en el rendimiento académico de los estudiantes universitarios de primer año de la Facultad de Comunicación de la Universidad X durante el ciclo 2024-II.\n\n**Ejemplo (Cualitativo):** Comprender las percepciones de los docentes de educación básica sobre las inserciones curriculares para el desarrollo sostenible en Portovelo.",
+        'examples': {
+            'Cuantitativa': [
+                "Determinar la influencia del uso de redes sociales en el rendimiento académico de los estudiantes universitarios de primer año de la Facultad de Comunicación de la Universidad X durante el ciclo 2024-II.",
+                "Analizar la relación entre el estrés académico y la calidad del sueño en estudiantes de medicina de una universidad española.",
+                "Evaluar el efecto de un programa de intervención nutricional en los niveles de glucosa en pacientes diabéticos tipo 2 en un centro de salud urbano."
+            ],
+            'Cualitativa': [
+                "Comprender las percepciones de los docentes de educación básica sobre las inserciones curriculares para el desarrollo sostenible en Portovelo.",
+                "Explorar las experiencias de resiliencia en mujeres migrantes venezolanas durante su integración laboral en España.",
+                "Interpretar los significados atribuidos por jóvenes a la participación ciudadana en contextos urbanos desfavorecidos de Madrid."
+            ]
+        },
         'input_type': 'text_area',
         'key': 'objetivo_general',
         'validation': lambda x: len(x) > 20 and any(x.lower().startswith(v) for v in ['analizar', 'determinar', 'describir', 'comprender', 'explorar', 'interpretar'])
@@ -111,15 +144,18 @@ base_steps = [
     {
         'name': "Objetivos Específicos",
         'question': "Escribe hasta 3 objetivos específicos. Estos deben detallar los pasos para alcanzar tu objetivo general. Inicia cada uno con un verbo en infinitivo. Ingresa uno por línea.",
-        'examples': """**Ejemplo (Cuantitativo):**
-- Identificar el tiempo promedio que los estudiantes de primer año dedican al uso de redes sociales diariamente.
-- Establecer la relación entre el tiempo de uso de redes sociales y las calificaciones obtenidas por los estudiantes.
-- Describir las percepciones de los estudiantes sobre el impacto de las redes sociales en su concentración y estudio.
-
-**Ejemplo (Cualitativo):**
-- Caracterizar las inserciones curriculares en desarrollo sostenible.
-- Identificar cómo los docentes comprenden el concepto de inserciones curriculares.
-- Describir cómo se implementan dichas inserciones en su práctica pedagógica.""",
+        'examples': {
+            'Cuantitativa': [
+                "Identificar el tiempo promedio que los estudiantes de primer año dedican al uso de redes sociales diariamente.",
+                "Establecer la relación entre el tiempo de uso de redes sociales y las calificaciones obtenidas por los estudiantes.",
+                "Describir las percepciones de los estudiantes sobre el impacto de las redes sociales en su concentración y estudio."
+            ],
+            'Cualitativa': [
+                "Caracterizar las inserciones curriculares en desarrollo sostenible implementadas por los docentes.",
+                "Analizar las estrategias pedagógicas empleadas por los docentes para integrar el desarrollo sostenible.",
+                "Explorar los desafíos que enfrentan los docentes al implementar la educación para el desarrollo sostenible."
+            ]
+        },
         'input_type': 'text_area',
         'key': 'objetivos_especificos',
         'special': 'list_split', # Indica que el texto se debe dividir en una lista por líneas
@@ -132,7 +168,14 @@ quantitative_specific_steps = [
     {
         'name': "Variable Independiente",
         'question': "Define tu variable independiente (la causa o el factor que se manipula o se presume que influye en otra variable).",
-        'examples': "**Ejemplo:** Uso de redes sociales (medida en horas/día).",
+        'examples': {
+            'Cuantitativa': [
+                "Uso de redes sociales (medido en horas de conexión diaria).",
+                "Horas de estudio semanales (medidas en autorreporte).",
+                "Participación en programa de tutorías (variable categórica: sí/no)."
+            ],
+            'Cualitativa': [] # Vacío, ya que este paso es específico de cuantitativa
+        },
         'input_type': 'text_input',
         'key': 'variables.independiente',
         'validation': lambda x: len(x) > 5
@@ -140,7 +183,14 @@ quantitative_specific_steps = [
     {
         'name': "Variable Dependiente",
         'question': "Define tu variable dependiente (el efecto o el resultado que se mide y se presume que es influenciado por la variable independiente).",
-        'examples': "**Ejemplo:** Rendimiento académico (medido por el promedio de calificaciones).",
+        'examples': {
+            'Cuantitativa': [
+                "Rendimiento académico (medido por el promedio de calificaciones finales).",
+                "Nivel de ansiedad ante exámenes (medido con escala validada).",
+                "Tasa de abandono universitario (variable dicotómica: abandono/continúa)."
+            ],
+            'Cualitativa': [] # Vacío, ya que este paso es específico de cuantitativa
+        },
         'input_type': 'text_input',
         'key': 'variables.dependiente',
         'validation': lambda x: len(x) > 5
@@ -148,7 +198,14 @@ quantitative_specific_steps = [
     {
         'name': "Hipótesis Nula (H₀)",
         'question': "Escribe tu hipótesis nula (H₀). Esta es una afirmación de no efecto o no relación. Se asume verdadera hasta que la evidencia demuestre lo contrario.",
-        'examples': "**Ejemplo:** No existe influencia significativa del uso de redes sociales en el rendimiento académico de los estudiantes universitarios de primer año de la Facultad de Comunicación de la Universidad X durante el ciclo 2024-II.",
+        'examples': {
+            'Cuantitativa': [
+                "No existe influencia significativa del uso de redes sociales en el rendimiento académico de los estudiantes universitarios de primer año de la Facultad de Comunicación de la Universidad X durante el ciclo 2024-II.",
+                "No hay diferencias significativas en el nivel de ansiedad ante exámenes entre estudiantes que reciben tutorías y los que no.",
+                "La edad del estudiante no se correlaciona significativamente con su tasa de abandono universitario."
+            ],
+            'Cualitativa': [] # Vacío, ya que este paso es específico de cuantitativa
+        },
         'input_type': 'text_area',
         'key': 'hipotesis.nula',
         'validation': lambda x: len(x) > 20
@@ -156,7 +213,14 @@ quantitative_specific_steps = [
     {
         'name': "Hipótesis Alternativa (H₁)",
         'question': "Escribe tu hipótesis alternativa (H₁). Esta es la afirmación que el investigador busca establecer, la que contradice la hipótesis nula.",
-        'examples': "**Ejemplo:** Existe una influencia significativa del uso de redes sociales en el rendimiento académico de los estudiantes universitarios de primer año de la Facultad de Comunicación de la Universidad X durante el ciclo 2024-II.",
+        'examples': {
+            'Cuantitativa': [
+                "Existe una influencia significativa del uso de redes sociales en el rendimiento académico de los estudiantes universitarios de primer año de la Facultad de Comunicación de la Universidad X durante el ciclo 2024-II.",
+                "Existen diferencias significativas en el nivel de ansiedad ante exámenes entre estudiantes que reciben tutorías y los que no.",
+                "La edad del estudiante se correlaciona significativamente de forma inversa con su tasa de abandono universitario."
+            ],
+            'Cualitativa': [] # Vacío, ya que este paso es específico de cuantitativa
+        },
         'input_type': 'text_area',
         'key': 'hipotesis.alternativa',
         'validation': lambda x: len(x) > 20
@@ -168,7 +232,18 @@ final_common_steps = [
     {
         'name': "Justificación",
         'question': "¿Por qué es importante tu investigación? Explica su relevancia académica, social o práctica, y a quién beneficiará.",
-        'examples': """**Ejemplo:** Esta investigación es relevante socialmente al abordar cómo una herramienta de uso masivo como las redes sociales impacta en un aspecto fundamental como el rendimiento académico, beneficiando a estudiantes, docentes e instituciones educativas al proporcionar información para estrategias de estudio y bienestar. Académicamente, contribuye al campo de la pedagogía y la comunicación digital.""",
+        'examples': {
+            'Cuantitativa': [
+                "Esta investigación es relevante socialmente al abordar cómo el uso de redes sociales impacta el rendimiento académico, beneficiando a estudiantes y universidades con estrategias de estudio. Académicamente, contribuye al campo de la pedagogía digital y el bienestar estudiantil.",
+                "El estudio sobre el estrés académico y calidad del sueño es vital para la salud mental estudiantil, aportando datos que pueden guiar intervenciones universitarias y enriquecer la literatura sobre factores no cognitivos del rendimiento.",
+                "Evaluar la efectividad del programa nutricional ofrecerá evidencia empírica crucial para mejorar el manejo de la diabetes tipo 2, beneficiando directamente a pacientes y profesionales de la salud, y validando un modelo de intervención en el contexto local."
+            ],
+            'Cualitativa': [
+                "Este estudio es relevante porque busca comprender las complejidades de la implementación de la educación para el desarrollo sostenible desde la voz de los docentes, lo que puede informar políticas educativas más contextualizadas y efectivas en Portovelo.",
+                "Comprender la resiliencia en mujeres migrantes es fundamental para diseñar programas de apoyo psicosocial y laboral que respondan a sus necesidades reales, contribuyendo a una integración más humana y efectiva en la sociedad de acogida.",
+                "La exploración de los significados de participación ciudadana en jóvenes de barrios desfavorecidos es crucial para fomentar su empoderamiento, desafiando narrativas preestablecidas y promoviendo una inclusión social más genuina."
+            ]
+        },
         'input_type': 'text_area',
         'key': 'justificacion',
         'validation': lambda x: len(x) > 50
@@ -176,10 +251,18 @@ final_common_steps = [
     {
         'name': "Marco Teórico",
         'question': "Para el marco teórico, ingresa un concepto o variable clave y sus autores principales (formato: Concepto - Autores). Ingresa uno por línea.",
-        'examples': """**Ejemplo:**
-- Redes sociales - Boyd & Ellison (2007)
-- Rendimiento académico - Román y Murillo (2011)
-- Distracción digital - Greenfield (2009)""",
+        'examples': {
+            'Cuantitativa': [
+                "Redes sociales - Boyd & Ellison (2007), Kaplan & Haenlein (2010)",
+                "Rendimiento académico - Román y Murillo (2011), Tinto (1993)",
+                "Distracción digital - Greenfield (2009), Carr (2010)"
+            ],
+            'Cualitativa': [
+                "Inserciones curriculares - UNESCO (2017), Jickling (2006), Sterling (2012)",
+                "Educación para el Desarrollo Sostenible (EDS) - UNESCO (2015), McCloskey (2010)",
+                "Percepción docente - Pajares (1992), Shulman (1986)"
+            ]
+        },
         'input_type': 'text_area',
         'key': 'marco_teorico',
         'special': 'marco_teorico_split', # Indica que el texto se debe parsear para concepto/autores
@@ -188,7 +271,18 @@ final_common_steps = [
     {
         'name': "Población",
         'question': "Describe la población de tu estudio (¿quiénes son el grupo completo de personas o elementos con características comunes que son objeto de tu investigación?).",
-        'examples': "**Ejemplo:** Todos los estudiantes de primer año de la Facultad de Comunicación de la Universidad X inscritos en el ciclo 2024-II, que suman aproximadamente 500 estudiantes.",
+        'examples': {
+            'Cualitativa': [
+                "La totalidad de docentes de educación básica en el cantón Portovelo, registrados en el distrito educativo durante el período 2024-2025.",
+                "Un grupo focal de madres de familia de estudiantes con necesidades especiales en la escuela urbana X, durante el año escolar 2023-2024.",
+                "Los pacientes mayores de 65 años diagnosticados con depresión mayor que asisten a la consulta de salud mental en el centro de salud Y, en el último semestre."
+            ],
+            'Cuantitativa': [
+                "Todos los estudiantes de primer año de la Facultad de Comunicación de la Universidad X inscritos en el ciclo 2024-II (aproximadamente 500 estudiantes).",
+                "La población estudiantil matriculada en programas de grado de la Facultad de Medicina de la Universidad Z durante el curso académico 2024-2025.",
+                "Los residentes de la ciudad A mayores de 18 años, según el último censo poblacional disponible."
+            ]
+        },
         'input_type': 'text_area',
         'key': 'metodologia.poblacion',
         'validation': lambda x: len(x) > 20
@@ -196,7 +290,18 @@ final_common_steps = [
     {
         'name': "Muestra",
         'question': "Describe la muestra de tu estudio (¿cómo seleccionarás a los participantes de la población y cuántos serán?).",
-        'examples': "**Ejemplo:** 100 estudiantes seleccionados aleatoriamente de la población total, asegurando representatividad por sexo y programa de estudios. Se utilizará un muestreo aleatorio simple.",
+        'examples': {
+            'Cualitativa': [
+                "15 docentes de educación básica con al menos 5 años de experiencia y que hayan implementado proyectos de desarrollo sostenible, seleccionados por muestreo intencional o por conveniencia.",
+                "6 madres de familia participantes en un grupo focal, seleccionadas mediante muestreo por bola de nieve a partir de contactos iniciales.",
+                "8 pacientes mayores de 65 años que han completado al menos 3 meses de terapia, seleccionados por muestreo por criterio."
+            ],
+            'Cuantitativa': [
+                "100 estudiantes seleccionados aleatoriamente de la población total (N=500), asegurando representatividad por sexo y programa de estudios mediante muestreo aleatorio simple.",
+                "Una muestra estratificada de 250 estudiantes de medicina (125 por sexo) para asegurar la representatividad de la población, calculada con un nivel de confianza del 95% y un margen de error del 5%.",
+                "384 ciudadanos seleccionados mediante muestreo aleatorio simple con listado telefónico, para una población infinita con un margen de error del 5% y un nivel de confianza del 95%."
+            ]
+        },
         'input_type': 'text_area',
         'key': 'metodologia.muestra',
         'validation': lambda x: len(x) > 20
@@ -204,18 +309,47 @@ final_common_steps = [
     {
         'name': "Técnicas de Recolección de Datos",
         'question': "¿Qué técnicas e instrumentos usarás para recolectar datos? (Ej. encuestas con cuestionarios, entrevistas a profundidad, observación, análisis documental).",
-        'examples': """**Ejemplo (Cuantitativo):**
-- Encuesta mediante cuestionario (para recabar datos sobre el uso de redes sociales y rendimiento percibido).
-- Análisis documental de registros académicos (para obtener calificaciones objetivas).
-
-**Ejemplo (Cualitativo):**
-- Entrevistas semiestructuradas (para comprender las percepciones de los docentes).
-- Observación participante (para documentar la implementación de inserciones curriculares en el aula).""",
+        'examples': {
+            'Cuantitativa': [
+                "Encuesta mediante cuestionario estandarizado (para recabar datos numéricos sobre uso de redes sociales y rendimiento percibido).",
+                "Análisis documental de expedientes académicos (para obtener promedios de calificaciones objetivas y tasas de abandono)."
+                "Escalas de medición psicométricas (para evaluar niveles de estrés o ansiedad, con validación y confiabilidad, como la Escala de Estrés Percibido)."
+            ],
+            'Cualitativa': [
+                "Entrevistas semiestructuradas a docentes (para comprender sus percepciones y experiencias a profundidad).",
+                "Observación participante en el aula (para documentar la dinámica de implementación de las inserciones curriculares)."
+                "Análisis de contenido de documentos curriculares y planes de estudio (para identificar el enfoque del desarrollo sostenible)."
+            ]
+        },
         'input_type': 'text_area',
         'key': 'metodologia.tecnicas',
         'validation': lambda x: len(x) > 20
     },
 ]
+
+# ==============================================================================
+# INICIALIZACIÓN DEL ESTADO DE SESIÓN
+# ==============================================================================
+if 'step' not in st.session_state:
+    st.session_state.step = 0
+if 'matrix_data' not in st.session_state:
+    st.session_state.matrix_data = {
+        'tipo_investigacion': '',
+        'tema': '',
+        'pregunta': '',
+        'objetivo_general': '',
+        'objetivos_especificos': ['', '', ''], # Por defecto 3 objetivos
+        'justificacion': '',
+        'marco_teorico': [], # Almacena diccionarios {'concepto': '', 'autores': ''}
+        'metodologia': {
+            'poblacion': '',
+            'muestra': '',
+            'tecnicas': ''
+        },
+        # Estas claves se rellenarán solo si el tipo de investigación es Cuantitativa
+        'variables': {'independiente': '', 'dependiente': ''},
+        'hipotesis': {'nula': '', 'alternativa': ''}
+    }
 
 # ==============================================================================
 # FUNCIÓN PRINCIPAL DE LA APLICACIÓN STREAMLIT
@@ -234,6 +368,9 @@ def main():
     if tipo_investigacion == 'Cuantitativa':
         all_steps.extend(quantitative_specific_steps) # Añade los pasos cuantitativos si aplica
     all_steps.extend(final_common_steps) # Añade los pasos finales comunes
+    elif tipo_investigacion == 'Cualitativa':
+        # Si es cualitativa, no añade los pasos cuantitativos específicos
+        all_steps.extend(final_common_steps)
 
     # ==========================================================================
     # BARRA LATERAL DE PROGRESO
@@ -259,12 +396,7 @@ def main():
         current_step = all_steps[st.session_state.step]
         st.subheader(f"Sección: {current_step['name']}") # Mostrar el nombre del paso
 
-        st.markdown(current_step['question']) # Pregunta
-        if current_step['examples']:
-            with st.expander("Ver ejemplo"): # Expander para los ejemplos
-                st.markdown(current_step['examples'])
-
-        # === Expander de Explicación del Paso ===
+        # === Expander de Explicación del Paso (primero) ===
         exp_key = current_step['key']
         explanation_content = explanations.get(exp_key)
 
@@ -278,7 +410,33 @@ def main():
                         st.markdown("Selecciona un tipo de investigación primero para ver la explicación relevante.")
                 else: # Es una explicación general
                     st.markdown(explanation_content)
-        # === Fin Nuevo ===
+        # === Fin Expander Explicación ===
+
+        st.markdown(current_step['question']) # Pregunta
+
+        # === Expander para Ejemplos (segundo, condicional por tipo de investigación) ===
+        if current_step['examples']: # Solo muestra el expander si hay ejemplos definidos para el paso
+            with st.expander("Ver ejemplo"):
+                current_research_type = st.session_state.matrix_data.get('tipo_investigacion')
+                
+                # Obtener los ejemplos específicos para el tipo de investigación actual
+                example_list = []
+                if isinstance(current_step['examples'], dict):
+                    if current_research_type:
+                        example_list = current_step['examples'].get(current_research_type, [])
+                    else: # Si no hay tipo de investigación seleccionado (primer paso)
+                        st.info("Selecciona un tipo de investigación para ver los ejemplos relevantes.")
+                # Si 'examples' no es un diccionario, se asume que es una lista directa de ejemplos (para casos futuros si se añadiera)
+                elif isinstance(current_step['examples'], list):
+                    example_list = current_step['examples']
+
+                if example_list:
+                    for i, example_text in enumerate(example_list):
+                        st.markdown(f"- **Ejemplo {i+1}:** {example_text}")
+                elif current_research_type and isinstance(current_step['examples'], dict):
+                    st.info("No hay ejemplos específicos para este tipo de investigación en este paso.")
+        # === Fin Expander Ejemplos ===
+
 
         # Obtener el valor actual del estado de sesión para el campo
         current_data_value = None
