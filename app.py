@@ -108,7 +108,30 @@ gemini_prompts = {
     'metodologia.estrategias': {
         'Cualitativa': lambda estrategia: f"Eres un experto en diseños de investigación cualitativa. Evalúa la estrategia de investigación '{estrategia}'. ¿Es un diseño estructural reconocido y apropiado para un estudio cualitativo? Proporciona retroalimentación concisa.",
         'Cuantitativa': lambda estrategia: f"Eres un experto en diseños de investigación cuantitativa. Evalúa la estrategia de investigación '{estrategia}'. ¿Es un diseño estructural reconocido y apropiado para un estudio cuantitativo (ej. encuestas)? Proporciona retroalimentación concisa."
-    }
+    },
+    'final_coherence_evaluation': lambda matrix_data_str, research_type: f"""
+        Actúa como un asesor experto en metodología de investigación y como editor de una revista científica Scopus Q1.
+        Has recibido la siguiente matriz de consistencia para una investigación de tipo '{research_type}':
+
+        {matrix_data_str}
+
+        Tu tarea es realizar una evaluación crítica y exhaustiva de la coherencia interna de toda la matriz.
+        Considera los siguientes puntos y proporciona retroalimentación constructiva y detallada, como lo harías para una publicación de alto impacto:
+
+        1.  **Coherencia general:** ¿El tipo de investigación, tema, pregunta y objetivos (general y específicos) están perfectamente alineados?
+        2.  **Claridad y especificidad:** ¿Cada componente es lo suficientemente claro y específico? ¿Hay ambigüedades?
+        3.  **Verbos y formulación:** ¿Los verbos y la formulación de objetivos y preguntas son adecuados para el tipo de investigación y su alcance?
+        4.  **Marco Teórico:** ¿Los conceptos clave son apropiados y ofrecen una base sólida para el estudio?
+        5.  **Metodología:**
+            * ¿La filosofía de la investigación y el enfoque son consistentes con el tipo de estudio?
+            * ¿La tipología/alcance del estudio es el adecuado?
+            * ¿El horizonte de tiempo es realista y coherente con los objetivos?
+            * ¿Las estrategias de investigación son pertinentes y viables?
+            * ¿Las técnicas e instrumentos son los más idóneos para recolectar los datos necesarios y responder la pregunta de investigación?
+        6.  **Variables/Hipótesis (si aplica para cuantitativa):** ¿Las variables están bien definidas y las hipótesis son claras y verificables?
+
+        Tu análisis debe ser riguroso, objetivo y profesional. Identifica cualquier inconsistencia o debilidad que pueda comprometer la validez o la rigurosidad del estudio. Utiliza un tono académico pero constructivo. No ofrezcas palabras clave en inglés aquí, solo la evaluación crítica de la coherencia de la matriz.
+        """
 }
 
 
@@ -139,7 +162,7 @@ def get_gemini_feedback(step_key, user_response, research_type):
             prompt_text,
             generation_config=genai.types.GenerationConfig(
                 temperature=0.7, 
-                max_output_tokens=200 
+                max_output_tokens=500 # Aumentado para respuestas más completas
             )
         )
         
@@ -180,6 +203,8 @@ if 'ai_feedback' not in st.session_state:
     st.session_state.ai_feedback = ""
 if 'validating_ai' not in st.session_state:
     st.session_state.validating_ai = False
+if 'ai_feedback_final' not in st.session_state: # Nuevo estado para la retroalimentación final
+    st.session_state.ai_feedback_final = ""
 
 # ==============================================================================
 # DEFINICIÓN DE PASOS Y SUS PREGUNTAS/EJEMPLOS
@@ -191,6 +216,52 @@ def starts_with_infinitive(text):
         return False
     first_word = text.split(' ')[0]
     return first_word.endswith('ar') or first_word.endswith('er') or first_word.endswith('ir')
+
+# Helper function to format matrix data for AI evaluation
+def format_matrix_data_for_ai(data):
+    formatted_str = []
+    
+    formatted_str.append(f"Tipo de Investigación: {data.get('tipo_investigacion', 'No definido')}")
+    formatted_str.append(f"Tema de Investigación: {data.get('tema', 'No definido')}")
+    formatted_str.append(f"Pregunta de Investigación: {data.get('pregunta', 'No definido')}")
+    formatted_str.append(f"Objetivo General: {data.get('objetivo_general', 'No definido')}")
+
+    obj_especificos = data.get('objetivos_especificos', [])
+    formatted_str.append("Objetivos Específicos:")
+    if obj_especificos:
+        for oe in obj_especificos:
+            formatted_str.append(f"- {oe}")
+    else:
+        formatted_str.append("- No definidos")
+
+    if data.get('tipo_investigacion') == 'Cuantitativa':
+        formatted_str.append(f"Variable Independiente: {data['variables'].get('independiente', 'No definido')}")
+        formatted_str.append(f"Variable Dependiente: {data['variables'].get('dependiente', 'No definido')}")
+        formatted_str.append(f"Hipótesis Nula (H₀): {data['hipotesis'].get('nula', 'No definido')}")
+        formatted_str.append(f"Hipótesis Alternativa (H₁): {data['hipotesis'].get('alternativa', 'No definido')}")
+
+    formatted_str.append(f"Justificación: {data.get('justificacion', 'No definido')}")
+
+    marco_teorico_items = data.get('marco_teorico', [])
+    formatted_str.append("Marco Teórico:")
+    if marco_teorico_items:
+        for item in marco_teorico_items:
+            formatted_str.append(f"- {item}")
+    else:
+        formatted_str.append("- No definido")
+
+    metodologia = data.get('metodologia', {})
+    formatted_str.append("Metodología:")
+    formatted_str.append(f"- Población: {metodologia.get('poblacion', 'No definido')}")
+    formatted_str.append(f"- Muestra: {metodologia.get('muestra', 'No definido')}")
+    formatted_str.append(f"- Técnicas y procedimientos/Instrumento: {metodologia.get('tecnicas', 'No definido')}")
+    formatted_str.append(f"- Filosofía de la investigación: {metodologia.get('filosofia', 'No definido')}")
+    formatted_str.append(f"- Enfoque de la investigación: {metodologia.get('enfoque', 'No definido')}")
+    formatted_str.append(f"- Tipología/Alcance de estudio: {metodologia.get('tipologia_estudio', 'No definido')}")
+    formatted_str.append(f"- Horizonte de tiempo: {metodologia.get('horizonte_tiempo', 'No definido')}")
+    formatted_str.append(f"- Estrategias de investigación: {metodologia.get('estrategias', 'No definido')}")
+
+    return "\n".join(formatted_str)
 
 
 base_steps = [
@@ -258,6 +329,7 @@ base_steps = [
         },
         'input_type': 'text_area',
         'key': 'objetivo_general',
+        # Modificación aquí: solo requiere más de 20 caracteres y empezar con infinitivo
         'validation': lambda x: len(x) > 20 and starts_with_infinitive(x)
     },
     {
@@ -671,7 +743,7 @@ def main():
 
         if current_step['input_type'] == 'radio':
             response = st.radio("Selecciona una opción:", current_step['options'], 
-                                index=current_step['options'].index(current_data_value) if current_data_value in current_step['options'] else 0, 
+                                index=current_step['options'].index(current_data_value) if current_data_value in current_data_value else 0, # Corregido para usar current_data_value
                                 key=f"input_{st.session_state.step}")
             # Guardar el valor directamente en matrix_data
             if len(keys) == 2:
@@ -784,7 +856,9 @@ def main():
 
     else:
         st.subheader("🎉 ¡Matriz de Investigación Completa!")
-        st.write("Aquí tienes un resumen de tu matriz de consistencia. Puedes revisarla y empezar una nueva si lo deseas.")
+        st.write("Aquí tienes un resumen de tu matriz de consistencia.")
+        
+        # Display the summary of the matrix
         data = st.session_state.matrix_data
         
         st.markdown("---")
@@ -817,14 +891,36 @@ def main():
         st.markdown("**Metodología:**")
         st.markdown(f"- **Población:** {data['metodologia']['poblacion'] or 'No definido'}")
         st.markdown(f"- **Muestra:** {data['metodologia']['muestra'] or 'No definido'}")
-        st.markdown(f"- **Técnicas y procedimientos/Instrumento:** {data['metodologia']['tecnicas'] or 'No definido'}") # Nombre actualizado
+        st.markdown(f"- **Técnicas y procedimientos/Instrumento:** {data['metodologia']['tecnicas'] or 'No definido'}")
         st.markdown(f"- **Filosofía de la investigación:** {data['metodologia']['filosofia'] or 'No definido'}")
         st.markdown(f"- **Enfoque de la investigación:** {data['metodologia']['enfoque'] or 'No definido'}")
         st.markdown(f"- **Tipología/Alcance de estudio:** {data['metodologia']['tipologia_estudio'] or 'No definido'}")
         st.markdown(f"- **Horizonte de tiempo:** {data['metodologia']['horizonte_tiempo'] or 'No definido'}")
         st.markdown(f"- **Estrategias de investigación:** {data['metodologia']['estrategias'] or 'No definido'}")
-
         st.markdown("---")
+
+        # New: Comprehensive AI Evaluation
+        st.subheader("Evaluación Crítica Completa de la Matriz por la IA 🧐")
+        st.write("A continuación, un asesor experto en investigación y editor de revista Scopus Q1 evaluará la coherencia de toda tu matriz.")
+
+        if st.button("Obtener Evaluación Crítica de la Matriz ✨"):
+            st.session_state.validating_ai = True
+            st.session_state.ai_feedback_final = "" # New state variable for final feedback
+            with st.spinner('Realizando evaluación crítica de toda la matriz...'):
+                formatted_matrix = format_matrix_data_for_ai(st.session_state.matrix_data)
+                final_feedback = get_gemini_feedback(
+                    'final_coherence_evaluation',
+                    formatted_matrix,
+                    st.session_state.matrix_data.get('tipo_investigacion', '')
+                )
+                st.session_state.ai_feedback_final = final_feedback
+            st.session_state.validating_ai = False
+            st.rerun()
+
+        if st.session_state.get('ai_feedback_final'):
+            st.markdown(f"**Análisis del Experto:**")
+            st.info(st.session_state.ai_feedback_final)
+            st.markdown("---")
 
         st.subheader("Mini Rúbrica de Autoevaluación:")
         st.write("¡Es hora de reflexionar sobre la coherencia de tu diseño!")
@@ -841,6 +937,7 @@ def main():
 
         st.markdown("---")
         st.info("¡Recuerda que este es un punto de partida! La investigación es un proceso iterativo. Lee, ajusta y perfecciona tu matriz con la literatura científica.")
+        st.info("La opción de descarga a PDF/Word se implementará en futuras actualizaciones. ¡Gracias por tu paciencia!") # Acknowledge download request
 
         if st.button("🔄 Empezar una nueva matriz"):
             st.session_state.step = 0
@@ -866,6 +963,7 @@ def main():
                 'hipotesis': {'nula': '', 'alternativa': ''}
             }
             st.session_state.ai_feedback = "" 
+            st.session_state.ai_feedback_final = "" # Clear final feedback on new matrix
             st.rerun()
 
 if __name__ == "__main__":
