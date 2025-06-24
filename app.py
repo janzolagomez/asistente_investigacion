@@ -33,8 +33,8 @@ explanations = {
     'hipotesis.alternativa': "La hipótesis alternativa (H₁) es la afirmación que el investigador busca establecer. Contradice la hipótesis nula, sugiriendo la existencia de una relación, efecto o diferencia significativa entre las variables.",
     'justificacion': "La justificación explica la *importancia* y el *porqué* de tu investigación. Debe argumentar su relevancia teórica (qué aporta al conocimiento), práctica (cómo resuelve un problema) y social (a quién beneficia o impacta positivamente).",
     'marco_teorico': {
-        'Cualitativa': "El marco teórico en investigación cualitativa es una síntesis y selección de conceptos clave, modelos y teorías relevantes que fundamentan tu perspectiva del fenómeno. Sirve para construir tus categorías iniciales o 'lentes interpretativos' antes o durante la recolectión de datos.",
-        'Cuantitativa': "El marco teórico en investigación cuantitativa es la conceptualización formal de tus variables, basada en la literatura científica existente. Define qué significa cada variable desde un punto de vista académico o técnico, usando autores y modelos reconocidos, y guía la operacionalización y medición."
+        'Cualitativa': "El marco teórico en investigación cualitativa es una síntesis y selección de **conceptos clave y temas relevantes** que fundamentan tu perspectiva del fenómeno. Sirve para construir tus categorías iniciales o 'lentes interpretativos' antes o durante la recolección de datos.",
+        'Cuantitativa': "El marco teórico en investigación cuantitativa es la conceptualización formal de tus variables, basada en la literatura científica existente. Define qué significa cada variable desde un punto de vista académico o técnico, usando autores y modelos reconocidos, y guía la operacionalización y medición. **En esta etapa, concéntrate en los conceptos clave o temas de tu estudio.**"
     },
     'metodologia.poblacion': "La población es el *conjunto total* de todas las personas, objetos o elementos que poseen una o más características comunes y que son el universo de tu estudio. Es el grupo al cual deseas generalizar tus hallazgos.",
     'metodologia.muestra': "La muestra es un *subconjunto representativo* de la población, seleccionado para realizar el estudio. Se describe el tipo de muestreo (probabilístico/no probabilístico), el tamaño de la muestra y los criterios de selección utilizados para garantizar que sea adecuada y permita inferencias si es cuantitativa.",
@@ -73,7 +73,7 @@ gemini_prompts = {
     'hipotesis.nula': lambda hip: f"Eres un experto en estadística. Evalúa la siguiente hipótesis nula: '{hip}'. ¿Está formulada correctamente (ausencia de relación/efecto/diferencia)? Proporciona retroalimentación constructiva.",
     'hipotesis.alternativa': lambda hip: f"Eres un experto en estadística. Evalúa la siguiente hipótesis alternativa: '{hip}'. ¿Está formulada correctamente (existencia de relación/efecto/diferencia) y contradice la hipótesis nula? Proporciona retroalimentación constructiva.",
     'justificacion': lambda just: f"Eres un experto en metodología de investigación. Evalúa la siguiente justificación: '{just}'. ¿Aborda la relevancia académica, social o práctica, y es convincente? Proporciona retroalimentación constructiva.",
-    'marco_teorico': lambda mt: f"Eres un experto en literatura científica. Evalúa el siguiente marco teórico (conceptos y autores): '{mt}'. ¿La relación concepto-autor es clara y los conceptos son centrales para una investigación? Proporciona retroalimentación constructiva.",
+    'marco_teorico': lambda temas: f"Actúa como experto en el tema de investigación. Dada la siguiente lista de temas o conceptos clave para un marco teórico: '{temas}'. Genera una lista de 5 a 10 palabras clave en inglés relevantes para hacer una búsqueda temática en bases de datos como Scopus y Web of Science. Las palabras clave deben estar separadas por comas.",
     'metodologia.poblacion': lambda pob: f"Eres un experto en muestreo. Evalúa la siguiente descripción de población: '{pob}'. ¿Es clara, delimitada y especifica las características comunes? Proporciona retroalimentación constructiva.",
     'metodologia.muestra': lambda mue: f"Eres un experto en muestreo. Evalúa la siguiente descripción de muestra: '{mue}'. ¿El método de selección y el tamaño son apropiados para el tipo de investigación y población? Proporciona retroalimentación constructiva.",
     'metodologia.tecnicas': lambda tec: f"Eres un experto en recolección de datos. Evalúa la siguiente descripción de técnicas e instrumentos: '{tec}'. ¿Son coherentes con el tipo de investigación y permiten recolectar los datos necesarios para responder la pregunta? Proporciona retroalimentación constructiva."
@@ -130,7 +130,7 @@ if 'matrix_data' not in st.session_state:
         'objetivo_general': '',
         'objetivos_especificos': ['', '', ''], 
         'justificacion': '',
-        'marco_teorico': [], 
+        'marco_teorico': [], # Almacenará solo conceptos como strings
         'metodologia': {
             'poblacion': '',
             'muestra': '',
@@ -333,23 +333,23 @@ final_common_steps = [
     },
     {
         'name': "Marco Teórico",
-        'question': "Para el marco teórico, ingresa un concepto o variable clave y sus autores principales (formato: Concepto - Autores). Ingresa uno por línea.",
+        'question': "Para el marco teórico, ingresa los temas o conceptos clave que serán la base de tu estudio. Ingresa uno por línea.",
         'examples': {
             'Cuantitativa': [
-                "Redes sociales - Boyd & Ellison (2007), Kaplan & Haenlein (2010)",
-                "Rendimiento académico - Román y Murillo (2011), Tinto (1993)",
-                "Distracción digital - Greenfield (2009), Carr (2010)"
+                "Redes sociales",
+                "Rendimiento académico",
+                "Distracción digital"
             ],
             'Cualitativa': [
-                "Inserciones curriculares - UNESCO (2017), Jickling (2006), Sterling (2012)",
-                "Educación para el Desarrollo Sostenible (EDS) - UNESCO (2015), McCloskey (2010)",
-                "Percepción docente - Pajares (1992), Shulman (1986)"
+                "Inserciones curriculares",
+                "Educación para el Desarrollo Sostenible (EDS)",
+                "Percepción docente"
             ]
         },
         'input_type': 'text_area',
         'key': 'marco_teorico',
-        'special': 'marco_teorico_split', 
-        'validation': lambda x: len(x) > 0 and all(' - ' in line for line in x.split('\n') if line.strip())
+        'special': 'list_split', # Modificado a list_split para almacenar solo conceptos como strings
+        'validation': lambda x: len(x) > 0 and all(line.strip() != '' for line in x.split('\n') if line.strip()) # Modificado para no requerir " - "
     },
     {
         'name': "Población",
@@ -496,10 +496,8 @@ def main():
             if value and (isinstance(value, str) and value.strip() != '' or isinstance(value, list) and value):
                 display_value = value
                 if isinstance(value, list):
-                    if prev_step_info.get('special') == 'marco_teorico_split':
-                        display_value = "\n".join([f"- {entry['concepto']} ({entry['autores']})" for entry in value])
-                    else:
-                        display_value = "\n".join([f"- {item}" for item in value])
+                    # Simplificado para mostrar solo los temas, sin asumir estructura de diccionario
+                    display_value = "\n".join([f"- {item}" for item in value])
                 
                 completed_steps_for_summary.append({
                     'name': friendly_names.get(key, prev_step_info['name']),
@@ -571,28 +569,22 @@ def main():
         elif current_step['input_type'] == 'text_area':
             if current_step.get('special') == 'list_split':
                 current_value_area = "\n".join(st.session_state.matrix_data[current_step['key']])
-            elif current_step.get('special') == 'marco_teorico_split':
-                current_value_area = "\n".join([f"{entry['concepto']} - {entry['autores']}" for entry in st.session_state.matrix_data[current_step['key']]])
+            # Eliminada la lógica de marco_teorico_split ya que ahora usa list_split
             else:
                 current_value_area = current_data_value
             
             response = st.text_area("", value=current_value_area, key=f"input_{st.session_state.step}", height=150)
             user_input_for_validation = response 
 
-            if current_step.get('special') == 'list_split':
+            # Modificado para manejar 'marco_teorico' como una lista simple de strings
+            if current_step.get('special') == 'list_split': # Esto ahora cubre 'objetivos_especificos' y 'marco_teorico'
                 lines = [line.strip() for line in response.split('\n') if line.strip()]
+                # Asegurar que no se exceda el límite de 3 objetivos si es el caso (solo para objetivos_especificos)
                 if current_step['key'] == 'objetivos_especificos':
                     st.session_state.matrix_data[current_step['key']] = lines[:3] 
-                else:
+                else: # Esto aplica para marco_teorico ahora
                     st.session_state.matrix_data[current_step['key']] = lines
-            elif current_step.get('special') == 'marco_teorico_split':
-                lines = [line.strip() for line in response.split('\n') if line.strip()]
-                marco_teorico_list = []
-                for line in lines:
-                    parts = line.split(' - ', 1) 
-                    if len(parts) >= 2:
-                        marco_teorico_list.append({'concepto': parts[0], 'autores': parts[1]})
-                st.session_state.matrix_data[current_step['key']] = marco_teorico_list
+            # Eliminada la lógica de parsing de marco_teorico_split aquí
             else:
                 if len(keys) == 2:
                     st.session_state.matrix_data[keys[0]][keys[1]] = response
@@ -620,8 +612,9 @@ def main():
                 st.warning("La hipótesis debe tener al menos 20 caracteres.")
             elif current_step['key'] == 'justificacion' and len(user_input_for_validation) <= 50:
                 st.warning("La justificación debe tener al menos 50 caracteres.")
-            elif current_step['key'] == 'marco_teorico' and (len(user_input_for_validation) == 0 or not all(' - ' in line for line in user_input_for_validation.split('\n') if line.strip())):
-                st.warning("Debes ingresar al menos una entrada para el marco teórico en formato 'Concepto - Autores'.")
+            # Modificación aquí: la validación para marco_teorico solo verifica que no esté vacío y que las líneas no estén vacías.
+            elif current_step['key'] == 'marco_teorico' and (len(user_input_for_validation) == 0 or not all(line.strip() != '' for line in user_input_for_validation.split('\n') if line.strip())):
+                st.warning("Debes ingresar al menos una entrada para el marco teórico (solo los temas/conceptos).")
             elif current_step['key'] in ['metodologia.poblacion', 'metodologia.muestra', 'metodologia.tecnicas'] and len(user_input_for_validation) <= 20:
                 st.warning("La descripción para esta sección de metodología debe tener al menos 20 caracteres.")
             else:
@@ -684,8 +677,9 @@ def main():
         
         st.markdown("**Marco Teórico:**")
         if data['marco_teorico']:
+            # Ajuste para mostrar la lista de temas/conceptos directamente
             for entry in data['marco_teorico']:
-                st.markdown(f"- **{entry.get('concepto', 'N/A')}**: {entry.get('autores', 'N/A')}")
+                st.markdown(f"- **{entry}**") # Muestra el string del tema/concepto
         else: st.markdown("No definido")
         
         st.markdown("**Metodología:**")
