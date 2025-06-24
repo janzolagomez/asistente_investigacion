@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
-import time # Para simular el tiempo de respuesta de la IA
+import google.generativeai as genai # Importar la librería de Gemini
+import time # Para manejar el estado de carga simulada o real
 
 # Configuración de la página
 st.set_page_config(page_title="Asistente para Matriz de Investigación", layout="wide")
@@ -45,144 +46,84 @@ explanations = {
 
 
 # ==============================================================================
-# PROMPTS PARA LA VALIDACIÓN CON GEMINI (SIMULADA)
+# PROMPTS PARA LA VALIDACIÓN CON GEMINI (REAL)
 # ==============================================================================
+# Estos prompts serán enviados a la API de Gemini para la evaluación.
+# Se ha generalizado para que la IA pueda ofrecer retroalimentación más flexible.
 gemini_prompts = {
+    'tipo_investigacion': lambda respuesta: f"Eres un experto en metodología de investigación. Evalúa la elección del tipo de investigación '{respuesta}' con respecto a la coherencia general para un estudio. Ofrece una retroalimentación concisa y constructiva.",
     'tema': {
-        'Cualitativa': lambda tema: f"Eres un experto en investigación cualitativa. Evalúa el siguiente tema de investigación cualitativa: '{tema}'. Indica si es claro, si delimita el fenómeno y el contexto, y si es apropiado para un estudio cualitativo. Proporciona retroalimentación constructiva en 2-3 oraciones.",
-        'Cuantitativa': lambda tema: f"Eres un experto en investigación cuantitativa. Evalúa el siguiente tema de investigación cuantitativa: '{tema}'. Indica si es específico, si incluye las variables principales y el contexto, y si es apropiado para un estudio cuantitativo. Proporciona retroalimentación constructiva en 2-3 oraciones."
+        'Cualitativa': lambda tema: f"Eres un experto en investigación cualitativa. Evalúa el siguiente tema de investigación cualitativa: '{tema}'. ¿Es claro, delimita el fenómeno y el contexto? ¿Es apropiado para un estudio cualitativo? Proporciona retroalimentación constructiva.",
+        'Cuantitativa': lambda tema: f"Eres un experto en investigación cuantitativa. Evalúa el siguiente tema de investigación cuantitativa: '{tema}'. ¿Es específico, incluye las variables principales y el contexto? ¿Es apropiado para un estudio cuantitativo? Proporciona retroalimentación constructiva."
     },
     'pregunta': {
-        'Cualitativa': lambda pregunta: f"Eres un experto en investigación cualitativa. Evalúa la siguiente pregunta de investigación cualitativa: '{pregunta}'. Indica si es abierta, si busca comprender un fenómeno, y si usa verbos interpretativos adecuados. Proporciona retroalimentación constructiva en 2-3 oraciones.",
-        'Cuantitativa': lambda pregunta: f"Eres un experto en investigación cuantitativa. Evalúa la siguiente pregunta de investigación cuantitativa: '{pregunta}'. Indica si es clara, específica, objetiva y si relaciona variables medibles. Proporciona retroalimentación constructiva en 2-3 oraciones."
+        'Cualitativa': lambda pregunta: f"Eres un experto en investigación cualitativa. Evalúa la siguiente pregunta de investigación cualitativa: '{pregunta}'. ¿Es abierta, busca comprender un fenómeno y usa verbos interpretativos adecuados? Proporciona retroalimentación constructiva.",
+        'Cuantitativa': lambda pregunta: f"Eres un experto en investigación cuantitativa. Evalúa la siguiente pregunta de investigación cuantitativa: '{pregunta}'. ¿Es clara, específica, objetiva y relaciona variables medibles? Proporciona retroalimentación constructiva."
     },
     'objetivo_general': {
-        'Cualitativa': lambda obj: f"Eres un experto en investigación cualitativa. Evalúa el siguiente objetivo general cualitativo: '{obj}'. Indica si inicia con un verbo adecuado (comprender, explorar, interpretar), si es coherente con el fenómeno, y si es apropiado para un enfoque cualitativo. Proporciona retroalimentación constructiva en 2-3 oraciones.",
-        'Cuantitativa': lambda obj: f"Eres un experto en investigación cuantitativa. Evalúa el siguiente objetivo general cuantitativo: '{obj}'. Indica si inicia con un verbo de acción medible (analizar, determinar, evaluar), si es claro y si relaciona las variables principales. Proporciona retroalimentación constructiva en 2-3 oraciones."
+        'Cualitativa': lambda obj: f"Eres un experto en investigación cualitativa. Evalúa el siguiente objetivo general cualitativo: '{obj}'. ¿Inicia con un verbo adecuado (comprender, explorar, interpretar), es coherente con el fenómeno y apropiado para un enfoque cualitativo? Proporciona retroalimentación constructiva.",
+        'Cuantitativa': lambda obj: f"Eres un experto en investigación cuantitativa. Evalúa el siguiente objetivo general cuantitativo: '{obj}'. ¿Inicia con un verbo de acción medible (analizar, determinar, evaluar), es claro y relaciona las variables principales? Proporciona retroalimentación constructiva."
     },
     'objetivos_especificos': {
-        'Cualitativa': lambda objs: f"Eres un experto en investigación cualitativa. Evalúa los siguientes objetivos específicos cualitativos: '{objs}'. Indica si son coherentes con el objetivo general, si detallan pasos concretos y si son apropiados para un enfoque cualitativo. Proporciona retroalimentación constructiva en 2-3 oraciones.",
-        'Cuantitativa': lambda objs: f"Eres un experto en investigación cuantitativa. Evalúa los siguientes objetivos específicos cuantitativos: '{objs}'. Indica si son medibles, si se alinean con el objetivo general y las variables, y si son claros. Proporciona retroalimentación constructiva en 2-3 oraciones."
+        'Cualitativa': lambda objs: f"Eres un experto en investigación cualitativa. Evalúa los siguientes objetivos específicos cualitativos: '{objs}'. ¿Son coherentes con el objetivo general, detallan pasos concretos y son apropiados para un enfoque cualitativo? Proporciona retroalimentación constructiva.",
+        'Cuantitativa': lambda objs: f"Eres un experto en investigación cuantitativa. Evalúa los siguientes objetivos específicos cuantitativos: '{objs}'. ¿Son medibles, se alinean con el objetivo general y las variables, y son claros? Proporciona retroalimentación constructiva."
     },
-    'variables.independiente': lambda var: f"Eres un experto en metodología. Evalúa la siguiente definición de variable independiente: '{var}'. Indica si está bien conceptualizada como causa o factor de influencia. Proporciona retroalimentación constructiva en 2-3 oraciones.",
-    'variables.dependiente': lambda var: f"Eres un experto en metodología. Evalúa la siguiente definición de variable dependiente: '{var}'. Indica si está bien conceptualizada como efecto o resultado medible. Proporciona retroalimentación constructiva en 2-3 oraciones.",
-    'hipotesis.nula': lambda hip: f"Eres un experto en estadística. Evalúa la siguiente hipótesis nula: '{hip}'. Indica si está formulada correctamente (no hay relación/efecto/diferencia). Proporciona retroalimentación constructiva en 2-3 oraciones.",
-    'hipotesis.alternativa': lambda hip: f"Eres un experto en estadística. Evalúa la siguiente hipótesis alternativa: '{hip}'. Indica si está formulada correctamente (sí hay relación/efecto/diferencia) y si contradice la hipótesis nula. Proporciona retroalimentación constructiva en 2-3 oraciones.",
-    'justificacion': lambda just: f"Eres un experto en metodología de investigación. Evalúa la siguiente justificación: '{just}'. Indica si aborda la relevancia académica, social o práctica, y si es convincente. Proporciona retroalimentación constructiva en 2-3 oraciones.",
-    'marco_teorico': lambda mt: f"Eres un experto en literatura científica. Evalúa el siguiente marco teórico (conceptos y autores): '{mt}'. Indica si la relación concepto-autor es clara y si los conceptos son centrales para una investigación. Proporciona retroalimentación constructiva en 2-3 oraciones.",
-    'metodologia.poblacion': lambda pob: f"Eres un experto en muestreo. Evalúa la siguiente descripción de población: '{pob}'. Indica si es clara, delimitada y si especifica las características comunes. Proporciona retroalimentación constructiva en 2-3 oraciones.",
-    'metodologia.muestra': lambda mue: f"Eres un experto en muestreo. Evalúa la siguiente descripción de muestra: '{mue}'. Indica si el método de selección y el tamaño son apropiados para el tipo de investigación y población. Proporciona retroalimentación constructiva en 2-3 oraciones.",
-    'metodologia.tecnicas': lambda tec: f"Eres un experto en recolección de datos. Evalúa la siguiente descripción de técnicas e instrumentos: '{tec}'. Indica si son coherentes con el tipo de investigación y si permiten recolectar los datos necesarios para responder la pregunta. Proporciona retroalimentación constructiva en 2-3 oraciones."
+    'variables.independiente': lambda var: f"Eres un experto en metodología. Evalúa la siguiente definición de variable independiente: '{var}'. ¿Está bien conceptualizada como causa o factor de influencia? Proporciona retroalimentación constructiva.",
+    'variables.dependiente': lambda var: f"Eres un experto en metodología. Evalúa la siguiente definición de variable dependiente: '{var}'. ¿Está bien conceptualizada como efecto o resultado medible? Proporciona retroalimentación constructiva.",
+    'hipotesis.nula': lambda hip: f"Eres un experto en estadística. Evalúa la siguiente hipótesis nula: '{hip}'. ¿Está formulada correctamente (ausencia de relación/efecto/diferencia)? Proporciona retroalimentación constructiva.",
+    'hipotesis.alternativa': lambda hip: f"Eres un experto en estadística. Evalúa la siguiente hipótesis alternativa: '{hip}'. ¿Está formulada correctamente (existencia de relación/efecto/diferencia) y contradice la hipótesis nula? Proporciona retroalimentación constructiva.",
+    'justificacion': lambda just: f"Eres un experto en metodología de investigación. Evalúa la siguiente justificación: '{just}'. ¿Aborda la relevancia académica, social o práctica, y es convincente? Proporciona retroalimentación constructiva.",
+    'marco_teorico': lambda mt: f"Eres un experto en literatura científica. Evalúa el siguiente marco teórico (conceptos y autores): '{mt}'. ¿La relación concepto-autor es clara y los conceptos son centrales para una investigación? Proporciona retroalimentación constructiva.",
+    'metodologia.poblacion': lambda pob: f"Eres un experto en muestreo. Evalúa la siguiente descripción de población: '{pob}'. ¿Es clara, delimitada y especifica las características comunes? Proporciona retroalimentación constructiva.",
+    'metodologia.muestra': lambda mue: f"Eres un experto en muestreo. Evalúa la siguiente descripción de muestra: '{mue}'. ¿El método de selección y el tamaño son apropiados para el tipo de investigación y población? Proporciona retroalimentación constructiva.",
+    'metodologia.tecnicas': lambda tec: f"Eres un experto en recolección de datos. Evalúa la siguiente descripción de técnicas e instrumentos: '{tec}'. ¿Son coherentes con el tipo de investigación y permiten recolectar los datos necesarios para responder la pregunta? Proporciona retroalimentación constructiva."
 }
 
 
 # ==============================================================================
-# FUNCIÓN PARA SIMULAR LA RESPUESTA DE GEMINI
+# FUNCIÓN PARA LLAMAR A LA API DE GEMINI
 # ==============================================================================
-def get_gemini_simulated_feedback(step_key, user_response, research_type):
+def get_gemini_feedback(step_key, user_response, research_type):
     """
-    Simula la llamada a la API de Gemini y devuelve una retroalimentación.
-    En un entorno real de Streamlit Canvas, la llamada a la API de Gemini
-    se realizaría a través de un componente Custom HTML/JS para manejar la API Key
-    de forma segura en el lado del cliente (si apiKey = "").
-    
-    Para una aplicación pura de Python/Streamlit que necesita interactuar con la API
-    directamente desde el servidor, se usaría la librería 'google-generativeai'
-    o 'requests' para hacer la llamada HTTP POST.
+    Realiza una llamada a la API de Gemini para obtener retroalimentación.
+    """
+    try:
+        # Configura la API de Gemini con la clave de API desde los secretos de Streamlit
+        # Asegúrate de haber configurado st.secrets["GEMINI_API_KEY"] en .streamlit/secrets.toml
+        genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 
-    Ejemplo de cómo sería una llamada real a la API de Gemini (en JavaScript para un componente HTML):
-    
-    ```javascript
-    async function callGeminiAPI(prompt_text) {
-        const apiKey = ""; // Streamlit Canvas inyecta la API Key aquí si no se define.
-                           // Si estuvieras usando st.secrets en Python directamente
-                           // y luego pasándolo a JS, la gestión es diferente.
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+        # Selecciona el modelo
+        model = genai.GenerativeModel('gemini-2.0-flash')
+
+        # Obtiene la función de prompt específica para el paso y tipo de investigación
+        prompt_template = gemini_prompts.get(step_key)
+        if not prompt_template:
+            return "No hay un prompt de validación configurado para esta sección."
+
+        if isinstance(prompt_template, dict):
+            specific_prompt_func = prompt_template.get(research_type)
+            if not specific_prompt_func:
+                return "No hay un prompt de validación para este tipo de investigación en esta sección."
+            prompt_text = specific_prompt_func(user_response)
+        else:
+            prompt_text = prompt_template(user_response)
+
+        # Genera contenido con Gemini
+        # Se añaden parámetros para controlar la salida y evitar respuestas excesivamente largas
+        response = model.generate_content(
+            prompt_text,
+            generation_config=genai.types.GenerationConfig(
+                temperature=0.7, # Controla la creatividad (0.0 a 1.0)
+                max_output_tokens=200 # Limita la longitud de la respuesta
+            )
+        )
         
-        const payload = {
-            contents: [{ role: "user", parts: [{ text: prompt_text }] }],
-            generationConfig: {
-                temperature: 0.7,
-                maxOutputTokens: 200,
-            },
-        };
+        # Devuelve el texto generado por la IA
+        return response.text
 
-        try {
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-            const result = await response.json();
-            if (result.candidates && result.candidates.length > 0) {
-                return result.candidates[0].content.parts[0].text;
-            } else {
-                return "Error: No se obtuvo respuesta de la IA.";
-            }
-        } catch (error) {
-            console.error("Error al llamar a la API de Gemini:", error);
-            return "Error al conectar con la IA. Inténtalo de nuevo más tarde.";
-        }
-    }
-    ```
-    """
-    time.sleep(2) # Simula un retraso de 2 segundos para la respuesta de la IA
-
-    prompt_func = gemini_prompts.get(step_key)
-    if not prompt_func:
-        return "No hay un prompt de validación configurado para esta sección."
-
-    # Si el prompt es un diccionario (depende del tipo de investigación)
-    if isinstance(prompt_func, dict):
-        specific_prompt_func = prompt_func.get(research_type)
-        if not specific_prompt_func:
-            return "No hay un prompt de validación para este tipo de investigación en esta sección."
-        prompt_text = specific_prompt_func(user_response)
-    else: # Si el prompt es una función directamente (no depende del tipo)
-        prompt_text = prompt_func(user_response)
-
-    # Simulación de respuestas de Gemini basadas en el prompt y la respuesta del usuario
-    if "claro" in prompt_text and "no es claro" in user_response.lower():
-        return "Según su respuesta, parece que la claridad aún es un desafío. Intente simplificar la terminología."
-    elif "específico" in prompt_text and "muy general" in user_response.lower():
-        return "La IA sugiere mayor especificidad. Considere añadir detalles sobre el grupo y el contexto."
-    elif "coherente" in prompt_text and "incoherente" in user_response.lower():
-        return "La IA identifica una posible incoherencia. Revise la alineación entre los elementos clave."
-    elif "verbo" in prompt_text and not any(v in user_response.lower() for v in ['analizar', 'determinar', 'describir', 'comprender', 'explorar', 'interpretar']):
-        return "El verbo inicial es crucial. Asegúrese de que sea un verbo en infinitivo que refleje la acción principal de su objetivo/pregunta."
-    elif "apropiado para un estudio cualitativo" in prompt_text and research_type == 'Cualitativa':
-        if "cuantificar" in user_response.lower() or "medir" in user_response.lower():
-            return "Su redacción podría estar tendiendo hacia un enfoque cuantitativo. Recuerde que la investigación cualitativa busca comprender y explorar, no medir."
-        else:
-            return "La IA valida la idoneidad cualitativa. Su redacción es adecuada para un estudio cualitativo."
-    elif "apropiado para un estudio cuantitativo" in prompt_text and research_type == 'Cuantitativa':
-        if "explorar" in user_response.lower() or "interpretar" in user_response.lower():
-            return "Su redacción podría estar tendiendo hacia un enfoque cualitativo. Recuerde que la investigación cuantitativa busca medir y probar hipótesis."
-        else:
-            return "La IA valida la idoneidad cuantitativa. Su redacción es adecuada para un estudio cuantitativo."
-    elif "bien conceptualizada como causa o factor de influencia" in prompt_text and "no es una causa" in user_response.lower():
-        return "La IA sugiere revisar el rol de esta variable. ¿Es realmente la causa o el factor que ejerce influencia?"
-    elif "bien conceptualizada como efecto o resultado medible" in prompt_text and "no es un efecto" in user_response.lower():
-        return "La IA sugiere revisar el rol de esta variable. ¿Es realmente el efecto o el resultado que se espera medir?"
-    elif "formulada correctamente (no hay relación/efecto/diferencia)" in prompt_text and ("hay relación" in user_response.lower() or "existe efecto" in user_response.lower()):
-        return "Para una hipótesis nula, el planteamiento debe ser de ausencia o no diferencia. Revise su formulación."
-    elif "formulada correctamente (sí hay relación/efecto/diferencia)" in prompt_text and ("no hay relación" in user_response.lower() or "no existe efecto" in user_response.lower()):
-        return "Para una hipótesis alternativa, el planteamiento debe ser de existencia de relación o efecto. Revise su formulación."
-    elif "aborda la relevancia académica, social o práctica" in prompt_text and ("no es importante" in user_response.lower() or "sin beneficio" in user_response.lower()):
-        return "La justificación debe destacar claramente la importancia y el beneficio de su estudio. Intente ser más explícito en su relevancia."
-    elif "relación concepto-autor es clara" in prompt_text and "sin autor" in user_response.lower():
-        return "Cada concepto clave en su marco teórico debe estar respaldado por autores relevantes."
-    elif "clara, delimitada y si especifica las características comunes" in prompt_text and "poco claro" in user_response.lower():
-        return "La descripción de su población debe ser más precisa. ¿Quiénes son exactamente y qué características comparten?"
-    elif "método de selección y el tamaño son apropiados" in prompt_text and "no sé cómo" in user_response.lower():
-        return "Considere revisar las técnicas de muestreo para asegurar que su método de selección de la muestra es el adecuado."
-    elif "coherentes con el tipo de investigación y si permiten recolectar los datos necesarios" in prompt_text and "no son adecuadas" in user_response.lower():
-        return "Las técnicas de recolección de datos deben alinearse directamente con su pregunta de investigación y el tipo de enfoque. Reevalúe su elección."
-    elif "ok" in user_response.lower() or "bien" in user_response.lower():
-        return "¡Excelente! Su respuesta parece bien formulada y cumple con los requisitos iniciales. Continúe así."
-    else:
-        # Respuesta por defecto si no coincide con las simulaciones específicas
-        return "Gracias por su aporte. La IA ha revisado su respuesta. Considere siempre la claridad, precisión y la coherencia con el tipo de investigación. Puede refinarla más si lo desea."
+    except Exception as e:
+        # Manejo de errores en la llamada a la API
+        return f"Error al conectar con la IA: {e}. Por favor, verifica tu clave de API y tu conexión."
 
 
 # ==============================================================================
@@ -650,7 +591,7 @@ def main():
             st.session_state.validating_ai = True
             st.session_state.ai_feedback = "" # Limpiar feedback anterior
             with st.spinner('Validando con IA...'):
-                feedback = get_gemini_simulated_feedback(
+                feedback = get_gemini_feedback( # Llamada a la función real de Gemini
                     current_step['key'],
                     user_input_for_validation,
                     st.session_state.matrix_data.get('tipo_investigacion', '')
