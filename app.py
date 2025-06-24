@@ -20,8 +20,8 @@ explanations = {
         'Cuantitativa': "La pregunta cuantitativa es una formulación clara, específica y objetiva que plantea una relación, efecto, diferencia o nivel entre una o más variables medibles. Guía la recolección y el análisis estadístico de datos."
     },
     'objetivo_general': {
-        'Cualitativa': "En la investigación cualitativa, el objetivo general busca orientar la exploración, comprensión, descripción o interpretación del fenómeno o experiencia en un grupo social o comunidad específica, de manera coherente con un enfoque interpretativo.",
-        'Cuantitativa': "En la investigación cuantitativa, el objetivo general debe expresar claramente qué se quiere analizar, correlacionar, describir o explicar en términos de la relación, efecto o influencia entre las variables de estudio, en una población y contexto definidos."
+        'Cualitativa': "En la investigación cualitativa, el objetivo general busca orientar la exploración, comprensión, descripción o interpretación del fenómeno o experiencia en un grupo social o comunidad específica, de manera coherente con un enfoque interpretativo. **Debe iniciar con un verbo en infinitivo (ejemplos: comprender, explorar, describir, interpretar, analizar, investigar).**",
+        'Cuantitativa': "En la investigación cuantitativa, el objetivo general debe expresar claramente qué se quiere analizar, correlacionar, describir o explicar en términos de la relación, efecto o influencia entre las variables de estudio, en una población y contexto definidos. **Debe iniciar con un verbo en infinitivo (ejemplos: analizar, determinar, evaluar, establecer, comparar, medir).**"
     },
     'objetivos_especificos': {
         'Cualitativa': "Son metas concretas y delimitadas que el estudio busca alcanzar para lograr el objetivo general. En cualitativa, suelen enfocarse en acciones como identificar, analizar, describir, interpretar o caracterizar dimensiones, categorías o subprocesos del fenómeno en los participantes y contexto.",
@@ -61,8 +61,8 @@ gemini_prompts = {
         'Cuantitativa': lambda pregunta: f"Eres un experto en investigación cuantitativa. Evalúa la siguiente pregunta de investigación cuantitativa: '{pregunta}'. ¿Es clara, específica, objetiva y relaciona variables medibles? Proporciona retroalimentación constructiva."
     },
     'objetivo_general': {
-        'Cualitativa': lambda obj: f"Eres un experto en investigación cualitativa. Evalúa el siguiente objetivo general cualitativo: '{obj}'. ¿Inicia con un verbo adecuado (comprender, explorar, interpretar), es coherente con el fenómeno y apropiado para un enfoque cualitativo? Proporciona retroalimentación constructiva.",
-        'Cuantitativa': lambda obj: f"Eres un experto en investigación cuantitativa. Evalúa el siguiente objetivo general cuantitativo: '{obj}'. ¿Inicia con un verbo de acción medible (analizar, determinar, evaluar), es claro y relaciona las variables principales? Proporciona retroalimentación constructiva."
+        'Cualitativa': lambda obj: f"Eres un experto en investigación cualitativa. Evalúa el siguiente objetivo general cualitativo: '{obj}'. ¿Inicia con un verbo en infinitivo adecuado al enfoque cualitativo, es coherente con el fenómeno y apropiado para un enfoque cualitativo? Proporciona retroalimentación constructiva.",
+        'Cuantitativa': lambda obj: f"Eres un experto en investigación cuantitativa. Evalúa el siguiente objetivo general cuantitativo: '{obj}'. ¿Inicia con un verbo en infinitivo adecuado al enfoque cuantitativo, es claro y relaciona las variables principales? Proporciona retroalimentación constructiva."
     },
     'objetivos_especificos': {
         'Cualitativa': lambda objs: f"Eres un experto en investigación cualitativa. Evalúa los siguientes objetivos específicos cualitativos: '{objs}'. ¿Son coherentes con el objetivo general, detallan pasos concretos y son apropiados para un enfoque cualitativo? Proporciona retroalimentación constructiva.",
@@ -147,6 +147,15 @@ if 'validating_ai' not in st.session_state:
 # ==============================================================================
 # DEFINICIÓN DE PASOS Y SUS PREGUNTAS/EJEMPLOS
 # ==============================================================================
+# Helper function to check for infinitive verbs
+def starts_with_infinitive(text):
+    text = text.strip().lower()
+    if not text:
+        return False
+    first_word = text.split(' ')[0]
+    return first_word.endswith('ar') or first_word.endswith('er') or first_word.endswith('ir')
+
+
 base_steps = [
     {
         'name': "Tipo de Investigación",
@@ -197,7 +206,7 @@ base_steps = [
     },
     {
         'name': "Objetivo General",
-        'question': "Ahora escribe tu objetivo general. ¿Qué meta principal quieres lograr con tu investigación? Inicia con un verbo en infinitivo (analizar, determinar, describir, etc.).",
+        'question': "Ahora escribe tu objetivo general. ¿Qué meta principal quieres lograr con tu investigación?",
         'examples': {
             'Cuantitativa': [
                 "Determinar la influencia del uso de redes sociales en el rendimiento académico de los estudiantes universitarios de primer año de la Facultad de Comunicación de la Universidad X durante el ciclo 2024-II.",
@@ -212,7 +221,8 @@ base_steps = [
         },
         'input_type': 'text_area',
         'key': 'objetivo_general',
-        'validation': lambda x: len(x) > 20 and any(x.lower().startswith(v) for v in ['analizar', 'determinar', 'describir', 'comprender', 'explorar', 'interpretar'])
+        # Modificación aquí: solo requiere más de 20 caracteres y empezar con infinitivo
+        'validation': lambda x: len(x) > 20 and starts_with_infinitive(x)
     },
     {
         'name': "Objetivos Específicos",
@@ -431,7 +441,6 @@ def main():
     # ==========================================================================
     st.sidebar.header("Progreso de la Matriz")
     if tipo_investigacion:
-        # Se usa tipo_invest_dict aquí
         st.sidebar.markdown(f"**Tipo Seleccionado:** {tipo_invest_dict.get(tipo_investigacion, tipo_investigacion)}")
         st.sidebar.markdown("---") 
 
@@ -452,9 +461,8 @@ def main():
         st.header(f"Sección: {current_step['name']}") 
 
         # ======================================================================
-        # NUEVO: RESUMEN DE DEFINICIONES ANTERIORES
+        # RESUMEN DE DEFINICIONES ANTERIORES
         # ======================================================================
-        # Define un mapeo para nombres más amigables en el resumen
         friendly_names = {
             'tipo_investigacion': 'Tipo de Investigación',
             'tema': 'Tema de Investigación',
@@ -472,13 +480,11 @@ def main():
             'metodologia.tecnicas': 'Técnicas de Recolección de Datos'
         }
         
-        # Filtra los pasos ya completados y con datos relevantes para mostrar
         completed_steps_for_summary = []
         for i in range(st.session_state.step):
             prev_step_info = all_steps[i]
             key = prev_step_info['key']
             
-            # Manejo de claves anidadas para recuperar el valor
             value = None
             if '.' in key:
                 main_key, sub_key = key.split('.')
@@ -487,9 +493,7 @@ def main():
             else:
                 value = st.session_state.matrix_data.get(key)
             
-            # Añade al resumen solo si hay un valor significativo
             if value and (isinstance(value, str) and value.strip() != '' or isinstance(value, list) and value):
-                # Formateo especial para listas o diccionarios
                 display_value = value
                 if isinstance(value, list):
                     if prev_step_info.get('special') == 'marco_teorico_split':
@@ -506,10 +510,7 @@ def main():
             with st.expander("Resumen de tus definiciones anteriores 📋"):
                 for item in completed_steps_for_summary:
                     st.markdown(f"**{item['name']}:** {item['value']}")
-                st.markdown("---") # Separador dentro del expander
-        # ======================================================================
-        # FIN NUEVO: RESUMEN DE DEFINICIONES ANTERIORES
-        # ======================================================================
+                st.markdown("---") 
 
         st.subheader(current_step['question']) 
 
@@ -607,8 +608,10 @@ def main():
                 st.warning("El tema de investigación debe tener al menos 20 caracteres.")
             elif current_step['key'] == 'pregunta' and (len(user_input_for_validation) <= 20 or '?' not in user_input_for_validation):
                  st.warning("La pregunta debe tener al menos 20 caracteres y contener un signo de interrogación.")
-            elif current_step['key'] == 'objetivo_general' and (len(user_input_for_validation) <= 20 or not any(user_input_for_validation.lower().startswith(v) for v in ['analizar', 'determinar', 'describir', 'comprender', 'explorar', 'interpretar'])):
-                st.warning("El objetivo general debe tener al menos 20 caracteres y empezar con un verbo en infinitivo (analizar, determinar, describir, comprender, explorar, interpretar).")
+            elif current_step['key'] == 'objetivo_general' and len(user_input_for_validation) <= 20:
+                st.warning("El objetivo general debe tener al menos 20 caracteres.")
+            elif current_step['key'] == 'objetivo_general' and not starts_with_infinitive(user_input_for_validation):
+                st.warning("El objetivo general debe empezar con un verbo en infinitivo (terminado en -ar, -er, -ir).")
             elif current_step['key'] == 'objetivos_especificos' and (len(user_input_for_validation) == 0 or not all(len(line.strip()) > 10 for line in user_input_for_validation.split('\n') if line.strip())):
                 st.warning("Debes ingresar al menos un objetivo específico y cada uno debe tener al menos 10 caracteres.")
             elif current_step['key'] in ['variables.independiente', 'variables.dependiente'] and len(user_input_for_validation) <= 5:
