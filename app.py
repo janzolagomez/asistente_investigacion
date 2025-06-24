@@ -140,7 +140,7 @@ gemini_prompts = {
 # ==============================================================================
 # FUNCIÓN PARA LLAMAR A LA API DE GEMINI
 # ==============================================================================
-def get_gemini_feedback(step_key, user_response, research_type, tokens_limit=300): # Default limit for individual feedback
+def get_gemini_feedback(step_key, user_response, research_type, tokens_limit=700): # Default limit for individual feedback (increased from 300)
     """
     Realiza una llamada a la API de Gemini para obtener retroalimentación.
     """
@@ -153,20 +153,24 @@ def get_gemini_feedback(step_key, user_response, research_type, tokens_limit=300
             return "No hay un prompt de validación configurado para esta sección."
 
         if step_key == 'final_coherence_evaluation':
+            # Use a much larger token limit for the final comprehensive evaluation
+            current_tokens_limit = 4000 # Increased from 2000
             prompt_text = prompt_template(user_response, research_type) 
         elif isinstance(prompt_template, dict):
             specific_prompt_func = prompt_template.get(research_type)
             if not specific_prompt_func:
                 return "No hay un prompt de validación para este tipo de investigación en esta sección."
             prompt_text = specific_prompt_func(user_response)
+            current_tokens_limit = tokens_limit # Use the default for individual feedback
         else:
             prompt_text = prompt_template(user_response)
+            current_tokens_limit = tokens_limit # Use the default for individual feedback
 
         response = model.generate_content(
             prompt_text,
             generation_config=genai.types.GenerationConfig(
                 temperature=0.7, 
-                max_output_tokens=tokens_limit # Use the passed limit
+                max_output_tokens=current_tokens_limit # Use the determined limit
             )
         )
         
@@ -981,7 +985,7 @@ def main():
                     'final_coherence_evaluation',
                     formatted_matrix,
                     st.session_state.matrix_data.get('tipo_investigacion', ''),
-                    tokens_limit=2000 # Increased limit for final evaluation
+                    tokens_limit=4000 # Increased limit for final evaluation
                 )
                 st.session_state.ai_feedback_final = final_feedback
             st.session_state.validating_ai = False
