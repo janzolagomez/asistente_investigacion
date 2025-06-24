@@ -399,7 +399,10 @@ def main():
         # Formato de título 1 para la Sección
         st.header(f"Sección: {current_step['name']}") 
 
-        # === Expander de Explicación (primero) ===
+        # Formato de título 2 para la Pregunta/Tarea (indicación)
+        st.subheader(current_step['question']) 
+
+        # === Expander de Explicación (ahora segundo en orden) ===
         exp_key = current_step['key']
         explanation_content = explanations.get(exp_key)
 
@@ -415,10 +418,7 @@ def main():
                     st.markdown(explanation_content)
         # === Fin Expander Explicación ===
 
-        # Formato de título 2 para la Pregunta/Tarea
-        st.subheader(current_step['question']) # Ahora es subheader
-
-        # === Expander para Ejemplos (segundo, condicional por tipo de investigación) ===
+        # === Expander para Ejemplos (tercero en orden, condicional por tipo de investigación) ===
         if current_step['examples']: # Solo muestra el expander si hay ejemplos definidos para el paso
             with st.expander("Ver ejemplos 💡"): # Texto ajustado e icono agregado aquí
                 current_research_type = st.session_state.matrix_data.get('tipo_investigacion')
@@ -441,7 +441,7 @@ def main():
                     st.info("No hay ejemplos específicos para este tipo de investigación en este paso.")
         # === Fin Expander Ejemplos ===
 
-
+        st.markdown("Tu respuesta:") # Título del área de respuesta
         # Obtener el valor actual del estado de sesión para el campo
         current_data_value = None
         keys = current_step['key'].split('.')
@@ -459,7 +459,7 @@ def main():
             st.session_state.matrix_data[current_step['key']] = response
 
         elif current_step['input_type'] == 'text_input':
-            response = st.text_input("Tu respuesta:", value=current_data_value, key=f"input_{st.session_state.step}")
+            response = st.text_input("", value=current_data_value, key=f"input_{st.session_state.step}") # Eliminar el label del text_input ya que "Tu respuesta:" ya está encima
             if len(keys) == 2:
                 st.session_state.matrix_data[keys[0]][keys[1]] = response
             else:
@@ -474,7 +474,7 @@ def main():
             else:
                 current_value_area = current_data_value
             
-            response = st.text_area("Tu respuesta:", value=current_value_area, key=f"input_{st.session_state.step}", height=150)
+            response = st.text_area("", value=current_value_area, key=f"input_{st.session_state.step}", height=150) # Eliminar el label del text_area ya que "Tu respuesta:" ya está encima
 
             # Guardar el valor procesado en el estado de sesión
             if current_step.get('special') == 'list_split':
