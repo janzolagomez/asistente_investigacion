@@ -1375,8 +1375,6 @@ def main():
             current_data_value = st.session_state.matrix_data.get(current_step['key'], '')
 
         # Define a function to update matrix_data and clear feedback
-        # This function is now simplified as st.radio returns the value directly
-        # and we assign it immediately, avoiding the need for on_change and args
         def update_matrix_data_and_clear_feedback(key_to_update, new_value):
             keys_to_update_split = key_to_update.split('.')
             if len(keys_to_update_split) == 2:
@@ -1385,27 +1383,35 @@ def main():
                 st.session_state.matrix_data[key_to_update] = new_value
             st.session_state.ai_feedback = "" # Clear AI feedback on data change
 
-       if current_step['input_type'] == 'radio':
-    # Usa una clave única más simple, sin depender del step
-    widget_key = f"radio_input_{current_step['key']}"
-    
-    # Obtener el valor actual almacenado
-    current_data_value = st.session_state.matrix_data.get(current_step['key'], '')
-    
-    # Mostrar el widget radio y capturar la selección
-    response = st.radio(
-        "Selecciona una opción:",
-        current_step['options'],
-        index=current_step['options'].index(current_data_value) if current_data_value in current_step['options'] else 0,
-        key=widget_key
-    )
-    
-    # Actualizar el estado de la sesión con la selección
-    if response != current_data_value:
-        update_matrix_data_and_clear_feedback(current_step['key'], response)
-        # No cambies st.session_state.step aquí, deja que el botón "Avanzar" lo maneje
-    
-    user_input_for_validation = response
+        # --- INICIO DEL CAMBIO DE INDENTACIÓN Y LÓGICA DE st.radio ---
+        if current_step['input_type'] == 'radio':
+            widget_key = f"radio_input_{current_step['key']}_{st.session_state.step}"
+            
+            # Obtener el índice de la opción actualmente seleccionada, o 0 si no se ha seleccionado nada
+            try:
+                current_index = current_step['options'].index(current_data_value)
+            except ValueError:
+                current_index = 0
+
+            response = st.radio(
+                "Selecciona una opción:",
+                current_step['options'],
+                index=current_index,
+                key=widget_key
+            )
+            
+            # Solo actualizar si la respuesta ha cambiado para evitar bucles o comportamientos inesperados
+            # y también asegurar que la validación se haga con el valor correcto.
+            if response != current_data_value:
+                if len(keys) == 2:
+                    st.session_state.matrix_data[keys[0]][keys[1]] = response
+                else:
+                    st.session_state.matrix_data[current_step['key']] = response
+                # For radio buttons, a change causes a rerun, so we need to ensure AI feedback is cleared
+                st.session_state.ai_feedback = ""
+                st.experimental_rerun() # Forces a rerun to reflect the selection and clear feedback
+
+            user_input_for_validation = response 
             
         elif current_step['input_type'] == 'radio_with_explanation': 
             current_research_type = st.session_state.matrix_data.get('tipo_investigacion')
@@ -1431,17 +1437,20 @@ def main():
                 
                 widget_key = f"radio_exp_input_{current_step['key']}_{st.session_state.step}"
                 
-                # Directly get the response from st.radio and update session state
                 selected_display_option = st.radio("Selecciona una opción:", display_options, 
                                                 index=selected_index, 
                                                 key=widget_key)
                 response = display_to_option_map.get(selected_display_option, "")
                 
                 # Update session state with the selected value
-                if len(keys) == 2:
-                    st.session_state.matrix_data[keys[0]][keys[1]] = response
-                else:
-                    st.session_state.matrix_data[current_step['key']] = response
+                if response != current_data_value:
+                    if len(keys) == 2:
+                        st.session_state.matrix_data[keys[0]][keys[1]] = response
+                    else:
+                        st.session_state.matrix_data[current_step['key']] = response
+                    st.session_state.ai_feedback = "" # Clear AI feedback on data change
+                    st.experimental_rerun() # Forces a rerun
+
                 user_input_for_validation = response
             else:
                 user_input_for_validation = "" # Default if no options
@@ -1479,7 +1488,8 @@ def main():
                     st.session_state.matrix_data[current_step['key']] = response
         
         is_current_step_valid = current_step['validation'](user_input_for_validation)
-        
+        # --- FIN DEL CAMBIO DE INDENTACIÓN Y LÓGICA DE st.radio ---
+
         if not is_current_step_valid:
             if current_step['input_type'] in ['radio', 'radio_with_explanation'] and user_input_for_validation == '':
                  st.warning("Por favor, selecciona una opción para continuar.")
@@ -1595,7 +1605,7 @@ def main():
         st.markdown("---")
 
         # Comprehensive AI Evaluation
-        st.subheader("Evaluación Crítica Completa de la Matriz por la IA 🧐")
+        st.subheader("Evaluación Crítica Completa de la Matriz por la IA �")
         st.write("A continuación, se evaluará la coherencia de toda tu matriz.")
 
         if st.button("Obtener Evaluación Crítica de la Matriz ✨"):
@@ -1686,3 +1696,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+�
