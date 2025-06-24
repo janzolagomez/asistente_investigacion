@@ -401,6 +401,14 @@ final_common_steps = [
 ]
 
 # ==============================================================================
+# Diccionario para nombres amigables de tipos de investigación
+# ==============================================================================
+tipo_invest_dict = {
+    'Cualitativa': 'Cualitativa',
+    'Cuantitativa': 'Cuantitativa'
+}
+
+# ==============================================================================
 # FUNCIÓN PRINCIPAL DE LA APLICACIÓN STREAMLIT
 # ==============================================================================
 def main():
@@ -423,6 +431,7 @@ def main():
     # ==========================================================================
     st.sidebar.header("Progreso de la Matriz")
     if tipo_investigacion:
+        # Se usa tipo_invest_dict aquí
         st.sidebar.markdown(f"**Tipo Seleccionado:** {tipo_invest_dict.get(tipo_investigacion, tipo_investigacion)}")
         st.sidebar.markdown("---") 
 
@@ -716,7 +725,7 @@ def main():
                 'variables': {'independiente': '', 'dependiente': ''},
                 'hipotesis': {'nula': '', 'alternativa': ''}
             }
-            st.session_state.ai_feedback = "" # Limpiar feedback al reiniciar
+            st.session_state.ai_feedback = "" 
             st.rerun()
 
 if __name__ == "__main__":
