@@ -367,10 +367,8 @@ def main():
     all_steps = list(base_steps) # Copia los pasos base
     if tipo_investigacion == 'Cuantitativa':
         all_steps.extend(quantitative_specific_steps) # Añade los pasos cuantitativos si aplica
-    all_steps.extend(final_common_steps) # Añade los pasos finales comunes
-    elif tipo_investigacion == 'Cualitativa':
-        # Si es cualitativa, no añade los pasos cuantitativos específicos
-        all_steps.extend(final_common_steps)
+    # Los pasos finales comunes siempre se añaden al final
+    all_steps.extend(final_common_steps)
 
     # ==========================================================================
     # BARRA LATERAL DE PROGRESO
