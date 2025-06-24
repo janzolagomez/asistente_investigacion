@@ -140,7 +140,7 @@ gemini_prompts = {
 # ==============================================================================
 # FUNCIÓN PARA LLAMAR A LA API DE GEMINI
 # ==============================================================================
-def get_gemini_feedback(step_key, user_response, research_type):
+def get_gemini_feedback(step_key, user_response, research_type, tokens_limit=300): # Default limit for individual feedback
     """
     Realiza una llamada a la API de Gemini para obtener retroalimentación.
     """
@@ -152,7 +152,6 @@ def get_gemini_feedback(step_key, user_response, research_type):
         if not prompt_template:
             return "No hay un prompt de validación configurado para esta sección."
 
-        # Modificación aquí: pasar ambos argumentos si el prompt lo requiere
         if step_key == 'final_coherence_evaluation':
             prompt_text = prompt_template(user_response, research_type) 
         elif isinstance(prompt_template, dict):
@@ -167,7 +166,7 @@ def get_gemini_feedback(step_key, user_response, research_type):
             prompt_text,
             generation_config=genai.types.GenerationConfig(
                 temperature=0.7, 
-                max_output_tokens=500 
+                max_output_tokens=tokens_limit # Use the passed limit
             )
         )
         
@@ -269,7 +268,7 @@ def format_matrix_data_for_ai(data):
     return "\n".join(formatted_str)
 
 
-# Función para generar el documento DOCX
+# Función para generar el documento DOCX de la matriz
 def generate_docx_from_matrix(data):
     document = Document()
     document.add_heading('Matriz de Consistencia de Investigación', level=1)
@@ -319,6 +318,17 @@ def generate_docx_from_matrix(data):
     document.add_paragraph(f"Estrategias de investigación: {metodologia.get('estrategias', 'No definido')}")
 
     # Guardar en un objeto BytesIO
+    buffer = BytesIO()
+    document.save(buffer)
+    buffer.seek(0)
+    return buffer.getvalue()
+
+# Función para generar el documento DOCX de la retroalimentación de la IA
+def generate_ai_feedback_docx(feedback_text):
+    document = Document()
+    document.add_heading('Análisis Crítico de la Matriz de Investigación por la IA', level=1)
+    document.add_paragraph(feedback_text)
+    
     buffer = BytesIO()
     document.save(buffer)
     buffer.seek(0)
@@ -970,7 +980,8 @@ def main():
                 final_feedback = get_gemini_feedback(
                     'final_coherence_evaluation',
                     formatted_matrix,
-                    st.session_state.matrix_data.get('tipo_investigacion', '')
+                    st.session_state.matrix_data.get('tipo_investigacion', ''),
+                    tokens_limit=2000 # Increased limit for final evaluation
                 )
                 st.session_state.ai_feedback_final = final_feedback
             st.session_state.validating_ai = False
@@ -980,6 +991,15 @@ def main():
             st.markdown(f"**Análisis del Experto:**")
             st.info(st.session_state.ai_feedback_final)
             st.markdown("---")
+            
+            # Download button for AI feedback
+            ai_feedback_doc_bytes = generate_ai_feedback_docx(st.session_state.ai_feedback_final)
+            st.download_button(
+                label="Descargar Análisis de la IA como DOCX 📄",
+                data=ai_feedback_doc_bytes,
+                file_name="Analisis_IA_Matriz_Investigacion.docx",
+                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            )
 
         st.subheader("Mini Rúbrica de Autoevaluación:")
         st.write("¡Es hora de reflexionar sobre la coherencia de tu diseño!")
@@ -997,8 +1017,8 @@ def main():
         st.markdown("---")
         st.info("¡Recuerda que este es un punto de partida! La investigación es un proceso iterativo. Lee, ajusta y perfecciona tu matriz con la literatura científica.")
         
-        # Download button for the DOCX file
-        if st.button("Descargar Matriz como DOCX 📄"):
+        # Download button for the DOCX file of the full matrix
+        if st.button("Descargar Matriz Completa como DOCX 📄"):
             docx_bytes = generate_docx_from_matrix(st.session_state.matrix_data)
             st.download_button(
                 label="Haz clic aquí para descargar",
