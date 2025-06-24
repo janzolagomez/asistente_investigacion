@@ -95,7 +95,7 @@ Usa un enfoque constructivista. Estructura tu respuesta en:
 3. Sugerencias claras de mejora.
 4. Ejemplo orientador (no resolver).
 
-Extensión: 3000 tokens. Sé claro, empático y fundamenta en Sampieri.
+Extensión: 300 tokens. Sé claro, empático y fundamenta en Sampieri.
 """,
 
         'Cuantitativa': lambda tema: f"""
