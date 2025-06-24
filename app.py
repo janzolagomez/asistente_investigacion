@@ -2280,7 +2280,7 @@ def main():
                 else:
                     st.session_state.matrix_data[current_step['key']] = response
                 st.session_state.ai_feedback = ""
-                st.experimental_rerun() 
+                st.rerun()
 
             user_input_for_validation = response 
             
@@ -2319,7 +2319,7 @@ def main():
                     else:
                         st.session_state.matrix_data[current_step['key']] = response
                     st.session_state.ai_feedback = ""
-                    st.experimental_rerun()
+                    st.rerun()
 
                 user_input_for_validation = response
             else:
