@@ -584,34 +584,19 @@ Evalúa la estrategia de investigación mixta:
 Extensión máxima: 300 tokens.
 """
     },
-    'final_coherence_evaluation': lambda full_matrix_data, research_type: f"""
-Actúa como un experto en metodología de investigación con amplio conocimiento en enfoques cualitativos, cuantitativos y mixtos.
+    'final_coherence_evaluation': lambda matriz, tipo: f"""
+Eres asesor experto en metodología. Evalúa esta matriz de consistencia para una investigación de tipo '{tipo}':
 
-Realiza una evaluación crítica y comprehensiva de la siguiente matriz de consistencia de investigación. Tu objetivo es identificar la coherencia interna entre todas las secciones, la adecuación del diseño general para el tipo de investigación seleccionado ({research_type}), y la claridad y viabilidad de cada componente.
+"{matriz}"
 
-**Matriz de Consistencia a Evaluar:**
-{full_matrix_data}
+Tu retroalimentación debe incluir:
+1. Apreciación global del trabajo.
+2. Evaluación crítica parte por parte (tema, objetivos, pregunta, marco, método, hipótesis o variables si aplica).
+3. Sugerencias específicas para mejorar.
+4. Ejemplos ilustrativos (si aplica).
+5. Evaluación global de coherencia.
 
-**Tu evaluación debe estructurarse de la siguiente manera:**
-
-1.  **Introducción y Reconocimiento:** Inicia con una valoración general del esfuerzo y el potencial del trabajo.
-2.  **Coherencia Global:**
-    * ¿Existe una clara alineación entre el tema, la pregunta, el objetivo general y los objetivos específicos?
-    * Si es cuantitativa o mixta, ¿las variables y las hipótesis son coherentes con la pregunta y los objetivos?
-    * ¿La justificación argumenta adecuadamente la relevancia del estudio en relación con los demás componentes?
-    * ¿El marco teórico propuesto se alinea con el tema y los objetivos, y ofrece un fundamento sólido?
-    * ¿La sección de metodología (población, muestra, técnicas, filosofía, enfoque, tipología, horizonte de tiempo, estrategias) es lógica, detallada y apropiada para el tipo de investigación seleccionado y coherente con los objetivos?
-    * Para investigación Mixta: ¿La integración de los componentes cualitativos y cuantitativos es clara y metodológicamente sólida?
-3.  **Análisis por Componente (Crítica Específica y Constructiva):**
-    * Identifica 2-3 puntos fuertes generales de la matriz.
-    * Identifica 2-3 áreas clave de mejora. Para cada área de mejora, proporciona una sugerencia concreta y práctica.
-4.  **Conclusión y Recomendaciones Finales:** Ofrece un mensaje de aliento y 1-2 recomendaciones generales para el siguiente paso en el desarrollo de la investigación.
-
-**Restricciones:**
-* Sé directo, claro y conciso.
-* Mantén un tono académico, respetuoso y constructivo.
-* Extensión máxima: 3000 tokens para permitir un análisis profundo.
-* No ofrezcas soluciones completas, sino guías y preguntas para que el estudiante reflexione y mejore.
+Extensión: 3000 tokens. Mantén el tipo de investigación claro y constante. Usa principios de metodología de investigación.
 """
 }
 
@@ -1570,7 +1555,7 @@ def main():
                 st.rerun()
 
     else:
-        st.subheader("� ¡Matriz de Investigación Completa!")
+        st.subheader("🎉 ¡Matriz de Investigación Completa!")
         st.write("Aquí tienes un resumen de tu matriz de consistencia.")
 
         # Display the summary of the matrix
@@ -1640,7 +1625,7 @@ def main():
             # Download button for AI feedback
             ai_feedback_doc_bytes = generate_ai_feedback_docx(st.session_state.ai_feedback_final)
             st.download_button(
-                label="Descargar Análisis de la IA como DOCX 📄",
+                label="Descargar Análisis de la IA como DOCX �",
                 data=ai_feedback_doc_bytes,
                 file_name="Analisis_IA_Matriz_Investigacion.docx",
                 mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
