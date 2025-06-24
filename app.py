@@ -34,7 +34,7 @@ explanations = {
     'hipotesis.alternativa': "La hipótesis alternativa (H₁) es la afirmación que el investigador busca establecer. Contradice la hipótesis nula, sugiriendo la existencia de una relación, efecto o diferencia significativa entre las variables.",
     'justificacion': "La justificación explica la *importancia* y el *porqué* de tu investigación. Debe argumentar su relevancia teórica (qué aporta al conocimiento), práctica (cómo resuelve un problema) y social (a quién beneficia o impacta positivamente).",
     'marco_teorico': {
-        'Cualitativa': "El marco teórico en investigación cualitativa es una síntesis y selección de conceptos clave, modelos y teorías relevantes que fundamentan tu perspectiva del fenómeno. Sirve para construir tus categorías iniciales o 'lentes interpretativos' antes o durante la recolección de datos.",
+        'Cualitativa': "El marco teórico en investigación cualitativa es una síntesis y selección de conceptos clave, modelos y teorías relevantes que fundamentan tu perspectiva del fenómeno. Sirve para construir tus categorías iniciales o 'lentes interpretativos' antes o durante la recolectión de datos.",
         'Cuantitativa': "El marco teórico en investigación cuantitativa es la conceptualización formal de tus variables, basada en la literatura científica existente. Define qué significa cada variable desde un punto de vista académico o técnico, usando autores y modelos reconocidos, y guía la operacionalización y medición."
     },
     'metodologia.poblacion': "La población es el *conjunto total* de todas las personas, objetos o elementos que poseen una o más características comunes y que son el universo de tu estudio. Es el grupo al cual deseas generalizar tus hallazgos.",
@@ -239,6 +239,11 @@ def main():
     # BARRA LATERAL DE PROGRESO
     # ==========================================================================
     st.sidebar.header("Progreso de la Matriz")
+    # Mostrar el tipo de investigación seleccionado en la barra lateral
+    if tipo_investigacion:
+        st.sidebar.markdown(f"**Tipo Seleccionado:** {tipo_investigacion}")
+        st.sidebar.markdown("---") # Separador visual
+
     for i, step_info in enumerate(all_steps):
         icon = "⬜" # No iniciado
         if i < st.session_state.step:
@@ -259,7 +264,7 @@ def main():
             with st.expander("Ver ejemplo"): # Expander para los ejemplos
                 st.markdown(current_step['examples'])
 
-        # === Nuevo: Expander de Explicación del Paso ===
+        # === Expander de Explicación del Paso ===
         exp_key = current_step['key']
         explanation_content = explanations.get(exp_key)
 
