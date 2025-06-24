@@ -355,9 +355,10 @@ if 'matrix_data' not in st.session_state:
 # FUNCIÓN PRINCIPAL DE LA APLICACIÓN STREAMLIT
 # ==============================================================================
 def main():
-    # Eliminar el título principal y la descripción de aquí para que no se repitan
-    # st.title("Asistente para Matriz de Investigación")
-    # st.write("Completa cada sección para construir tu matriz de consistencia.")
+    # Título principal y descripción en el área de contenido principal
+    st.title("Asistente para Matriz de Investigación")
+    st.write("Completa cada sección para construir tu matriz de consistencia.")
+    st.markdown("---") # Separador visual
 
     # ==========================================================================
     # DETERMINACIÓN DINÁMICA DE LOS PASOS COMPLETOS
@@ -374,15 +375,9 @@ def main():
     # ==========================================================================
     # BARRA LATERAL DE PROGRESO
     # ==========================================================================
-    st.sidebar.title("Asistente para Matriz de Investigación") # Título principal en la barra lateral
-    st.sidebar.write("Completa cada sección para construir tu matriz de consistencia.") # Descripción en la barra lateral
-    st.sidebar.markdown("---") # Separador visual
-
     st.sidebar.header("Progreso de la Matriz")
-    # Mostrar el tipo de investigación seleccionado en la barra lateral
-    if tipo_investigacion:
-        st.sidebar.markdown(f"**Tipo Seleccionado:** {tipo_investigacion}")
-        st.sidebar.markdown("---") # Separador visual
+    # Ya no se muestra el tipo de investigación seleccionado aquí, solo en el título principal si se desea.
+    # El progreso de los pasos sí se mantiene.
 
     for i, step_info in enumerate(all_steps):
         icon = "⬜" # No iniciado
@@ -399,12 +394,12 @@ def main():
         current_step = all_steps[st.session_state.step]
         st.subheader(f"Sección: {current_step['name']}") # Mostrar el nombre del paso
 
-        # === Expander de Explicación del Paso (primero) ===
+        # === Expander de Explicación (primero) ===
         exp_key = current_step['key']
         explanation_content = explanations.get(exp_key)
 
         if explanation_content:
-            with st.expander("Ver explicación del paso 📖"):
+            with st.expander("Ver explicación 📖"): # Texto ajustado aquí
                 if isinstance(explanation_content, dict): # Es una explicación que depende del tipo de investigación
                     current_research_type = st.session_state.matrix_data.get('tipo_investigacion')
                     if current_research_type:
