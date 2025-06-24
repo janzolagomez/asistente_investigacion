@@ -95,7 +95,7 @@ Usa un enfoque constructivista. Estructura tu respuesta en:
 3. Sugerencias claras de mejora.
 4. Ejemplo orientador (no resolver).
 
-Extensión: 30 tokens. Sé claro, empático y fundamenta en Sampieri.
+Extensión: 300 tokens. Sé claro, empático y fundamenta en Sampieri.
 """,
 
         'Cuantitativa': lambda tema: f"""
@@ -125,7 +125,7 @@ Tu retroalimentación debe:
 3. Orientar si requiere mejoras.
 4. Incluir ejemplo similar como guía.
 
-Sigue criterios de Hernández Sampieri. Sé crítico y empático. Extensión: 3000 tokens.
+Sigue criterios de Hernández Sampieri. Sé crítico y empático. Extensión: 300 tokens.
 """,
 
         'Cuantitativa': lambda pregunta: f"""
@@ -155,7 +155,7 @@ Organiza tu respuesta en:
 3. Recomendaciones claras.
 4. Ejemplo tipo.
 
-Tono pedagógico, crítica fundamentada. Extensión esperada: 3000 tokens.
+Tono pedagógico, crítica fundamentada. Extensión esperada: 300 tokens.
 """,
 
         'Cuantitativa': lambda obj: f"""
