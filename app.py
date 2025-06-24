@@ -1386,20 +1386,26 @@ def main():
             st.session_state.ai_feedback = "" # Clear AI feedback on data change
 
         if current_step['input_type'] == 'radio':
-            # Generate a unique key for the Streamlit widget itself
-            widget_key = f"radio_input_{current_step['key']}_{st.session_state.step}"
-            
-            # Directly get the response from st.radio and update session state
-            response = st.radio("Selecciona una opción:", current_step['options'], 
-                                 index=current_step['options'].index(current_data_value) if current_data_value in current_step['options'] else 0, 
-                                 key=widget_key)
-            
-            # Update session state with the selected value
-            if len(keys) == 2:
-                st.session_state.matrix_data[keys[0]][keys[1]] = response
-            else:
-                st.session_state.matrix_data[current_step['key']] = response
-            user_input_for_validation = response 
+    # Usa una clave única más simple, sin depender del step
+    widget_key = f"radio_input_{current_step['key']}"
+    
+    # Obtener el valor actual almacenado
+    current_data_value = st.session_state.matrix_data.get(current_step['key'], '')
+    
+    # Mostrar el widget radio y capturar la selección
+    response = st.radio(
+        "Selecciona una opción:",
+        current_step['options'],
+        index=current_step['options'].index(current_data_value) if current_data_value in current_step['options'] else 0,
+        key=widget_key
+    )
+    
+    # Actualizar el estado de la sesión con la selección
+    if response != current_data_value:
+        update_matrix_data_and_clear_feedback(current_step['key'], response)
+        # No cambies st.session_state.step aquí, deja que el botón "Avanzar" lo maneje
+    
+    user_input_for_validation = response
             
         elif current_step['input_type'] == 'radio_with_explanation': 
             current_research_type = st.session_state.matrix_data.get('tipo_investigacion')
