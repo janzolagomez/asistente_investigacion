@@ -376,8 +376,11 @@ def main():
     # BARRA LATERAL DE PROGRESO
     # ==========================================================================
     st.sidebar.header("Progreso de la Matriz")
-    # Ya no se muestra el tipo de investigación seleccionado aquí, solo en el título principal si se desea.
-    # El progreso de los pasos sí se mantiene.
+    # Mostrar el tipo de investigación seleccionado en la barra lateral
+    # Si el tipo de investigación ya ha sido seleccionado, se muestra aquí.
+    if tipo_investigacion:
+        st.sidebar.markdown(f"**Tipo Seleccionado:** {tipo_investigacion}")
+        st.sidebar.markdown("---") # Separador visual
 
     for i, step_info in enumerate(all_steps):
         icon = "⬜" # No iniciado
@@ -392,7 +395,9 @@ def main():
     # ==========================================================================
     if st.session_state.step < len(all_steps):
         current_step = all_steps[st.session_state.step]
-        st.subheader(f"Sección: {current_step['name']}") # Mostrar el nombre del paso
+        
+        # Formato de título 1 para la Sección
+        st.header(f"Sección: {current_step['name']}") 
 
         # === Expander de Explicación (primero) ===
         exp_key = current_step['key']
@@ -410,11 +415,12 @@ def main():
                     st.markdown(explanation_content)
         # === Fin Expander Explicación ===
 
-        st.markdown(current_step['question']) # Pregunta
+        # Formato de título 2 para la Pregunta/Tarea
+        st.subheader(current_step['question']) # Ahora es subheader
 
         # === Expander para Ejemplos (segundo, condicional por tipo de investigación) ===
         if current_step['examples']: # Solo muestra el expander si hay ejemplos definidos para el paso
-            with st.expander("Ver ejemplo"):
+            with st.expander("Ver ejemplos 💡"): # Texto ajustado e icono agregado aquí
                 current_research_type = st.session_state.matrix_data.get('tipo_investigacion')
                 
                 # Obtener los ejemplos específicos para el tipo de investigación actual
