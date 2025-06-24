@@ -52,7 +52,7 @@ explanations = {
     },
     'metodologia.filosofia': {
         'Cualitativa': "La filosofía de la investigación es la postura epistemológica sobre cómo se concibe el conocimiento y la realidad. Para la investigación cualitativa, los enfoques comunes son el Interpretativismo (que busca comprender el significado subjetivo de las experiencias) y el Pragmatismo (que se centra en la utilidad práctica del conocimiento).",
-        'Cuantitativa': "La filosofía de la investigación es la postura epistemológica sobre cómo se concibe el conocimiento y la realidad. Para la investigación cuantitativa, los enfoques comunes son el Positivismo (que busca leyes generales y objetivas a través de la observación empírica) y el Pragmatismo (que se centra en la utilidad práctica del conocimiento y la resolución de problemas).",
+        'Cuantitativa': "La filosofía de la investigación es la postura epistemológica sobre cómo se concibe el conocimiento y la realidad. Para la investigación cuantitativa, los enfoques comunes son el Positivismo (que busca leyes generales y objetivas a través de la observación empírica y la verificación de hipótesis, buscando leyes generales).",
         'Mixta': "La filosofía de la investigación para un enfoque mixto es comúnmente el Pragmatismo, que valora la utilidad del conocimiento y la resolución de problemas, permitiendo la combinación de distintas perspectivas para lograr un objetivo de investigación más amplio y profundo."
     },
     'metodologia.enfoque': {
@@ -1375,6 +1375,8 @@ def main():
             current_data_value = st.session_state.matrix_data.get(current_step['key'], '')
 
         # Define a function to update matrix_data and clear feedback
+        # This function is now simplified as st.radio returns the value directly
+        # and we assign it immediately, avoiding the need for on_change and args
         def update_matrix_data_and_clear_feedback(key_to_update, new_value):
             keys_to_update_split = key_to_update.split('.')
             if len(keys_to_update_split) == 2:
@@ -1387,19 +1389,18 @@ def main():
             # Generate a unique key for the Streamlit widget itself
             widget_key = f"radio_input_{current_step['key']}_{st.session_state.step}"
             
-            # Use on_change callback to update the session state
-            st.radio("Selecciona una opción:", current_step['options'], 
-                     index=current_step['options'].index(current_data_value) if current_data_value in current_step['options'] else 0, 
-                     key=widget_key, # This key is for the Streamlit widget
-                     on_change=update_matrix_data_and_clear_feedback, 
-                     args=(current_step['key'], st.session_state[widget_key])) # Pass the key and the new value
+            # Directly get the response from st.radio and update session state
+            response = st.radio("Selecciona una opción:", current_step['options'], 
+                                 index=current_step['options'].index(current_data_value) if current_data_value in current_step['options'] else 0, 
+                                 key=widget_key)
             
-            # The user_input_for_validation should be read from the matrix_data after the potential on_change
+            # Update session state with the selected value
             if len(keys) == 2:
-                user_input_for_validation = st.session_state.matrix_data[keys[0]][keys[1]]
+                st.session_state.matrix_data[keys[0]][keys[1]] = response
             else:
-                user_input_for_validation = st.session_state.matrix_data[current_step['key']]
-
+                st.session_state.matrix_data[current_step['key']] = response
+            user_input_for_validation = response 
+            
         elif current_step['input_type'] == 'radio_with_explanation': 
             current_research_type = st.session_state.matrix_data.get('tipo_investigacion')
             options_dict = {}
@@ -1424,23 +1425,23 @@ def main():
                 
                 widget_key = f"radio_exp_input_{current_step['key']}_{st.session_state.step}"
                 
-                st.radio("Selecciona una opción:", display_options, 
-                         index=selected_index, 
-                         key=widget_key,
-                         on_change=update_matrix_data_and_clear_feedback, 
-                         args=(current_step['key'], display_to_option_map.get(st.session_state[widget_key], "")))
+                # Directly get the response from st.radio and update session state
+                selected_display_option = st.radio("Selecciona una opción:", display_options, 
+                                                index=selected_index, 
+                                                key=widget_key)
+                response = display_to_option_map.get(selected_display_option, "")
                 
-                # The user_input_for_validation should be read from the matrix_data after the potential on_change
+                # Update session state with the selected value
                 if len(keys) == 2:
-                    user_input_for_validation = st.session_state.matrix_data[keys[0]][keys[1]]
+                    st.session_state.matrix_data[keys[0]][keys[1]] = response
                 else:
-                    user_input_for_validation = st.session_state.matrix_data[current_step['key']]
+                    st.session_state.matrix_data[current_step['key']] = response
+                user_input_for_validation = response
             else:
                 user_input_for_validation = "" # Default if no options
                 st.warning("Selecciona primero un tipo de investigación para ver las opciones disponibles.")
                 
         elif current_step['input_type'] == 'text_input':
-            # For text inputs, the update is simpler as on_change is not strictly needed for this type of issue
             response = st.text_input("", value=current_data_value, key=f"input_{st.session_state.step}")
             if len(keys) == 2:
                 st.session_state.matrix_data[keys[0]][keys[1]] = response
