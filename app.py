@@ -68,74 +68,402 @@ explanations = {
 # PROMPTS PARA LA VALIDACIÓN CON GEMINI (REAL)
 # ==============================================================================
 gemini_prompts = {
-    'tipo_investigacion': lambda respuesta: f"Eres un experto en metodología de investigación. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa la elección del tipo de investigación '{respuesta}' con respecto a la coherencia general para un estudio. Ofrece una retroalimentación concisa y constructiva.",
+
+    'tipo_investigacion': lambda respuesta: f"""
+Actúa como un experto en metodología de investigación. Evalúa la elección del tipo de investigación '{respuesta}'.
+
+Tu rol es ser un guía pedagógico constructivista, no un juez. Fundamenta tu análisis con base en criterios de Hernández Sampieri (6ª ed.).
+
+Estructura tu respuesta en:
+1. Reconocimiento del aporte del estudiante.
+2. Evaluación crítica fundamentada: ¿el tipo de investigación es coherente con el enfoque general del estudio?
+3. Orientación para la mejora (si aplica).
+4. Ejemplo orientativo (si aplica).
+
+Extensión esperada: 2800 a 3200 tokens. Mantén un tono académico, respetuoso, motivador y crítico.
+""",
+
     'tema': {
-        'Cualitativa': lambda tema: f"Eres un experto en investigación cualitativa. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa el siguiente tema de investigación cualitativa: '{tema}'. ¿Es claro, delimita el fenómeno y el contexto? ¿Es apropiado para un estudio cualitativo? Proporciona retroalimentación constructiva.",
-        'Cuantitativa': lambda tema: f"Eres un experto en investigación cuantitativa. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa el siguiente tema de investigación cuantitativa: '{tema}'. ¿Es específico, incluye las variables principales y el contexto? ¿Es apropiado para un estudio cuantitativo? Proporciona retroalimentación constructiva."
+        'Cualitativa': lambda tema: f"""
+Actúa como experto en investigación cualitativa. Evalúa el siguiente tema de investigación:
+
+"{tema}"
+
+Usa un enfoque constructivista. Estructura tu respuesta en:
+1. Valoración inicial del esfuerzo.
+2. Evaluación crítica: ¿delimita fenómeno y contexto? ¿es apropiado para estudio cualitativo?
+3. Sugerencias claras de mejora.
+4. Ejemplo orientador (no resolver).
+
+Extensión: 3000 tokens. Sé claro, empático y fundamenta en Sampieri.
+""",
+
+        'Cuantitativa': lambda tema: f"""
+Actúa como experto en investigación cuantitativa. Evalúa el siguiente tema:
+
+"{tema}"
+
+Estructura tu evaluación en:
+1. Reconocimiento del aporte.
+2. Evaluación crítica: ¿incluye variables? ¿es específico? ¿coherente con lo cuantitativo?
+3. Orientación para mejorar.
+4. Ejemplo ilustrativo (si aplica).
+
+Responde en tono académico y constructivo. Extensión: 3000 tokens.
+"""
     },
+
     'pregunta': {
-        'Cualitativa': lambda pregunta: f"Eres un experto en investigación cualitativa. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa la siguiente pregunta de investigación cualitativa: '{pregunta}'. ¿Es abierta, busca comprender un fenómeno y usa verbos interpretativos adecuados? Proporciona retroalimentación constructiva.",
-        'Cuantitativa': lambda pregunta: f"Eres un experto en investigación cuantitativa. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa la siguiente pregunta de investigación cuantitativa: '{pregunta}'. ¿Es clara, específica, objetiva y relaciona variables medibles? Proporciona retroalimentación constructiva."
+        'Cualitativa': lambda pregunta: f"""
+Eres experto en investigación cualitativa. Evalúa la siguiente pregunta:
+
+"{pregunta}"
+
+Tu retroalimentación debe:
+1. Reconocer el esfuerzo.
+2. Evaluar si es abierta, interpretativa y fenomenológica.
+3. Orientar si requiere mejoras.
+4. Incluir ejemplo similar como guía.
+
+Sigue criterios de Hernández Sampieri. Sé crítico y empático. Extensión: 3000 tokens.
+""",
+
+        'Cuantitativa': lambda pregunta: f"""
+Actúa como experto en investigación cuantitativa. Evalúa:
+
+"{pregunta}"
+
+Tu evaluación debe:
+1. Valorar el intento del estudiante.
+2. Evaluar claridad, relación de variables, objetividad.
+3. Orientar sin reemplazar.
+4. Dar ejemplo comparativo.
+
+Responde de forma crítica y constructiva, citando criterios de Sampieri. Extensión: 3000 tokens.
+"""
     },
+
     'objetivo_general': {
-        'Cualitativa': lambda obj: f"Eres un experto en investigación cualitativa. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa el siguiente objetivo general cualitativo: '{obj}'. ¿Inicia con un verbo en infinitivo adecuado al enfoque cualitativo, es coherente con el fenómeno y apropiado para un enfoque cualitativo? Proporciona retroalimentación constructiva.",
-        'Cuantitativa': lambda obj: f"Eres un experto en investigación cuantitativa. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa el siguiente objetivo general cuantitativo: '{obj}'. ¿Inicia con un verbo de acción medible (analizar, determinar, evaluar), es claro y relaciona las variables principales? Proporciona retroalimentación constructiva."
+        'Cualitativa': lambda obj: f"""
+Eres especialista en investigación cualitativa. Evalúa el objetivo general:
+
+"{obj}"
+
+Organiza tu respuesta en:
+1. Reconocimiento.
+2. Evaluación: ¿verbo en infinitivo adecuado? ¿coherente con lo cualitativo?
+3. Recomendaciones claras.
+4. Ejemplo tipo.
+
+Tono pedagógico, crítica fundamentada. Extensión esperada: 3000 tokens.
+""",
+
+        'Cuantitativa': lambda obj: f"""
+Actúa como experto en metodología cuantitativa. Evalúa:
+
+"{obj}"
+
+Responde en:
+1. Valoración inicial.
+2. Evaluación técnica: ¿verbo de acción medible? ¿variables claras?
+3. Orientación pedagógica.
+4. Modelo orientador.
+
+Usa marco de Sampieri. Sé detallado y formativo. 3000 tokens.
+"""
     },
+
     'objetivos_especificos': {
-        'Cualitativa': lambda objs: f"Eres un experto en investigación cualitativa. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa los siguientes objetivos específicos cualitativos: '{objs}'. ¿Son coherentes con el objetivo general, detallan pasos concretos y son apropiados para un enfoque cualitativo? Proporciona retroalimentación constructiva.",
-        'Cuantitativa': lambda objs: f"Eres un experto en investigación cuantitativa. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa los siguientes objetivos específicos cuantitativos: '{objs}'. ¿Son medibles, se alinean con el objetivo general y las variables, y son claros? Proporciona retroalimentación constructiva.",
+        'Cualitativa': lambda objs: f"""
+Evalúa los siguientes objetivos específicos cualitativos:
+
+"{objs}"
+
+Tu respuesta debe incluir:
+1. Aprecio por el esfuerzo.
+2. Evaluación crítica: ¿derivan del objetivo general? ¿son coherentes con lo cualitativo?
+3. Orientación concreta.
+4. Ejemplo orientativo parcial.
+
+Extensión: 3000 tokens. Tono pedagógico, crítico y constructivo.
+""",
+
+        'Cuantitativa': lambda objs: f"""
+Evalúa los siguientes objetivos específicos cuantitativos:
+
+"{objs}"
+
+Organiza la retroalimentación en:
+1. Reconocimiento inicial.
+2. Evaluación crítica: ¿son medibles? ¿alineados con variables y objetivo general?
+3. Recomendaciones formativas.
+4. Ejemplo ilustrativo.
+
+Sigue un enfoque constructivista. Extensión: 3000 tokens.
+"""
     },
-    'variables.independiente': lambda var: f"Eres un experto en metodología. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa la siguiente definición de variable independiente: '{var}'. ¿Está bien conceptualizada como causa o factor de influencia? Proporciona retroalimentación constructiva.",
-    'variables.dependiente': lambda var: f"Eres un experto en metodología. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa la siguiente definición de variable dependiente: '{var}'. ¿Está bien conceptualizada como efecto o resultado medible? Proporciona retroalimentación constructiva.",
-    'hipotesis.nula': lambda hip: f"Eres un experto en estadística. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa la siguiente hipótesis nula: '{hip}'. ¿Está formulada correctamente (ausencia de relación/efecto/diferencia)? Proporciona retroalimentación constructiva.",
-    'hipotesis.alternativa': lambda hip: f"Eres un experto en estadística. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa la siguiente hipótesis alternativa: '{hip}'. ¿Está formulada correctamente (existencia de relación/efecto/diferencia) y contradice la hipótesis nula? Proporciona retroalimentación constructiva.",
-    'justificacion': lambda just: f"Eres un experto en metodología de investigación. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa la siguiente justificación: '{just}'. ¿Aborda la relevancia académica, social o práctica, y es convincente? Proporciona retroalimentación constructiva.",
-    'marco_teorico': lambda temas: f"Actúa como experto en el tema de investigación. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Dada la siguiente lista de temas o conceptos clave para un marco teórico: '{temas}'. Por favor, proporciona una breve introducción en español (1-2 oraciones) indicando que la siguiente es una lista de palabras clave relevantes para búsqueda. Luego, genera una lista de 5 a 10 palabras clave en inglés relevantes para hacer una búsqueda temática en bases de datos como Scopus y Web of Science. Las palabras clave deben estar separadas por comas.",
-    'metodologia.poblacion': lambda pob: f"Eres un experto en muestreo. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa la siguiente descripción de población: '{pob}'. ¿Es clara, delimitada y especifica las características comunes? Proporciona retroalimentación constructiva.",
-    'metodologia.muestra': lambda mue: f"Eres un experto en muestreo. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa la siguiente descripción de muestra: '{mue}'. ¿El método de selección y el tamaño son apropiados para el tipo de investigación y población? Proporciona retroalimentación constructiva.",
-    'metodologia.tecnicas': lambda tec: f"Eres un experto en recolección de datos. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa la siguiente descripción de técnicas e instrumentos: '{tec}'. ¿Son coherentes con el tipo de investigación y si permiten recolectar los datos necesarios para responder la pregunta? Proporciona retroalimentación constructiva.",
+
+    'variables.independiente': lambda var: f"""
+Evalúa la siguiente variable independiente:
+
+"{var}"
+
+Estructura tu respuesta en:
+1. Apreciación inicial.
+2. Evaluación crítica: ¿es la causa? ¿está bien definida y operacionalizada?
+3. Orientación pedagógica.
+4. Ejemplo similar.
+
+Extensión sugerida: 3000 tokens. Usa enfoque pedagógico y criterios de Sampieri.
+""",
+
+    'variables.dependiente': lambda var: f"""
+Evalúa la siguiente variable dependiente:
+
+"{var}"
+
+Organiza tu retroalimentación en:
+1. Valoración del aporte.
+2. Evaluación crítica: ¿representa el efecto? ¿es medible y coherente?
+3. Recomendación para refinar.
+4. Ejemplo modelo.
+
+Extensión sugerida: 3000 tokens.
+""",
+
+    'hipotesis.nula': lambda hip: f"""
+Evalúa la siguiente hipótesis nula:
+
+"{hip}"
+
+Sigue esta estructura:
+1. Reconocimiento del esfuerzo.
+2. Evaluación: ¿representa ausencia de relación/efecto? ¿es verificable?
+3. Sugerencias.
+4. Ejemplo orientador.
+
+Cita criterios de Sampieri. Extensión: 3000 tokens.
+""",
+
+    'hipotesis.alternativa': lambda hip: f"""
+Evalúa la siguiente hipótesis alternativa:
+
+"{hip}"
+
+Desarrolla tu retroalimentación en:
+1. Apreciación del intento.
+2. Evaluación crítica: ¿contradice a la nula? ¿establece relación o efecto verificable?
+3. Sugerencia de mejora.
+4. Ejemplo ilustrativo.
+
+Tono académico y empático. Extensión: 3000 tokens.
+""",
+
+    'justificacion': lambda just: f"""
+Evalúa la siguiente justificación:
+
+"{just}"
+
+Tu evaluación debe:
+1. Reconocer aspectos positivos.
+2. Evaluar: ¿aborda conveniencia, relevancia social, valor teórico, utilidad?
+3. Orientación formativa.
+4. Preguntas guía para revisión.
+
+Extensión: 3000 tokens. Sé crítico y alentador.
+""",
+
+    'marco_teorico': lambda temas: f"""
+Evalúa la lista de conceptos para el marco teórico:
+
+"{temas}"
+
+1. Breve introducción en español.
+2. Evaluación de pertinencia.
+3. Genera lista de 5-10 palabras clave en inglés para búsqueda científica (Scopus, WoS).
+
+Tono académico. Extensión: 3000 tokens.
+""",
+
+    'metodologia.poblacion': lambda pob: f"""
+Evalúa la descripción de población:
+
+"{pob}"
+
+1. Valoración del esfuerzo.
+2. Evaluación crítica: ¿está bien delimitada? ¿se identifican características comunes?
+3. Sugerencias.
+4. Ejemplo orientativo.
+
+Extensión: 3000 tokens.
+""",
+
+    'metodologia.muestra': lambda mue: f"""
+Evalúa la muestra propuesta:
+
+"{mue}"
+
+1. Reconocimiento.
+2. Evaluación: ¿tipo de muestreo y tamaño adecuados?
+3. Orientación para ajustes.
+4. Ejemplo similar.
+
+Extensión: 3000 tokens.
+""",
+
+    'metodologia.tecnicas': lambda tec: f"""
+Evalúa técnicas e instrumentos:
+
+"{tec}"
+
+1. Aprecio inicial.
+2. Evaluación crítica: ¿permiten recolectar los datos necesarios según el enfoque?
+3. Recomendaciones.
+4. Ejemplo.
+
+Extensión: 3000 tokens.
+""",
+
     'metodologia.filosofia': {
-        'Cualitativa': lambda filosofia: f"Eres un experto en epistemología. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa la descripción de la filosofía de investigación cualitativa '{filosofia}'. ¿Es coherente con los enfoques interpretativistas o pragmáticos y cómo se alinea con la concepción cualitativa del conocimiento? Proporciona retroalimentación concisa.",
-        'Cuantitativa': lambda filosofia: f"Eres un experto en epistemología. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa la descripción de la filosofía de investigación cuantitativa '{filosofia}'. ¿Es coherente con los enfoques positivistas o pragmáticos y cómo se alinea con la concepción cuantitativa del conocimiento? Proporciona retroalimentación concisa."
+        'Cualitativa': lambda filo: f"""
+Evalúa la filosofía de investigación cualitativa:
+
+"{filo}"
+
+1. Reconocimiento del intento.
+2. Evaluación: ¿se alinea con paradigmas interpretativos/pragmáticos?
+3. Sugerencias.
+4. Ejemplo orientativo.
+
+Extensión: 3000 tokens.
+""",
+
+        'Cuantitativa': lambda filo: f"""
+Evalúa la filosofía de investigación cuantitativa:
+
+"{filo}"
+
+1. Apreciación inicial.
+2. Evaluación: ¿se alinea con paradigma positivista/pragmático?
+3. Orientación.
+4. Ejemplo.
+
+Extensión: 3000 tokens.
+"""
     },
+
     'metodologia.enfoque': {
-        'Cualitativa': lambda enfoque: f"Eres un experto en metodología. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa el enfoque de investigación '{enfoque}' para un estudio cualitativo. ¿Es coherente con el razonamiento inductivo? Proporciona retroalimentación concisa.",
-        'Cuantitativa': lambda enfoque: f"Eres un experto en metodología. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa el enfoque de investigación '{enfoque}' para un estudio cuantitativo. ¿Es coherente con el razonamiento deductivo? Proporciona retroalimentación concisa."
+        'Cualitativa': lambda enfoque: f"""
+Evalúa el enfoque cualitativo:
+
+"{enfoque}"
+
+1. Reconocimiento.
+2. Evaluación crítica: ¿se alinea con razonamiento inductivo?
+3. Recomendaciones.
+4. Ejemplo.
+
+Extensión: 3000 tokens.
+""",
+
+        'Cuantitativa': lambda enfoque: f"""
+Evalúa el enfoque cuantitativo:
+
+"{enfoque}"
+
+1. Apreciación.
+2. Evaluación crítica: ¿se alinea con razonamiento deductivo?
+3. Recomendaciones.
+4. Ejemplo.
+
+Extensión: 3000 tokens.
+"""
     },
+
     'metodologia.tipologia_estudio': {
-        'Cualitativa': lambda tipologia: f"Eres un experto en metodología cualitativa. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa la tipología de estudio cualitativo '{tipologia}'. ¿Es una clasificación reconocida y adecuada para los propósitos de un estudio cualitativo? Proporciona retroalimentación concisa.",
-        'Cuantitativa': lambda tipologia: f"Eres un experto en metodología cuantitativa. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa la tipología de estudio cuantitativo '{tipologia}'. ¿Es una clasificación reconocida y adecuada para los propósitos de un estudio cuantitativo? Proporciona retroalimentación concisa."
+        'Cualitativa': lambda tipologia: f"""
+Evalúa la tipología del estudio cualitativo:
+
+"{tipologia}"
+
+1. Aprecio inicial.
+2. Evaluación crítica: ¿es una clasificación reconocida? ¿coherente con el propósito?
+3. Recomendación.
+4. Ejemplo.
+
+Extensión: 3000 tokens.
+""",
+
+        'Cuantitativa': lambda tipologia: f"""
+Evalúa la tipología del estudio cuantitativo:
+
+"{tipologia}"
+
+1. Reconocimiento.
+2. Evaluación: ¿es adecuada para lo que se quiere medir o comparar?
+3. Sugerencia.
+4. Modelo.
+
+Extensión: 3000 tokens.
+"""
     },
-    'metodologia.horizonte_tiempo': lambda tiempo: f"Eres un experto en diseño de investigación. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa el horizonte de tiempo '{tiempo}'. ¿Es una duración y momento de observación clara y pertinente para el estudio? Proporciona retroalimentación concisa.",
+
+    'metodologia.horizonte_tiempo': lambda tiempo: f"""
+Evalúa el horizonte temporal:
+
+"{tiempo}"
+
+1. Reconocimiento del estudiante.
+2. Evaluación crítica: ¿es pertinente y clara la duración?
+3. Sugerencias.
+4. Ejemplo.
+
+Extensión: 3000 tokens.
+""",
+
     'metodologia.estrategias': {
-        'Cualitativa': lambda estrategia: f"Eres un experto en diseños de investigación cualitativa. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa la estrategia de investigación '{estrategia}'. ¿Es un diseño estructural reconocido y apropiado para un estudio cualitativo? Proporciona retroalimentación concisa.",
-        'Cuantitativa': lambda estrategia: f"Eres un experto en diseños de investigación cuantitativa. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa la estrategia de investigación '{estrategia}'. ¿Es un diseño estructural reconocido y apropiado para un estudio cuantitativo (ej. encuestas)? Proporciona retroalimentación concisa."
+        'Cualitativa': lambda estrategia: f"""
+Evalúa la estrategia de investigación cualitativa:
+
+"{estrategia}"
+
+1. Aprecio por el esfuerzo.
+2. Evaluación: ¿es una estrategia reconocida? ¿coherente con lo cualitativo?
+3. Sugerencias.
+4. Ejemplo.
+
+Extensión: 3000 tokens.
+""",
+
+        'Cuantitativa': lambda estrategia: f"""
+Evalúa la estrategia cuantitativa:
+
+"{estrategia}"
+
+1. Reconocimiento.
+2. Evaluación crítica: ¿es adecuada al diseño estructural del estudio?
+3. Recomendaciones.
+4. Modelo.
+
+Extensión: 3000 tokens.
+"""
     },
-    'final_coherence_evaluation': lambda matrix_data_str, research_type: f"""
-        Actúa como un asesor experto en metodología de investigación y como editor de una revista científica Scopus Q1.
-        Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'.
-        Has recibido la siguiente matriz de consistencia para una investigación de tipo '{research_type}':
 
-        {matrix_data_str}
+    'final_coherence_evaluation': lambda matriz, tipo: f"""
+Eres asesor experto en metodología y editor de revista científica. Evalúa esta matriz de consistencia para una investigación de tipo '{tipo}':
 
-        Tu tarea es realizar una evaluación crítica y exhaustiva de la coherencia interna de toda la matriz.
-        Considera los siguientes puntos y proporciona retroalimentación constructiva y detallada, como lo harías para una publicación de alto impacto:
+"{matriz}"
 
-        1.  **Coherencia general:** ¿El tipo de investigación, tema, pregunta y objetivos (general y específicos) están perfectamente alineados?
-        2.  **Claridad y especificidad:** ¿Cada componente es lo suficientemente claro y específico? ¿Hay ambigüedades?
-        3.  **Verbos y formulación:** ¿Los verbos y la formulación de objetivos y preguntas son adecuados para el tipo de investigación y su alcance?
-        4.  **Marco Teórico:** ¿Los conceptos clave son apropiados y ofrecen una base sólida para el estudio?
-        5.  **Metodología:**
-            * ¿La filosofía de la investigación y el enfoque son consistentes con el tipo de estudio?
-            * ¿La tipología/alcance del estudio es el adecuado?
-            * ¿El horizonte de tiempo es realista y coherente con los objetivos?
-            * ¿Las estrategias de investigación son pertinentes y viables?
-            * ¿Las técnicas e instrumentos son los más idóneos para recolectar los datos necesarios y responder la pregunta de investigación?
-        6.  **Variables/Hipótesis (si aplica para cuantitativa):** ¿Las variables están bien definidas y las hipótesis son claras y verificables?
+Estructura tu retroalimentación en:
+1. Apreciación global del trabajo.
+2. Evaluación crítica parte por parte (tema, objetivos, pregunta, marco, método, hipótesis o variables si aplica).
+3. Sugerencias específicas para mejorar.
+4. Ejemplos ilustrativos (si aplica).
+5. Evaluación global de coherencia.
 
-        Tu análisis debe ser riguroso, objetivo y profesional. Identifica cualquier inconsistencia o debilidad que pueda comprometer la validez o la rigurosidad del estudio. Utiliza un tono académico pero constructivo. No ofrezcas palabras clave en inglés aquí, solo la evaluación crítica de la coherencia de la matriz.
-        """
-}
+Extensión: 6000 tokens. Mantén el tipo de investigación claro y constante. Usa principios de Hernández Sampieri y pedagogía constructivista.
+"""
+} 
 
 
 # ==============================================================================
