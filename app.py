@@ -68,51 +68,52 @@ explanations = {
 # PROMPTS PARA LA VALIDACIÓN CON GEMINI (REAL)
 # ==============================================================================
 gemini_prompts = {
-    'tipo_investigacion': lambda respuesta: f"Eres un experto en metodología de investigación. Evalúa la elección del tipo de investigación '{respuesta}' con respecto a la coherencia general para un estudio. Ofrece una retroalimentación concisa y constructiva.",
+    'tipo_investigacion': lambda respuesta: f"Eres un experto en metodología de investigación. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa la elección del tipo de investigación '{respuesta}' con respecto a la coherencia general para un estudio. Ofrece una retroalimentación concisa y constructiva.",
     'tema': {
-        'Cualitativa': lambda tema: f"Eres un experto en investigación cualitativa. Evalúa el siguiente tema de investigación cualitativa: '{tema}'. ¿Es claro, delimita el fenómeno y el contexto? ¿Es apropiado para un estudio cualitativo? Proporciona retroalimentación constructiva.",
-        'Cuantitativa': lambda tema: f"Eres un experto en investigación cuantitativa. Evalúa el siguiente tema de investigación cuantitativa: '{tema}'. ¿Es específico, incluye las variables principales y el contexto? ¿Es apropiado para un estudio cuantitativo? Proporciona retroalimentación constructiva."
+        'Cualitativa': lambda tema: f"Eres un experto en investigación cualitativa. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa el siguiente tema de investigación cualitativa: '{tema}'. ¿Es claro, delimita el fenómeno y el contexto? ¿Es apropiado para un estudio cualitativo? Proporciona retroalimentación constructiva.",
+        'Cuantitativa': lambda tema: f"Eres un experto en investigación cuantitativa. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa el siguiente tema de investigación cuantitativa: '{tema}'. ¿Es específico, incluye las variables principales y el contexto? ¿Es apropiado para un estudio cuantitativo? Proporciona retroalimentación constructiva."
     },
     'pregunta': {
-        'Cualitativa': lambda pregunta: f"Eres un experto en investigación cualitativa. Evalúa la siguiente pregunta de investigación cualitativa: '{pregunta}'. ¿Es abierta, busca comprender un fenómeno y usa verbos interpretativos adecuados? Proporciona retroalimentación constructiva.",
-        'Cuantitativa': lambda pregunta: f"Eres un experto en investigación cuantitativa. Evalúa la siguiente pregunta de investigación cuantitativa: '{pregunta}'. ¿Es clara, específica, objetiva y relaciona variables medibles? Proporciona retroalimentación constructiva."
+        'Cualitativa': lambda pregunta: f"Eres un experto en investigación cualitativa. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa la siguiente pregunta de investigación cualitativa: '{pregunta}'. ¿Es abierta, busca comprender un fenómeno y usa verbos interpretativos adecuados? Proporciona retroalimentación constructiva.",
+        'Cuantitativa': lambda pregunta: f"Eres un experto en investigación cuantitativa. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa la siguiente pregunta de investigación cuantitativa: '{pregunta}'. ¿Es clara, específica, objetiva y relaciona variables medibles? Proporciona retroalimentación constructiva."
     },
     'objetivo_general': {
-        'Cualitativa': lambda obj: f"Eres un experto en investigación cualitativa. Evalúa el siguiente objetivo general cualitativo: '{obj}'. ¿Inicia con un verbo en infinitivo adecuado al enfoque cualitativo, es coherente con el fenómeno y apropiado para un enfoque cualitativo? Proporciona retroalimentación constructiva.",
-        'Cuantitativa': lambda obj: f"Eres un experto en investigación cuantitativa. Evalúa el siguiente objetivo general cuantitativo: '{obj}'. ¿Inicia con un verbo de acción medible (analizar, determinar, evaluar), es claro y relaciona las variables principales? Proporciona retroalimentación constructiva."
+        'Cualitativa': lambda obj: f"Eres un experto en investigación cualitativa. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa el siguiente objetivo general cualitativo: '{obj}'. ¿Inicia con un verbo en infinitivo adecuado al enfoque cualitativo, es coherente con el fenómeno y apropiado para un enfoque cualitativo? Proporciona retroalimentación constructiva.",
+        'Cuantitativa': lambda obj: f"Eres un experto en investigación cuantitativa. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa el siguiente objetivo general cuantitativo: '{obj}'. ¿Inicia con un verbo de acción medible (analizar, determinar, evaluar), es claro y relaciona las variables principales? Proporciona retroalimentación constructiva."
     },
     'objetivos_especificos': {
-        'Cualitativa': lambda objs: f"Eres un experto en investigación cualitativa. Evalúa los siguientes objetivos específicos cualitativos: '{objs}'. ¿Son coherentes con el objetivo general, detallan pasos concretos y son apropiados para un enfoque cualitativo? Proporciona retroalimentación constructiva.",
-        'Cuantitativa': lambda objs: f"Eres un experto en investigación cuantitativa. Evalúa los siguientes objetivos específicos cuantitativos: '{objs}'. ¿Son medibles, se alinean con el objetivo general y las variables, y son claros? Proporciona retroalimentación constructiva.",
+        'Cualitativa': lambda objs: f"Eres un experto en investigación cualitativa. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa los siguientes objetivos específicos cualitativos: '{objs}'. ¿Son coherentes con el objetivo general, detallan pasos concretos y son apropiados para un enfoque cualitativo? Proporciona retroalimentación constructiva.",
+        'Cuantitativa': lambda objs: f"Eres un experto en investigación cuantitativa. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa los siguientes objetivos específicos cuantitativos: '{objs}'. ¿Son medibles, se alinean con el objetivo general y las variables, y son claros? Proporciona retroalimentación constructiva.",
     },
-    'variables.independiente': lambda var: f"Eres un experto en metodología. Evalúa la siguiente definición de variable independiente: '{var}'. ¿Está bien conceptualizada como causa o factor de influencia? Proporciona retroalimentación constructiva.",
-    'variables.dependiente': lambda var: f"Eres un experto en metodología. Evalúa la siguiente definición de variable dependiente: '{var}'. ¿Está bien conceptualizada como efecto o resultado medible? Proporciona retroalimentación constructiva.",
-    'hipotesis.nula': lambda hip: f"Eres un experto en estadística. Evalúa la siguiente hipótesis nula: '{hip}'. ¿Está formulada correctamente (ausencia de relación/efecto/diferencia)? Proporciona retroalimentación constructiva.",
-    'hipotesis.alternativa': lambda hip: f"Eres un experto en estadística. Evalúa la siguiente hipótesis alternativa: '{hip}'. ¿Está formulada correctamente (existencia de relación/efecto/diferencia) y contradice la hipótesis nula? Proporciona retroalimentación constructiva.",
-    'justificacion': lambda just: f"Eres un experto en metodología de investigación. Evalúa la siguiente justificación: '{just}'. ¿Aborda la relevancia académica, social o práctica, y es convincente? Proporciona retroalimentación constructiva.",
-    'marco_teorico': lambda temas: f"Actúa como experto en el tema de investigación. Dada la siguiente lista de temas o conceptos clave para un marco teórico: '{temas}'. Por favor, proporciona una breve introducción en español (1-2 oraciones) indicando que la siguiente es una lista de palabras clave relevantes para búsqueda. Luego, genera una lista de 5 a 10 palabras clave en inglés relevantes para hacer una búsqueda temática en bases de datos como Scopus y Web of Science. Las palabras clave deben estar separadas por comas.",
-    'metodologia.poblacion': lambda pob: f"Eres un experto en muestreo. Evalúa la siguiente descripción de población: '{pob}'. ¿Es clara, delimitada y especifica las características comunes? Proporciona retroalimentación constructiva.",
-    'metodologia.muestra': lambda mue: f"Eres un experto en muestreo. Evalúa la siguiente descripción de muestra: '{mue}'. ¿El método de selección y el tamaño son apropiados para el tipo de investigación y población? Proporciona retroalimentación constructiva.",
-    'metodologia.tecnicas': lambda tec: f"Eres un experto en recolección de datos. Evalúa la siguiente descripción de técnicas e instrumentos: '{tec}'. ¿Son coherentes con el tipo de investigación y si permiten recolectar los datos necesarios para responder la pregunta? Proporciona retroalimentación constructiva.",
+    'variables.independiente': lambda var: f"Eres un experto en metodología. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa la siguiente definición de variable independiente: '{var}'. ¿Está bien conceptualizada como causa o factor de influencia? Proporciona retroalimentación constructiva.",
+    'variables.dependiente': lambda var: f"Eres un experto en metodología. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa la siguiente definición de variable dependiente: '{var}'. ¿Está bien conceptualizada como efecto o resultado medible? Proporciona retroalimentación constructiva.",
+    'hipotesis.nula': lambda hip: f"Eres un experto en estadística. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa la siguiente hipótesis nula: '{hip}'. ¿Está formulada correctamente (ausencia de relación/efecto/diferencia)? Proporciona retroalimentación constructiva.",
+    'hipotesis.alternativa': lambda hip: f"Eres un experto en estadística. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa la siguiente hipótesis alternativa: '{hip}'. ¿Está formulada correctamente (existencia de relación/efecto/diferencia) y contradice la hipótesis nula? Proporciona retroalimentación constructiva.",
+    'justificacion': lambda just: f"Eres un experto en metodología de investigación. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa la siguiente justificación: '{just}'. ¿Aborda la relevancia académica, social o práctica, y es convincente? Proporciona retroalimentación constructiva.",
+    'marco_teorico': lambda temas: f"Actúa como experto en el tema de investigación. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Dada la siguiente lista de temas o conceptos clave para un marco teórico: '{temas}'. Por favor, proporciona una breve introducción en español (1-2 oraciones) indicando que la siguiente es una lista de palabras clave relevantes para búsqueda. Luego, genera una lista de 5 a 10 palabras clave en inglés relevantes para hacer una búsqueda temática en bases de datos como Scopus y Web of Science. Las palabras clave deben estar separadas por comas.",
+    'metodologia.poblacion': lambda pob: f"Eres un experto en muestreo. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa la siguiente descripción de población: '{pob}'. ¿Es clara, delimitada y especifica las características comunes? Proporciona retroalimentación constructiva.",
+    'metodologia.muestra': lambda mue: f"Eres un experto en muestreo. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa la siguiente descripción de muestra: '{mue}'. ¿El método de selección y el tamaño son apropiados para el tipo de investigación y población? Proporciona retroalimentación constructiva.",
+    'metodologia.tecnicas': lambda tec: f"Eres un experto en recolección de datos. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa la siguiente descripción de técnicas e instrumentos: '{tec}'. ¿Son coherentes con el tipo de investigación y si permiten recolectar los datos necesarios para responder la pregunta? Proporciona retroalimentación constructiva.",
     'metodologia.filosofia': {
-        'Cualitativa': lambda filosofia: f"Eres un experto en epistemología. Evalúa la descripción de la filosofía de investigación cualitativa '{filosofia}'. ¿Es coherente con los enfoques interpretativistas o pragmáticos y cómo se alinea con la concepción cualitativa del conocimiento? Proporciona retroalimentación concisa.",
-        'Cuantitativa': lambda filosofia: f"Eres un experto en epistemología. Evalúa la descripción de la filosofía de investigación cuantitativa '{filosofia}'. ¿Es coherente con los enfoques positivistas o pragmáticos y cómo se alinea con la concepción cuantitativa del conocimiento? Proporciona retroalimentación concisa."
+        'Cualitativa': lambda filosofia: f"Eres un experto en epistemología. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa la descripción de la filosofía de investigación cualitativa '{filosofia}'. ¿Es coherente con los enfoques interpretativistas o pragmáticos y cómo se alinea con la concepción cualitativa del conocimiento? Proporciona retroalimentación concisa.",
+        'Cuantitativa': lambda filosofia: f"Eres un experto en epistemología. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa la descripción de la filosofía de investigación cuantitativa '{filosofia}'. ¿Es coherente con los enfoques positivistas o pragmáticos y cómo se alinea con la concepción cuantitativa del conocimiento? Proporciona retroalimentación concisa."
     },
     'metodologia.enfoque': {
-        'Cualitativa': lambda enfoque: f"Eres un experto en metodología. Evalúa el enfoque de investigación '{enfoque}' para un estudio cualitativo. ¿Es coherente con el razonamiento inductivo? Proporciona retroalimentación concisa.",
-        'Cuantitativa': lambda enfoque: f"Eres un experto en metodología. Evalúa el enfoque de investigación '{enfoque}' para un estudio cuantitativo. ¿Es coherente con el razonamiento deductivo? Proporciona retroalimentación concisa."
+        'Cualitativa': lambda enfoque: f"Eres un experto en metodología. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa el enfoque de investigación '{enfoque}' para un estudio cualitativo. ¿Es coherente con el razonamiento inductivo? Proporciona retroalimentación concisa.",
+        'Cuantitativa': lambda enfoque: f"Eres un experto en metodología. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa el enfoque de investigación '{enfoque}' para un estudio cuantitativo. ¿Es coherente con el razonamiento deductivo? Proporciona retroalimentación concisa."
     },
     'metodologia.tipologia_estudio': {
-        'Cualitativa': lambda tipologia: f"Eres un experto en metodología cualitativa. Evalúa la tipología de estudio cualitativo '{tipologia}'. ¿Es una clasificación reconocida y adecuada para los propósitos de un estudio cualitativo? Proporciona retroalimentación concisa.",
-        'Cuantitativa': lambda tipologia: f"Eres un experto en metodología cuantitativa. Evalúa la tipología de estudio cuantitativo '{tipologia}'. ¿Es una clasificación reconocida y adecuada para los propósitos de un estudio cuantitativo? Proporciona retroalimentación concisa."
+        'Cualitativa': lambda tipologia: f"Eres un experto en metodología cualitativa. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa la tipología de estudio cualitativo '{tipologia}'. ¿Es una clasificación reconocida y adecuada para los propósitos de un estudio cualitativo? Proporciona retroalimentación concisa.",
+        'Cuantitativa': lambda tipologia: f"Eres un experto en metodología cuantitativa. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa la tipología de estudio cuantitativo '{tipologia}'. ¿Es una clasificación reconocida y adecuada para los propósitos de un estudio cuantitativo? Proporciona retroalimentación concisa."
     },
-    'metodologia.horizonte_tiempo': lambda tiempo: f"Eres un experto en diseño de investigación. Evalúa el horizonte de tiempo '{tiempo}'. ¿Es una duración y momento de observación clara y pertinente para el estudio? Proporciona retroalimentación concisa.",
+    'metodologia.horizonte_tiempo': lambda tiempo: f"Eres un experto en diseño de investigación. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa el horizonte de tiempo '{tiempo}'. ¿Es una duración y momento de observación clara y pertinente para el estudio? Proporciona retroalimentación concisa.",
     'metodologia.estrategias': {
-        'Cualitativa': lambda estrategia: f"Eres un experto en diseños de investigación cualitativa. Evalúa la estrategia de investigación '{estrategia}'. ¿Es un diseño estructural reconocido y apropiado para un estudio cualitativo? Proporciona retroalimentación concisa.",
-        'Cuantitativa': lambda estrategia: f"Eres un experto en diseños de investigación cuantitativa. Evalúa la estrategia de investigación '{estrategia}'. ¿Es un diseño estructural reconocido y apropiado para un estudio cuantitativo (ej. encuestas)? Proporciona retroalimentación concisa."
+        'Cualitativa': lambda estrategia: f"Eres un experto en diseños de investigación cualitativa. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa la estrategia de investigación '{estrategia}'. ¿Es un diseño estructural reconocido y apropiado para un estudio cualitativo? Proporciona retroalimentación concisa.",
+        'Cuantitativa': lambda estrategia: f"Eres un experto en diseños de investigación cuantitativa. Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'. Evalúa la estrategia de investigación '{estrategia}'. ¿Es un diseño estructural reconocido y apropiado para un estudio cuantitativo (ej. encuestas)? Proporciona retroalimentación concisa."
     },
     'final_coherence_evaluation': lambda matrix_data_str, research_type: f"""
         Actúa como un asesor experto en metodología de investigación y como editor de una revista científica Scopus Q1.
+        Comienza tu respuesta directamente con la evaluación sin introducciones informales como 'Okay' o 'Bien'.
         Has recibido la siguiente matriz de consistencia para una investigación de tipo '{research_type}':
 
         {matrix_data_str}
@@ -140,7 +141,7 @@ gemini_prompts = {
 # ==============================================================================
 # FUNCIÓN PARA LLAMAR A LA API DE GEMINI
 # ==============================================================================
-def get_gemini_feedback(step_key, user_response, research_type, tokens_limit=700): # Default limit for individual feedback (increased from 300)
+def get_gemini_feedback(step_key, user_response, research_type, tokens_limit=700): 
     """
     Realiza una llamada a la API de Gemini para obtener retroalimentación.
     """
@@ -153,24 +154,23 @@ def get_gemini_feedback(step_key, user_response, research_type, tokens_limit=700
             return "No hay un prompt de validación configurado para esta sección."
 
         if step_key == 'final_coherence_evaluation':
-            # Use a much larger token limit for the final comprehensive evaluation
-            current_tokens_limit = 4000 # Increased from 2000
+            current_tokens_limit = 4000 
             prompt_text = prompt_template(user_response, research_type) 
         elif isinstance(prompt_template, dict):
             specific_prompt_func = prompt_template.get(research_type)
             if not specific_prompt_func:
                 return "No hay un prompt de validación para este tipo de investigación en esta sección."
             prompt_text = specific_prompt_func(user_response)
-            current_tokens_limit = tokens_limit # Use the default for individual feedback
+            current_tokens_limit = tokens_limit 
         else:
             prompt_text = prompt_template(user_response)
-            current_tokens_limit = tokens_limit # Use the default for individual feedback
+            current_tokens_limit = tokens_limit 
 
         response = model.generate_content(
             prompt_text,
             generation_config=genai.types.GenerationConfig(
                 temperature=0.7, 
-                max_output_tokens=current_tokens_limit # Use the determined limit
+                max_output_tokens=current_tokens_limit 
             )
         )
         
@@ -912,7 +912,8 @@ def main():
             st.rerun() 
 
         if st.session_state.ai_feedback:
-            st.info(f"**Retroalimentación de la IA:** {st.session_state.ai_feedback}")
+            st.markdown(f"**Retroalimentación de la IA:**")
+            st.markdown(st.session_state.ai_feedback)
 
         col1, col2 = st.columns(2)
         with col1:
@@ -985,7 +986,7 @@ def main():
                     'final_coherence_evaluation',
                     formatted_matrix,
                     st.session_state.matrix_data.get('tipo_investigacion', ''),
-                    tokens_limit=4000 # Increased limit for final evaluation
+                    tokens_limit=4000 
                 )
                 st.session_state.ai_feedback_final = final_feedback
             st.session_state.validating_ai = False
@@ -993,7 +994,7 @@ def main():
 
         if st.session_state.get('ai_feedback_final'):
             st.markdown(f"**Análisis del Experto:**")
-            st.info(st.session_state.ai_feedback_final)
+            st.markdown(st.session_state.ai_feedback_final)
             st.markdown("---")
             
             # Download button for AI feedback
