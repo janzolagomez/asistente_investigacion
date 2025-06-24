@@ -12,22 +12,26 @@ st.set_page_config(page_title="Asistente para Matriz de Investigación", layout=
 # EXPLICACIONES DETALLADAS POR PASO Y TIPO DE INVESTIGACIÓN
 # ==============================================================================
 explanations = {
-    'tipo_investigacion': "La investigación cualitativa busca comprender fenómenos desde la perspectiva de los participantes, mientras que la cuantitativa busca medir y probar hipótesis a través de datos numéricos y análisis estadístico. Elige el enfoque que mejor se adapte a tu pregunta y objetivos.",
+    'tipo_investigacion': "La investigación cualitativa busca comprender fenómenos desde la perspectiva de los participantes, mientras que la cuantitativa busca medir y probar hipótesis a través de datos numéricos y análisis estadístico. La investigación mixta combina ambos enfoques para una comprensión más completa. Elige el enfoque que mejor se adapte a tu pregunta y objetivos.",
     'tema': {
         'Cualitativa': "El tema en investigación cualitativa es una idea general que expresa el fenómeno, sujetos, actores y contexto que quieres estudiar, enfocado en la comprensión profunda. Debe ser amplio pero delimitado.",
-        'Cuantitativa': "El tema en investigación cuantitativa debe ser específico, delimitado, e incluir al menos las variables principales y el contexto de estudio. Se enfoca en la medición y la relación entre variables."
+        'Cuantitativa': "El tema en investigación cuantitativa debe ser específico, delimitado, e incluir al menos las variables principales y el contexto de estudio. Se enfoca en la medición y la relación entre variables.",
+        'Mixta': "El tema en investigación mixta debe ser lo suficientemente amplio para integrar componentes cualitativos y cuantitativos, expresando el fenómeno y el contexto desde ambas perspectivas para una comprensión holística."
     },
     'pregunta': {
         'Cualitativa': "La pregunta cualitativa es una pregunta amplia y abierta que expresa el fenómeno principal que se desea comprender desde la perspectiva de los participantes, sin buscar medir o cuantificar.",
-        'Cuantitativa': "La pregunta cuantitativa es una formulación clara, específica y objetiva que plantea una relación, efecto, diferencia o nivel entre una o más variables medibles. Guía la recolección y el análisis estadístico de datos."
+        'Cuantitativa': "La pregunta cuantitativa es una formulación clara, específica y objetiva que plantea una relación, efecto, diferencia o nivel entre una o más variables medibles. Guía la recolección y el análisis estadístico de datos.",
+        'Mixta': "La pregunta de investigación mixta integra componentes cualitativos y cuantitativos, buscando comprender un fenómeno de manera más profunda, combinando la exploración de significados con la medición de relaciones o impactos."
     },
     'objetivo_general': {
         'Cualitativa': "En la investigación cualitativa, el objetivo general busca orientar la exploración, comprensión, descripción o interpretación del fenómeno o experiencia en un grupo social o comunidad específica, de manera coherente con un enfoque interpretativo. **Debe iniciar con un verbo en infinitivo (ejemplos: comprender, explorar, describir, interpretar, analizar, investigar).**",
-        'Cuantitativa': "En la investigación cuantitativa, el objetivo general debe expresar claramente qué se quiere analizar, correlacionar, describir o explicar en términos de la relación, efecto o influencia entre las variables de estudio, en una población y contexto definidos. **Debe iniciar con un verbo en infinitivo (ejemplos: analizar, determinar, evaluar, establecer, comparar, medir).**"
+        'Cuantitativa': "En la investigación cuantitativa, el objetivo general debe expresar claramente qué se quiere analizar, correlacionar, describir o explicar en términos de la relación, efecto o influencia entre las variables de estudio, en una población y contexto definidos. **Debe iniciar con un verbo en infinitivo (ejemplos: analizar, determinar, evaluar, establecer, comparar, medir).**",
+        'Mixta': "En la investigación mixta, el objetivo general busca integrar la comprensión cualitativa y la medición cuantitativa para abordar el fenómeno de estudio de manera comprehensiva. **Debe iniciar con un verbo en infinitivo que refleje la integración (ejemplos: explorar y determinar, comprender y evaluar, analizar la relación e interpretar las percepciones).**"
     },
     'objetivos_especificos': {
-        'Cualitativa': "Son metas concretas y delimitadas que el estudio busca alcanzar para lograr el objetivo general. En cualitativa, suelen enfocarse en acciones como identificar, analizar, describir, interpretar o caracterizar dimensiones, categorías o subprocesos del fenómeno en los participantes y contexto.",
-        'Cuantitativa': "Son metas concretas y medibles que derivan del objetivo general, detallando los pasos para alcanzarlo. En cuantitativa, se enfocan en describir variables, comparar grupos, correlacionar variables o explicar relaciones específicas entre ellas, orientando la operacionalización y recolección de datos."
+        'Cualitativa': "Son metas concretas y delimitadas que el estudio busca alcanzar para lograr el objetivo general. En cualitativa, suelen enfocarse en acciones como identificar, analizar, describir o interpretar dimensiones del fenómeno.",
+        'Cuantitativa': "Son metas concretas y medibles que derivan del objetivo general, detallando los pasos para alcanzarlo. En cuantitativa, se enfocan en describir variables, comparar grupos, correlacionar variables o explicar relaciones específicas.",
+        'Mixta': "Son metas concretas que desglosan el objetivo general, incluyendo tanto pasos cualitativos (explorar, comprender, interpretar) como cuantitativos (medir, cuantificar, comparar, correlacionar) para abordar el fenómeno desde ambas perspectivas. Deben reflejar la secuencialidad o concurrencia de las fases."
     },
     'variables.independiente': "Es la característica o propiedad observable y medible que se presume es la *causa* o el factor que influye en otra variable. El investigador la manipula o mide para observar su efecto.",
     'variables.dependiente': "Es la característica o propiedad observable y medible que se presume es el *efecto* o el resultado que cambia debido a la influencia de la variable independiente. Es lo que se observa o mide como respuesta.",
@@ -36,30 +40,36 @@ explanations = {
     'justificacion': "La justificación explica la *importancia* y el *porqué* de tu investigación. Debe argumentar su relevancia teórica (qué aporta al conocimiento), práctica (cómo resuelve un problema) y social (a quién beneficia o impacta positivamente).",
     'marco_teorico': {
         'Cualitativa': "El marco teórico en investigación cualitativa es una síntesis y selección de **conceptos clave y temas relevantes** que fundamentan tu perspectiva del fenómeno. Sirve para construir tus categorías iniciales o 'lentes interpretativos' antes o durante la recolección de datos.",
-        'Cuantitativa': "El marco teórico en investigación cuantitativa es la conceptualización formal de tus variables, basada en la literatura científica existente. Define qué significa cada variable desde un punto de vista académico o técnico, usando autores y modelos reconocidos, y guía la operacionalización y medición. **En esta etapa, concéntrate en los conceptos clave o temas de tu estudio.**"
+        'Cuantitativa': "El marco teórico en investigación cuantitativa es la conceptualización formal de tus variables, basada en la literatura científica existente. Define qué significa cada variable desde un punto de vista académico o técnico, usando autores y modelos reconocidos, y guía la operacionalización y medición. **En esta etapa, concéntrate en los conceptos clave o temas de tu estudio.**",
+        'Mixta': "El marco teórico en investigación mixta debe integrar conceptos y teorías relevantes de ambos enfoques (cualitativo y cuantitativo) para fundamentar la comprensión integral del fenómeno. Puede incluir conceptualizaciones de variables y categorías de análisis."
     },
     'metodologia.poblacion': "La población es el *conjunto total* de todas las personas, objetos o elementos que poseen una o más características comunes y que son el universo de tu estudio. Es el grupo al cual deseas generalizar tus hallazgos.",
     'metodologia.muestra': "La muestra es un *subconjunto representativo* de la población, seleccionado para realizar el estudio. Se describe el tipo de muestreo (probabilístico/no probabilístico), el tamaño de la muestra y los criterios de selección utilizados para garantizar que sea adecuada y permita inferencias si es cuantitativa.",
     'metodologia.tecnicas': {
         'Cualitativa': "Las técnicas de recolección de datos cualitativas son los procedimientos y herramientas que te permiten obtener información detallada y profunda para comprender el fenómeno. Ejemplos incluyen entrevistas, grupos focales, observación participante, o análisis documental.",
-        'Cuantitativa': "Las técnicas de recolección de datos cuantitativas son los procedimientos y herramientas que te permiten obtener datos numéricos y estructurados para medir variables y probar hipótesis. Ejemplos incluyen encuestas con cuestionarios estandarizados, escalas de medición (Likert), o la recopilación de datos de registros existentes."
+        'Cuantitativa': "Las técnicas de recolección de datos cuantitativas son los procedimientos y herramientas que te permiten obtener datos numéricos y estructurados para medir variables y probar hipótesis. Ejemplos incluyen encuestas con cuestionarios estandarizados, escalas de medición (Likert), o la recopilación de datos de registros existentes.",
+        'Mixta': "Las técnicas de recolección de datos mixtas combinan procedimientos cualitativos (ej., entrevistas, grupos focales) y cuantitativos (ej., encuestas, escalas estandarizadas) para recopilar información rica y variada, buscando la complementariedad y triangulación de los datos."
     },
     'metodologia.filosofia': {
         'Cualitativa': "La filosofía de la investigación es la postura epistemológica sobre cómo se concibe el conocimiento y la realidad. Para la investigación cualitativa, los enfoques comunes son el Interpretativismo (que busca comprender el significado subjetivo de las experiencias) y el Pragmatismo (que se centra en la utilidad práctica del conocimiento).",
-        'Cuantitativa': "La filosofía de la investigación es la postura epistemológica sobre cómo se concibe el conocimiento y la realidad. Para la investigación cuantitativa, los enfoques comunes son el Positivismo (que busca leyes generales y objetivas a través de la observación empírica) y el Pragmatismo (que se centra en la utilidad práctica del conocimiento y la resolución de problemas)."
+        'Cuantitativa': "La filosofía de la investigación es la postura epistemológica sobre cómo se concibe el conocimiento y la realidad. Para la investigación cuantitativa, los enfoques comunes son el Positivismo (que busca leyes generales y objetivas a través de la observación empírica) y el Pragmatismo (que se centra en la utilidad práctica del conocimiento y la resolución de problemas).",
+        'Mixta': "La filosofía de la investigación para un enfoque mixto es comúnmente el Pragmatismo, que valora la utilidad del conocimiento y la resolución de problemas, permitiendo la combinación de distintas perspectivas para lograr un objetivo de investigación más amplio y profundo."
     },
     'metodologia.enfoque': {
         'Cualitativa': "El enfoque de la investigación es el tipo de razonamiento que guía el proceso investigativo. En la investigación cualitativa, el enfoque es principalmente Inductivo, lo que significa que se parte de la observación de datos específicos para construir teorías o patrones generales.",
-        'Cuantitativa': "El enfoque de la investigación es el tipo de razonamiento que guía el proceso investigativo. En la investigación cuantitativa, el enfoque es principalmente Deductivo, lo que significa que se parte de teorías o hipótesis generales para probarlas a través de la recolección y análisis de datos específicos."
+        'Cuantitativa': "El enfoque de la investigación es el tipo de razonamiento que guía el proceso investigativo. En la investigación cuantitativa, el enfoque es principalmente Deductivo, lo que significa que se parte de teorías o hipótesis generales para probarlas a través de la recolección y análisis de datos específicos.",
+        'Mixta': "El enfoque de la investigación mixta combina razonamiento deductivo e inductivo, utilizando ambos enfoques en diferentes fases (secuencial) o de manera simultánea (concurrente), buscando la complementariedad en la construcción del conocimiento."
     },
     'metodologia.tipologia_estudio': {
         'Cualitativa': "La tipología o alcance de estudio clasifica la investigación cualitativa según su propósito y profundidad. Algunos tipos comunes incluyen: Fenomenológico (explora experiencias vividas), Hermenéutico (interpreta textos o símbolos), Crítico (analiza el poder y la injusticia), y Narrativo (examina historias de vida).",
-        'Cuantitativa': "La tipología o alcance de estudio clasifica la investigación cuantitativa según su propósito. Los tipos comunes son: Descriptivo (describe características de una población), Correlacional (examina la relación entre variables), y Explicativo (busca causas y efectos de fenómenos)."
+        'Cuantitativa': "La tipología o alcance de estudio clasifica la investigación cuantitativa según su propósito. Los tipos comunes son: Descriptivo (describe características de una población), Correlacional (examina la relación entre variables), y Explicativo (busca causas y efectos de fenómenos).",
+        'Mixta': "La tipología o alcance de estudio mixto depende del diseño específico, buscando integrar la exploración y la explicación. Incluye diseños como Exploratorio Secuencial (cual-cuant), Explicatorio Secuencial (cuant-cual), y Convergente Paralelo (cual+cuant)."
     },
     'metodologia.horizonte_tiempo': "El horizonte de tiempo se refiere al plazo temporal del estudio en función de su duración y momentos de observación. Puede ser Transversal (los datos se recogen en un único momento) o Longitudinal (los datos se recogen en múltiples momentos a lo largo del tiempo).",
     'metodologia.estrategias': {
         'Cualitativa': "Las estrategias de investigación cualitativa son los diseños estructurales generales para abordar el estudio. Ejemplos incluyen: Estudio de caso, Investigación Acción Participativa (IAP), Etnográfico y Teoría Fundamentada. Cada una ofrece una forma particular de acercarse al fenómeno para una comprensión profunda.",
-        'Cuantitativa': "Las estrategias de investigación cuantitativa son los diseños estructurales generales que se emplean para la recolección y análisis de datos numéricos. Ejemplos comunes son el Diseño de Encuesta, Experimental, Cuasi-experimental y No experimental. Cada estrategia define cómo se manipularán o se observarán las variables y cómo se recolectarán los datos."
+        'Cuantitativa': "Las estrategias de investigación cuantitativa son los diseños estructurales generales que se emplean para la recolección y análisis de datos numéricos. Ejemplos comunes son el Diseño de Encuesta, Experimental, Cuasi-experimental y No experimental. Cada estrategia define cómo se manipularán o se observarán las variables y cómo se recolectarán los datos.",
+        'Mixta': "Las estrategias de investigación mixta son diseños que integran explícitamente los componentes cualitativos y cuantitativos. Incluyen diseños como Convergente Paralelo, Exploratorio Secuencial (QUAL-quan) y Explicatorio Secuencial (QUAN-qual), los cuales definen la secuencia y la forma de integración de los datos."
     }
 }
 
@@ -108,6 +118,19 @@ Estructura tu evaluación en:
 4. Ejemplo ilustrativo (si aplica).
 
 Responde en tono académico y constructivo. Extensión máxima: 300 tokens.
+""",
+        'Mixta': lambda tema: f"""
+Actúa como experto en investigación mixta. Evalúa el siguiente tema de investigación:
+
+"{tema}"
+
+Estructura tu respuesta en:
+1. Valoración inicial del esfuerzo.
+2. Evaluación crítica: ¿delimita el fenómeno desde perspectivas cualitativas y cuantitativas? ¿Es lo suficientemente amplio para un diseño mixto?
+3. Sugerencias claras de mejora.
+4. Ejemplo orientador (no resolver).
+
+Extensión máxima: 300 tokens. Sé claro y empático.
 """
     },
 
@@ -138,6 +161,19 @@ Tu evaluación debe:
 4. Dar ejemplo comparativo.
 
 Responde de forma crítica y constructiva. Extensión máxima: 300 tokens.
+""",
+        'Mixta': lambda pregunta: f"""
+Eres experto en investigación mixta. Evalúa la siguiente pregunta:
+
+"{pregunta}"
+
+Tu retroalimentación debe:
+1. Reconocer el esfuerzo.
+2. Evaluar si integra componentes cualitativos y cuantitativos. ¿Es clara, específica y abarcadora para un diseño mixto?
+3. Orientar si requiere mejoras.
+4. Incluir ejemplo similar como guía.
+
+Sé crítico y empático. Extensión máxima: 300 tokens.
 """
     },
 
@@ -168,6 +204,19 @@ Responde en:
 4. Modelo orientador.
 
 Extensión máxima: 300 tokens.
+""",
+        'Mixta': lambda obj: f"""
+Eres especialista en investigación mixta. Evalúa el objetivo general:
+
+"{obj}"
+
+Organiza tu respuesta en:
+1. Reconocimiento.
+2. Evaluación: ¿El verbo en infinitivo refleja la integración cualitativa y cuantitativa? ¿Es coherente con un diseño mixto?
+3. Recomendaciones claras.
+4. Ejemplo tipo.
+
+Extensión máxima: 300 tokens.
 """
     },
 
@@ -196,6 +245,19 @@ Organiza la retroalimentación en:
 2. Evaluación crítica: ¿son medibles? ¿alineados con variables y objetivo general?
 3. Recomendaciones formativas.
 4. Ejemplo ilustrativo.
+
+Extensión máxima: 300 tokens.
+""",
+        'Mixta': lambda objs: f"""
+Evalúa los siguientes objetivos específicos mixtos:
+
+"{objs}"
+
+Tu respuesta debe incluir:
+1. Aprecio por el esfuerzo.
+2. Evaluación crítica: ¿derivan del objetivo general? ¿Integran pasos cualitativos y cuantitativos? ¿Reflejan la secuencialidad/concurrencia del diseño?
+3. Orientación concreta.
+4. Ejemplo orientativo parcial.
 
 Extensión máxima: 300 tokens.
 """
@@ -309,7 +371,8 @@ Evalúa la muestra propuesta:
 Extensión máxima: 300 tokens.
 """,
 
-    'metodologia.tecnicas': lambda tec: f"""
+    'metodologia.tecnicas': {
+        'Cualitativa': lambda tec: f"""
 Evalúa técnicas e instrumentos:
 
 "{tec}"
@@ -321,6 +384,31 @@ Evalúa técnicas e instrumentos:
 
 Extensión máxima: 300 tokens.
 """,
+        'Cuantitativa': lambda tec: f"""
+Evalúa técnicas e instrumentos:
+
+"{tec}"
+
+1. Aprecio inicial.
+2. Evaluación crítica: ¿permiten recolectar los datos necesarios según el enfoque?
+3. Recomendaciones.
+4. Ejemplo.
+
+Extensión máxima: 300 tokens.
+""",
+        'Mixta': lambda tec: f"""
+Evalúa las técnicas e instrumentos propuestos para un estudio mixto:
+
+"{tec}"
+
+1. Aprecio inicial.
+2. Evaluación crítica: ¿Las técnicas e instrumentos cualitativos y cuantitativos son apropiados para el diseño mixto? ¿Se complementan para la triangulación de datos?
+3. Recomendaciones.
+4. Ejemplo.
+
+Extensión máxima: 300 tokens.
+"""
+    },
 
     'metodologia.filosofia': {
         'Cualitativa': lambda filo: f"""
@@ -345,6 +433,18 @@ Evalúa la filosofía de investigación cuantitativa:
 2. Evaluación: ¿se alinea con paradigma positivista/pragmático?
 3. Orientación.
 4. Ejemplo.
+
+Extensión máxima: 300 tokens.
+""",
+        'Mixta': lambda filo: f"""
+Evalúa la filosofía de investigación para un estudio mixto:
+
+"{filo}"
+
+1. Reconocimiento del intento.
+2. Evaluación: ¿Es la filosofía adecuada para integrar ambos enfoques?
+3. Sugerencias.
+4. Ejemplo orientativo.
 
 Extensión máxima: 300 tokens.
 """
@@ -375,6 +475,18 @@ Evalúa el enfoque cuantitativo:
 4. Ejemplo.
 
 Extensión máxima: 300 tokens.
+""",
+        'Mixta': lambda enfoque: f"""
+Evalúa el enfoque para un estudio mixto:
+
+"{enfoque}"
+
+1. Reconocimiento.
+2. Evaluación crítica: ¿Refleja la combinación de razonamiento inductivo y deductivo apropiada para un diseño mixto?
+3. Recomendaciones.
+4. Ejemplo.
+
+Extensión máxima: 300 tokens.
 """
     },
 
@@ -399,6 +511,18 @@ Evalúa la tipología del estudio cuantitativo:
 
 1. Reconocimiento.
 2. Evaluación: ¿es adecuada para lo que se quiere medir o comparar?
+3. Sugerencia.
+4. Modelo.
+
+Extensión máxima: 300 tokens.
+""",
+        'Mixta': lambda tipologia: f"""
+Evalúa la tipología del estudio mixto:
+
+"{tipologia}"
+
+1. Reconocimiento.
+2. Evaluación: ¿Es una clasificación reconocida para diseños mixtos? ¿Es coherente con el propósito de integrar ambos enfoques?
 3. Sugerencia.
 4. Modelo.
 
@@ -442,6 +566,18 @@ Evalúa la estrategia cuantitativa:
 2. Evaluación crítica: ¿es adecuada al diseño estructural del estudio?
 3. Recomendaciones.
 4. Modelo.
+
+Extensión máxima: 300 tokens.
+""",
+        'Mixta': lambda estrategia: f"""
+Evalúa la estrategia de investigación mixta:
+
+"{estrategia}"
+
+1. Aprecio por el esfuerzo.
+2. Evaluación: ¿Es una estrategia reconocida para diseños mixtos? ¿Refleja la integración de los componentes cualitativos y cuantitativos?
+3. Sugerencias.
+4. Ejemplo.
 
 Extensión máxima: 300 tokens.
 """
@@ -566,7 +702,7 @@ def format_matrix_data_for_ai(data):
     else:
         formatted_str.append("- No definidos")
 
-    if data.get('tipo_investigacion') == 'Cuantitativa':
+    if data.get('tipo_investigacion') in ['Cuantitativa', 'Mixta']: # Variables and Hypotheses apply to Mixed too
         formatted_str.append(f"Variable Independiente: {data['variables'].get('independiente', 'No definido')}")
         formatted_str.append(f"Variable Dependiente: {data['variables'].get('dependiente', 'No definido')}")
         formatted_str.append(f"Hipótesis Nula (H₀): {data['hipotesis'].get('nula', 'No definido')}")
@@ -616,7 +752,7 @@ def generate_docx_from_matrix(data):
     else:
         document.add_paragraph("No definidos")
 
-    if data.get('tipo_investigacion') == 'Cuantitativa':
+    if data.get('tipo_investigacion') in ['Cuantitativa', 'Mixta']:
         document.add_heading('Variables e Hipótesis', level=2)
         document.add_paragraph(f"Variable Independiente: {data['variables'].get('independiente', 'No definido')}")
         document.add_paragraph(f"Variable Dependiente: {data['variables'].get('dependiente', 'No definido')}")
@@ -669,7 +805,7 @@ base_steps = [
         'question': "¡Hola! Vamos a crear tu matriz de investigación. ¿Qué tipo de investigación realizarás?",
         'examples': {}, 
         'input_type': 'radio',
-        'options': ['Cualitativa', 'Cuantitativa'],
+        'options': ['Cualitativa', 'Cuantitativa', 'Mixta'], # Added 'Mixta' option
         'key': 'tipo_investigacion',
         'validation': lambda x: x != ''
     },
@@ -686,6 +822,11 @@ base_steps = [
                 "Percepciones docentes sobre la educación para el desarrollo sostenible implementadas en el cantón Portovelo, Ecuador.",
                 "Experiencias de resiliencia en mujeres migrantes venezolanas en España durante el proceso de integración laboral.",
                 "Significados atribuidos por jóvenes a la participación ciudadana en contextos urbanos desfavorecidos de Madrid."
+            ],
+            'Mixta': [
+                "Evaluación del impacto de un programa de intervención educativa en la alfabetización digital y las percepciones de los docentes sobre su efectividad en escuelas rurales.",
+                "Exploración de los factores que influyen en la deserción universitaria y cuantificación de su incidencia en una cohorte específica.",
+                "Análisis de la eficacia de una terapia grupal en la reducción de síntomas de ansiedad y exploración de las experiencias individuales de los participantes."
             ]
         },
         'input_type': 'text_area',
@@ -705,6 +846,11 @@ base_steps = [
                 "¿Qué percepciones tienen los docentes de educación básica respecto a las inserciones curriculares de la educación para el desarrollo sostenible en el cantón Portovelo?",
                 "¿Cómo construyen la resiliencia las mujeres migrantes venezolanas al enfrentar los desafíos de la integración laboral en España?",
                 "¿Cuáles son los significados que los jóvenes de barrios desfavorecidos de Madrid atribuyen a la participación ciudadana?"
+            ],
+            'Mixta': [
+                "¿Qué impacto tiene un programa de alfabetización digital en el nivel de competencia digital de los docentes (cuant) y cómo perciben ellos su propia transformación y los desafíos del programa (cual)?",
+                "¿Cuáles son los factores socioeconómicos y académicos asociados a la deserción universitaria (cuant), y cuáles son las experiencias vividas por los estudiantes que desertaron (cual)?",
+                "¿En qué medida una terapia grupal reduce los síntomas de ansiedad (cuant) y cómo experimentan los participantes los cambios emocionales y relacionales durante el proceso terapéutico (cual)?"
             ]
         },
         'input_type': 'text_area',
@@ -724,6 +870,11 @@ base_steps = [
                 "Comprender las percepciones de los docentes de educación básica sobre las inserciones curriculares para el desarrollo sostenible en Portovelo.",
                 "Explorar las experiencias de resiliencia en mujeres migrantes venezolanas durante su integración laboral en España.",
                 "Interpretar los significados atribuidos por jóvenes a la participación ciudadana en contextos urbanos desfavorecidos de Madrid."
+            ],
+            'Mixta': [
+                "Explorar las percepciones y experiencias de los docentes sobre la alfabetización digital e identificar el impacto cuantitativo de un programa de intervención en sus niveles de competencia digital.",
+                "Determinar la incidencia de factores socioeconómicos y académicos en la deserción universitaria y comprender las razones subjetivas de los estudiantes que abandonaron sus estudios.",
+                "Evaluar la efectividad de una terapia grupal en la reducción de síntomas de ansiedad y explorar las narrativas personales de los participantes sobre su proceso de cambio."
             ]
         },
         'input_type': 'text_area',
@@ -744,6 +895,11 @@ base_steps = [
                 "Caracterizar las inserciones curriculares en desarrollo sostenible implementadas por los docentes.",
                 "Analizar las estrategias pedagógicas empleadas por los docentes para integrar el desarrollo sostenible.",
                 "Explorar los desafíos que enfrentan los docentes al implementar la educación para el desarrollo sostenible."
+            ],
+            'Mixta': [
+                "Cuantificar la mejora en las habilidades de alfabetización digital de los docentes tras el programa.",
+                "Identificar las temáticas emergentes en las percepciones de los docentes sobre los beneficios del programa.",
+                "Correlacionar la participación en el programa con los cambios en las actitudes hacia la tecnología educativa."
             ]
         },
         'input_type': 'text_area',
@@ -753,7 +909,7 @@ base_steps = [
     },
 ]
 
-# Pasos adicionales para investigación Cuantitativa (se insertan si se selecciona 'Cuantitativa')
+# Pasos adicionales para investigación Cuantitativa (se insertan si se selecciona 'Cuantitativa' o 'Mixta')
 quantitative_specific_steps = [
     {
         'name': "Variable Independiente",
@@ -763,6 +919,11 @@ quantitative_specific_steps = [
                 "Uso de redes sociales (medido en horas de conexión diaria).",
                 "Horas de estudio semanales (medidas en autorreporte).",
                 "Participación en programa de tutorías (variable categórica: sí/no)."
+            ],
+            'Mixta': [
+                "Intensidad de la intervención educativa (variable categórica: alta, media, baja).",
+                "Horas de participación en talleres de habilidades blandas (medida cuantitativa).",
+                "Exposición a contenido mediático (frecuencia de exposición)."
             ],
             'Cualitativa': [] 
         },
@@ -779,6 +940,11 @@ quantitative_specific_steps = [
                 "Nivel de ansiedad ante exámenes (medido con escala validada).",
                 "Tasa de abandono universitario (variable dicotómica: abandono/continúa)."
             ],
+            'Mixta': [
+                "Nivel de competencia digital (medido por un test estandarizado).",
+                "Satisfacción laboral (medida por escala Likert).",
+                "Nivel de estrés percibido (medido por escala validada)."
+            ],
             'Cualitativa': [] 
         },
         'input_type': 'text_input',
@@ -794,6 +960,10 @@ quantitative_specific_steps = [
                 "No hay diferencias significativas en el nivel de ansiedad ante exámenes entre estudiantes que reciben tutorías y los que no.",
                 "La edad del estudiante no se correlaciona significativamente con su tasa de abandono universitario."
             ],
+            'Mixta': [
+                "El programa de alfabetización digital no produce un aumento significativo en la competencia digital de los docentes.",
+                "No existe una relación significativa entre la participación en talleres de habilidades blandas y el nivel de satisfacción laboral."
+            ],
             'Cualitativa': [] 
         },
         'input_type': 'text_area',
@@ -808,6 +978,10 @@ quantitative_specific_steps = [
                 "Existe una influencia significativa del uso de redes sociales en el rendimiento académico de los estudiantes universitarios de primer año de la Facultad de Comunicación de la Universidad X durante el ciclo 2024-II.",
                 "Existen diferencias significativas en el nivel de ansiedad ante exámenes entre estudiantes que reciben tutorías y los que no.",
                 "La edad del estudiante se correlaciona significativamente de forma inversa con su tasa de abandono universitario."
+            ],
+            'Mixta': [
+                "El programa de alfabetización digital produce un aumento significativo en la competencia digital de los docentes.",
+                "Existe una relación positiva y significativa entre la participación en talleres de habilidades blandas y el nivel de satisfacción laboral."
             ],
             'Cualitativa': [] 
         },
@@ -832,6 +1006,10 @@ final_common_steps = [
                 "Este estudio es relevante porque busca comprender las complejidades de la implementación de la educación para el desarrollo sostenible desde la voz de los docentes, lo que puede informar políticas educativas más contextualizadas y efectivas en Portovelo.",
                 "Comprender la resiliencia en mujeres migrantes es fundamental para diseñar programas de apoyo psicosocial y laboral que respondan a sus necesidades reales, contribuyendo a una integración más humana y efectiva en la sociedad de acogida.",
                 "La exploración de los significados de participación ciudadana en jóvenes de barrios desfavorecidos es crucial para fomentar su empoderamiento, desafiando narrativas preestablecidas y promoviendo una inclusión social más genuina."
+            ],
+            'Mixta': [
+                "La investigación mixta ofrece una visión integral del impacto del programa de alfabetización, combinando datos duros de efectividad con las experiencias humanas de los docentes, lo que es crucial para un diseño de programas futuros más efectivos y centrados en el usuario.",
+                "Este estudio es relevante porque no solo cuantifica los factores de deserción, sino que también ofrece narrativas profundas sobre las experiencias de los estudiantes, proporcionando una base sólida para intervenciones multidimensionales en la universidad."
             ]
         },
         'input_type': 'text_area',
@@ -851,6 +1029,12 @@ final_common_steps = [
                 "Inserciones curriculares",
                 "Educación para el Desarrollo Sostenible (EDS)",
                 "Percepción docente"
+            ],
+            'Mixta': [
+                "Alfabetización digital",
+                "Percepción de eficacia",
+                "Integración curricular",
+                "Teorías de aprendizaje mixto"
             ]
         },
         'input_type': 'text_area',
@@ -871,6 +1055,10 @@ final_common_steps = [
                 "Todos los estudiantes de primer año de la Facultad de Comunicación de la Universidad X inscritos en el ciclo 2024-II (aproximadamente 500 estudiantes).",
                 "La población estudiantil matriculada en programas de grado de la Facultad de Medicina de la Universidad Z durante el curso académico 2024-2025.",
                 "Los residentes de la ciudad A mayores de 18 años, según el último censo poblacional disponible."
+            ],
+            'Mixta': [
+                "Todos los docentes de educación primaria de 5 escuelas rurales de la región X.",
+                "La población de estudiantes matriculados en los programas de grado de la Universidad Y durante el período 2023-2024."
             ]
         },
         'input_type': 'text_area',
@@ -890,6 +1078,10 @@ final_common_steps = [
                 "100 estudiantes seleccionados aleatoriamente de la población total (N=500), asegurando representatividad por sexo y programa de estudios mediante muestreo aleatorio simple.",
                 "Una muestra estratificada de 250 estudiantes de medicina (125 por sexo) para asegurar la representatividad de la población, calculada con un nivel de confianza del 95% y un margen de error del 5%.",
                 "384 ciudadanos seleccionados mediante muestreo aleatorio simple con listado telefónico, para una población infinita con un margen de error del 5% y un nivel de confianza del 95%."
+            ],
+            'Mixta': [
+                "Una muestra probabilística de 100 docentes para la fase cuantitativa (encuesta) y una submuestra intencional de 10 docentes para entrevistas en la fase cualitativa.",
+                "Para la fase cuantitativa, se utilizará un muestreo aleatorio simple de 300 estudiantes. Para la fase cualitativa, se seleccionarán 15 estudiantes que desertaron mediante muestreo por criterio."
             ]
         },
         'input_type': 'text_area',
@@ -909,6 +1101,10 @@ final_common_steps = [
                 "Técnica: Entrevistas / Instrumento: Guion de entrevistas semiestructuradas (para comprender percepciones y experiencias a profundidad).",
                 "Técnica: Observación participante / Instrumento: Diario de campo, guía de observación (para documentar la dinámica de implementación de las inserciones curriculares)."
                 "Técnica: Análisis de contenido / Instrumento: Matriz de análisis documental de documentos curriculares y planes de estudio (para identificar el enfoque del desarrollo sostenible)."
+            ],
+            'Mixta': [
+                "Para la fase cuantitativa: Cuestionarios estandarizados de competencia digital. Para la fase cualitativa: Entrevistas semiestructuradas sobre experiencias con el programa.",
+                "Para la fase cuantitativa: Análisis de bases de datos institucionales (notas, asistencia). Para la fase cualitativa: Grupos focales con estudiantes desertores."
             ]
         },
         'input_type': 'text_area',
@@ -927,6 +1123,9 @@ final_common_steps = [
             'Cuantitativa': [
                 "Positivismo: La realidad es objetiva y externa, y el conocimiento se obtiene a través de la observación empírica y la verificación de hipótesis, buscando leyes generales.",
                 "Pragmatismo: El conocimiento es provisional y se valida por su utilidad y las consecuencias prácticas de las acciones; se enfoca en resolver problemas."
+            ],
+            'Mixta': [
+                "Pragmatismo: Se centra en la aplicación práctica del conocimiento para resolver problemas, permitiendo la combinación de enfoques y métodos de investigación para una comprensión más completa del fenómeno."
             ]
         },
         'input_type': 'text_area',
@@ -943,6 +1142,9 @@ final_common_steps = [
             },
             'Cuantitativa': {
                 "Deductivo": "Se parte de una teoría o hipótesis general para probarla a través de observaciones específicas y datos."
+            },
+            'Mixta': {
+                "Mixto (Secuencial o Concurrente)": "Combina razonamiento deductivo e inductivo, utilizando ambos enfoques en diferentes fases o de manera simultánea para lograr una comprensión más completa."
             }
         },
         'key': 'metodologia.enfoque',
@@ -963,6 +1165,11 @@ final_common_steps = [
                 "Descriptivo": "Busca describir características de una población o fenómeno.",
                 "Correlacional": "Examina la relación entre dos o más variables.",
                 "Explicativo": "Busca establecer relaciones de causa y efecto entre variables."
+            },
+            'Mixta': {
+                "Exploratorio Secuencial (QUAL-quan)": "Inicia con fase cualitativa para explorar y luego una cuantitativa para probar. Ejemplo: Entrevistas para generar hipótesis, luego encuesta para validarlas.",
+                "Explicatorio Secuencial (QUAN-qual)": "Inicia con fase cuantitativa para obtener resultados y luego una cualitativa para profundizar o explicar. Ejemplo: Encuesta para identificar patrones, luego entrevistas para entender el 'porqué'.",
+                "Concurrente (QUAL+QUAN)": "Las fases cualitativa y cuantitativa se realizan al mismo tiempo y se integran para una comprensión más completa. Ejemplo: Encuestas y grupos focales simultáneos."
             }
         },
         'key': 'metodologia.tipologia_estudio',
@@ -980,6 +1187,10 @@ final_common_steps = [
             'Cuantitativa': {
                 "Transversal": "Los datos se recogen en un único momento, en un punto específico del tiempo.",
                 "Longitudinal": "Los datos se recogen en múltiples momentos, a lo largo del tiempo, para observar cambios o desarrollo."
+            },
+            'Mixta': {
+                "Transversal": "Los datos cualitativos y cuantitativos se recogen en un único momento, simultáneamente.",
+                "Longitudinal": "Los datos cualitativos y/o cuantitativos se recogen en múltiples momentos, a lo largo del tiempo, permitiendo observar la evolución."
             }
         },
         'key': 'metodologia.horizonte_tiempo',
@@ -1001,6 +1212,11 @@ final_common_steps = [
                 "Experimental": "Manipulación de una variable independiente para observar su efecto en una dependiente, con control de otras variables.",
                 "Cuasi-experimental": "Similar al experimental pero sin asignación aleatoria a grupos, utilizando grupos ya existentes.",
                 "No experimental": "Observación de fenómenos tal como ocurren en su contexto natural, sin manipulación de variables."
+            },
+            'Mixta': {
+                "Diseño Convergente Paralelo": "Recoge datos cualitativos y cuantitativos de forma simultánea, los analiza por separado y luego los compara o relaciona para una comprensión integral.",
+                "Diseño Exploratorio Secuencial (QUAL-quan)": "Comienza con una fase cualitativa para explorar un fenómeno, y los resultados cualitativos informan el desarrollo y la implementación de una fase cuantitativa posterior.",
+                "Diseño Explicatorio Secuencial (QUAN-qual)": "Inicia con una fase cuantitativa para identificar tendencias o relaciones, y los resultados cuantitativos guían una fase cualitativa posterior para explorar las razones o explicaciones de esos resultados."
             }
         },
         'key': 'metodologia.estrategias',
@@ -1013,7 +1229,8 @@ final_common_steps = [
 # ==============================================================================
 tipo_invest_dict = {
     'Cualitativa': 'Cualitativa',
-    'Cuantitativa': 'Cuantitativa'
+    'Cuantitativa': 'Cuantitativa',
+    'Mixta': 'Mixta'
 }
 
 # ==============================================================================
@@ -1030,7 +1247,8 @@ def main():
     tipo_investigacion = st.session_state.matrix_data.get('tipo_investigacion', '')
     
     all_steps = list(base_steps) 
-    if tipo_investigacion == 'Cuantitativa':
+    # Variables and Hypotheses sections are added for Quantitative and Mixed types
+    if tipo_investigacion in ['Cuantitativa', 'Mixta']: 
         all_steps.extend(quantitative_specific_steps) 
     all_steps.extend(final_common_steps)
 
@@ -1260,16 +1478,14 @@ def main():
                 st.warning("La descripción de las técnicas/instrumentos debe tener al menos 20 caracteres.")
             elif current_step['key'] == 'metodologia.filosofia' and len(user_input_for_validation) <= 20:
                 st.warning("La descripción de la filosofía de investigación debe tener al menos 20 caracteres.")
-            elif current_step['key'] == 'metodologia.enfoque' and len(user_input_for_validation) <= 5:
-                st.warning("La descripción del enfoque de investigación debe tener al menos 5 caracteres.")
-            elif current_step['key'] == 'metodologia.tipologia_estudio' and len(user_input_for_validation) <= 10:
-                st.warning("La descripción de la tipología de estudio debe tener al menos 10 caracteres.")
+            elif current_step['key'] == 'metodologia.enfoque' and user_input_for_validation == '':
+                st.warning("Por favor, selecciona una opción para el enfoque de investigación.")
+            elif current_step['key'] == 'metodologia.tipologia_estudio' and user_input_for_validation == '':
+                st.warning("Por favor, selecciona una opción para la tipología de estudio.")
             elif current_step['key'] == 'metodologia.horizonte_tiempo' and user_input_for_validation == '':
                 st.warning("Por favor, selecciona una opción para el horizonte de tiempo.")
             elif current_step['key'] == 'metodologia.estrategias' and user_input_for_validation == '':
                 st.warning("Por favor, selecciona una opción para la estrategia de investigación.")
-            elif current_step['key'] == 'metodologia.estrategias' and len(user_input_for_validation) <= 10:
-                st.warning("La descripción de las estrategias de investigación debe tener al menos 10 caracteres.")
             else:
                  st.warning("Por favor, completa el campo antes de avanzar.")
 
@@ -1322,7 +1538,7 @@ def main():
                 if oe: st.markdown(f"- {oe}")
         else: st.markdown("No definido")
         
-        if data['tipo_investigacion'] == 'Cuantitativa':
+        if data['tipo_investigacion'] in ['Cuantitativa', 'Mixta']:
             st.markdown(f"**Variable Independiente:** {data['variables']['independiente'] or 'No definido'}")
             st.markdown(f"**Variable Dependiente:** {data['variables']['dependiente'] or 'No definido'}")
             st.markdown(f"**Hipótesis Nula (H₀):** {data['hipotesis']['nula'] or 'No definido'}")
@@ -1348,7 +1564,7 @@ def main():
         st.markdown("---")
 
         # Comprehensive AI Evaluation
-        st.subheader("Evaluación Crítica Completa de la Matriz por la IA 🧐")
+        st.subheader("Evaluación Crítica Completa de la Matriz por la IA �")
         st.write("A continuación, se evaluará la coherencia de toda tu matriz.")
 
         if st.button("Obtener Evaluación Crítica de la Matriz ✨"):
@@ -1391,6 +1607,10 @@ def main():
             st.checkbox("¿Mis variables (independiente y dependiente) están bien definidas y son medibles?")
             st.checkbox("¿Mis hipótesis son coherentes con mis variables y tipo de estudio?")
             st.checkbox("¿La metodología que propongo es adecuada para responder mi pregunta y probar mis hipótesis?")
+        elif data['tipo_investigacion'] == 'Mixta':
+            st.checkbox("¿Mi diseño mixto integra coherentemente los componentes cualitativos y cuantitativos?")
+            st.checkbox("¿Las preguntas y objetivos reflejan adecuadamente la naturaleza combinada del estudio?")
+            st.checkbox("¿Las técnicas de recolección de datos cualitativas y cuantitativas se complementan entre sí?")
 
         st.markdown("---")
         st.info("¡Recuerda que este es un punto de partida! La investigación es un proceso iterativo. Lee, ajusta y perfecciona tu matriz con la literatura científica.")
@@ -1435,3 +1655,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+�
