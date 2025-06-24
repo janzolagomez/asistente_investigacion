@@ -1385,7 +1385,7 @@ def main():
                 st.session_state.matrix_data[key_to_update] = new_value
             st.session_state.ai_feedback = "" # Clear AI feedback on data change
 
-        if current_step['input_type'] == 'radio':
+       if current_step['input_type'] == 'radio':
     # Usa una clave única más simple, sin depender del step
     widget_key = f"radio_input_{current_step['key']}"
     
