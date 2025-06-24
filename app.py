@@ -1471,22 +1471,8 @@ Extensión máxima: 300 tokens.
         'Cuantitativa': "Las estrategias de investigación cuantitativa son los diseños estructurales generales que se emplean para la recolección y análisis de datos numéricos. Ejemplos comunes son el Diseño de Encuesta, Experimental, Cuasi-experimental y No experimental. Cada estrategia define cómo se manipularán o se observarán las variables y cómo se recolectarán los datos.",
         'Mixta': "Las estrategias de investigación mixta son diseños que integran explícitamente los componentes cualitativos y cuantitativos. Incluyen diseños como Convergente Paralelo, Exploratorio Secuencial (QUAL-quan) y Explicatorio Secuencial (QUAN-qual), los cuales definen la secuencia y la forma de integración de los datos."
     }
-    
-    'final_coherence_evaluation': lambda matriz, tipo: f"""
-Eres asesor experto en metodología. Evalúa esta matriz de consistencia para una investigación de tipo '{tipo}':
-
-"{matriz}"
-
-Tu retroalimentación debe incluir:
-1. Apreciación global del trabajo.
-2. Evaluación crítica parte por parte (tema, objetivos, pregunta, marco, método, hipótesis o variables si aplica).
-3. Sugerencias específicas para mejorar.
-4. Ejemplos ilustrativos (si aplica).
-5. Evaluación global de coherencia.
-
-Extensión: 3000 tokens. Mantén el tipo de investigación claro y constante. Usa principios de metodología de investigación.
-"""
 }
+
 
 # ==============================================================================
 # FUNCIÓN PARA LLAMAR A LA API DE GEMINI
